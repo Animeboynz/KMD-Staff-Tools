@@ -85,6 +85,18 @@ fun NavigationHost(
             CustomerOrders(navController = navController, viewModel = viewModel)
         }
 
+        composable("add_order_route") {
+            AddOrderScreen(
+                viewModel = viewModel,
+                onAddOrder = { order ->
+                    viewModel.addOrder(order)
+                    navController.navigateUp() // Navigate back to CustomerOrders after adding order
+                },
+                onClose = { navController.navigateUp() },
+                navController = navController
+            )
+        }
+
     }
 }
 
