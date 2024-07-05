@@ -72,6 +72,11 @@ fun NavigationHost(
         {
             OutgoingTransfers()
         }
+
+        composable("customer_orders_route") {
+            CustomerOrders(navController = navController, viewModel = viewModel)
+        }
+
     }
 }
 
