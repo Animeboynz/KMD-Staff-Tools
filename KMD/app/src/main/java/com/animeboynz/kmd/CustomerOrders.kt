@@ -1,6 +1,11 @@
+package com.animeboynz.kmd
+
 // CustomerOrders.kt
+import Order
+import OrdersViewModel
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -46,7 +51,6 @@ fun CustomerOrders(
         ) {
             TabRow(
                 selectedTabIndex = selectedTabIndex,
-                //backgroundColor = MaterialTheme.colorScheme.primarySurface,
                 contentColor = Color.White,
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -62,9 +66,7 @@ fun CustomerOrders(
             // Display orders based on selected tab
             when (selectedTabIndex) {
                 0 -> OrderList(orders = viewModel.createdOrders)
-                1 -> OrderList(orders = emptyList()) // Placeholder for other tabs
-                2 -> OrderList(orders = emptyList()) // Placeholder for other tabs
-                3 -> OrderList(orders = emptyList()) // Placeholder for other tabs
+                1, 2, 3 -> EmptyOrderListPlaceholder()
             }
         }
     }
@@ -80,13 +82,30 @@ fun OrderList(orders: List<Order>) {
 }
 
 @Composable
+fun EmptyOrderListPlaceholder() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Text("No orders yet.")
+    }
+}
+
+@Composable
 fun OrderListItem(order: Order) {
     ListItem(
-        text = { Text("Order ID: ${order.orderId}") },
-        secondaryText = { Text("Customer: ${order.customerName}, Employee: ${order.employeeName}") },
-        modifier = Modifier.padding(vertical = 8.dp)
+        modifier = Modifier.padding(vertical = 8.dp),
+        headlineContent = { Text("Order ID: ${order.orderId}") },
+        supportingContent = {
+            Column {
+                Text("Customer: ${order.customerName}")
+                Text("Employee: ${order.employeeName}")
+            }
+        }
     )
 }
+
 
 @Composable
 fun AddOrderScreen(
