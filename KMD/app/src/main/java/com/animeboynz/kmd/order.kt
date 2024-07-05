@@ -1,4 +1,5 @@
 import androidx.compose.runtime.mutableStateListOf
+import androidx.lifecycle.ViewModel
 
 // Order.kt - Data Model
 data class Order(
@@ -11,8 +12,6 @@ data class Order(
     val items: List<String>
 )
 
-// OrdersViewModel.kt - ViewModel
-import androidx.lifecycle.ViewModel
 
 class OrdersViewModel : ViewModel() {
     // Sample data to start with

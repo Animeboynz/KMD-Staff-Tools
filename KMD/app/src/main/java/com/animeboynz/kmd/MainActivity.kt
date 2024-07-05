@@ -1,9 +1,11 @@
 package com.animeboynz.kmd
 
+import OrdersViewModel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -16,7 +18,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.animeboynz.kmd.ui.theme.KMDTheme
 
+
 class MainActivity : ComponentActivity() {
+    private val viewModel: OrdersViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -25,17 +30,19 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    NavigationHost(navController = navController, modifier = Modifier.padding(innerPadding))
+                    NavigationHost(navController = navController, modifier = Modifier.padding(innerPadding), viewModel = viewModel)
                 }
             }
         }
     }
 }
 
+
 @Composable
 fun NavigationHost(
     navController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: OrdersViewModel
 ) {
     NavHost(navController = navController, startDestination = "main_screen_route") {
         composable("main_screen_route") {
@@ -74,6 +81,7 @@ fun NavigationHost(
         }
 
         composable("customer_orders_route") {
+
             CustomerOrders(navController = navController, viewModel = viewModel)
         }
 
