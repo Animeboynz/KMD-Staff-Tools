@@ -41,6 +41,8 @@ class FindSKUViewModel(context: Context) : ViewModel() {
                         }
                     }
                 }
+                // Sort products in descending order by SKU
+                products.sortByDescending { it.sku }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -54,10 +56,14 @@ class FindSKUViewModel(context: Context) : ViewModel() {
 fun FindSKUPage(viewModel: FindSKUViewModel) {
     var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
     val filteredProducts = remember(searchQuery) {
-        viewModel.productList.filter {
-            it.sku.contains(searchQuery.text, ignoreCase = true) ||
-                    it.name.contains(searchQuery.text, ignoreCase = true) ||
-                    it.name.split(" ").containsAll(searchQuery.text.split(" ").filter { queryWord -> queryWord.isNotBlank() })
+        if (searchQuery.text.isBlank()) {
+            viewModel.productList
+        } else {
+            viewModel.productList.filter {
+                it.sku.contains(searchQuery.text, ignoreCase = true) ||
+                        it.name.contains(searchQuery.text, ignoreCase = true) ||
+                        it.name.split(" ").containsAll(searchQuery.text.split(" ").filter { queryWord -> queryWord.isNotBlank() })
+            }
         }
     }
 

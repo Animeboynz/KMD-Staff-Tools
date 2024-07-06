@@ -49,11 +49,13 @@ fun MainScreen(navController: NavController) {
                 iconResId = R.drawable.ic_price_change,
                 onClick = { navController.navigate("cash_row_route") }
             )
+            /*
             RowItem(
                 text = "Search",
                 iconResId = R.drawable.ic_search, // Ensure you have this drawable resource
                 onClick = { navController.navigate("search_route") }
             )
+            */
             RowItem(
                 text = "Find SKU",
                 iconResId = R.drawable.ic_search, // Ensure you have this drawable resource
@@ -69,11 +71,13 @@ fun MainScreen(navController: NavController) {
                 iconResId = R.drawable.ic_outgoing, // Ensure you have this drawable resource
                 onClick = { navController.navigate("outgoing_transfers_route") }
             )
+            /*
             RowItem(
                 text = "Transfer Requests",
                 iconResId = R.drawable.ic_incoming, // Ensure you have this drawable resource
                 onClick = { navController.navigate("search_route") }
             )
+             */
             RowItem(
                 text = "Customer Orders",
                 iconResId = R.drawable.ic_person, // Ensure you have this drawable resource
