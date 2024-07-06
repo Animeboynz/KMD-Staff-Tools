@@ -22,7 +22,7 @@ fun SearchScreen() {
                 settings.javaScriptEnabled = true
                 settings.loadWithOverviewMode = true
                 settings.useWideViewPort = true
-                settings.userAgentString = settings.userAgentString.replace("Mobile", "eliboM").replace("Android", "diordnA")
+                //settings.userAgentString = settings.userAgentString.replace("Mobile", "eliboM").replace("Android", "diordnA")
                 webViewClient = WebViewClient()
                 loadUrl("https://google.com/")
             }
