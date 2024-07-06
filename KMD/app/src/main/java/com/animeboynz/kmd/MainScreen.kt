@@ -55,6 +55,11 @@ fun MainScreen(navController: NavController) {
                 onClick = { navController.navigate("search_route") }
             )
             RowItem(
+                text = "Find SKU",
+                iconResId = R.drawable.ic_search, // Ensure you have this drawable resource
+                onClick = { navController.navigate("find_sku_route") }
+            )
+            RowItem(
                 text = "Offsite Inventory",
                 iconResId = R.drawable.ic_offsite, // Ensure you have this drawable resource
                 onClick = { navController.navigate("search_route") }
