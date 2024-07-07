@@ -55,14 +55,18 @@ class FindSKUViewModel(context: Context) : ViewModel() {
 @Composable
 fun FindSKUPage(viewModel: FindSKUViewModel) {
     var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
-    val filteredProducts = remember(searchQuery) {
-        if (searchQuery.text.isBlank()) {
-            viewModel.productList
-        } else {
-            viewModel.productList.filter {
-                it.sku.contains(searchQuery.text, ignoreCase = true) ||
-                        it.name.contains(searchQuery.text, ignoreCase = true) ||
-                        it.name.split(" ").containsAll(searchQuery.text.split(" ").filter { queryWord -> queryWord.isNotBlank() })
+
+    // Use derivedStateOf to recompute filteredProducts whenever searchQuery or viewModel.productList changes
+    val filteredProducts by remember(searchQuery, viewModel.productList) {
+        derivedStateOf {
+            if (searchQuery.text.isBlank()) {
+                viewModel.productList
+            } else {
+                viewModel.productList.filter {
+                    it.sku.contains(searchQuery.text, ignoreCase = true) ||
+                            it.name.contains(searchQuery.text, ignoreCase = true) ||
+                            it.name.split(" ").containsAll(searchQuery.text.split(" ").filter { queryWord -> queryWord.isNotBlank() })
+                }
             }
         }
     }
@@ -91,6 +95,7 @@ fun FindSKUPage(viewModel: FindSKUViewModel) {
         }
     }
 }
+
 
 @Composable
 fun ProductRow(product: Product) {
