@@ -40,12 +40,6 @@ fun CashRow(
     val scrollState = rememberScrollState()
     var inputValues by rememberSaveable { mutableStateOf(currencyList.associateWith { "" }) }
 
-    LaunchedEffect(key1 = imeState.value) {
-        if (imeState.value){
-            scrollState.scrollTo(scrollState.maxValue)
-        }
-    }
-
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
