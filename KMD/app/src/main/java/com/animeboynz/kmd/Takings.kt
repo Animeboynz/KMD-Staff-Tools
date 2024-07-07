@@ -4,8 +4,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -43,8 +45,13 @@ fun TakingsScreen(
         (quantity.toIntOrNull() ?: 0) * denominationValue
     }
 
+    val scrollState = rememberScrollState()
+
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .imePadding(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -153,5 +160,3 @@ fun TakingsScreen(
         }
     }
 }
-
-

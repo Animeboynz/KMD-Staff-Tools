@@ -4,8 +4,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -14,10 +16,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 
 val currencyList = listOf(
     "$100", "$50", "$20", "$10", "$5", "$2", "$1", "50c", "20c", "10c"
@@ -29,14 +36,25 @@ fun CashRow(
     modifier: Modifier = Modifier,
     navigateToTakings: () -> Unit
 ) {
+    val imeState = rememberImeState()
+    val scrollState = rememberScrollState()
     var inputValues by rememberSaveable { mutableStateOf(currencyList.associateWith { "" }) }
+
+    LaunchedEffect(key1 = imeState.value) {
+        if (imeState.value){
+            scrollState.scrollTo(scrollState.maxValue)
+        }
+    }
 
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
     ) {
         Column(
-            modifier = modifier.fillMaxSize(),
+            modifier = modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .imePadding(), // Ensures padding to handle the keyboard
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
