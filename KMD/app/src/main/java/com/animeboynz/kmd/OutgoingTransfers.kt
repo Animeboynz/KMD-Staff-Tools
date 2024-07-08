@@ -9,17 +9,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.animeboynz.kmd.R
 import com.animeboynz.kmd.Transfer
-import com.animeboynz.kmd.TransferViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OutgoingTransfers(
-    navController: NavController,
-    transferViewModel: TransferViewModel = viewModel()
 ) {
-    val transfers by transferViewModel.allTransfers.observeAsState(initial = emptyList())
 
     Scaffold(
         topBar = {
@@ -29,7 +29,7 @@ fun OutgoingTransfers(
                     IconButton(
                         onClick = {
                             // Handle add transfer click
-                            navController.navigate("add_transfer_route")
+                            //navController.navigate("add_transfer_route")
                         }
                     ) {
                         Icon(
@@ -46,11 +46,9 @@ fun OutgoingTransfers(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            if (transfers.isEmpty()) {
-                Text(text = "No transfer info available")
-            } else {
-                TransferList(transfers = transfers)
-            }
+            ///
+
+            ///
         }
     }
 }
@@ -78,3 +76,12 @@ fun TransferListItem(transfer: Transfer) {
         }
     )
 }
+
+@Entity(tableName = "transfers")
+data class Transfer(
+    @PrimaryKey val transferId: String,
+    val tracking: String,
+    val fromLocation: String,
+    val toLocation: String,
+    val notes: String
+)
