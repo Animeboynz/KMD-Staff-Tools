@@ -69,7 +69,7 @@ fun MainScreen(navController: NavController) {
             RowItem(
                 text = "Log Transfer",
                 iconResId = R.drawable.ic_outgoing, // Ensure you have this drawable resource
-                onClick = { navController.navigate("outgoing_transfers_route") }
+                onClick = { navController.navigate("log_transfer") }
             )
             /*
             RowItem(

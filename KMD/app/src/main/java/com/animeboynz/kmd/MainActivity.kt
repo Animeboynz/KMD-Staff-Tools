@@ -2,6 +2,7 @@ package com.animeboynz.kmd
 
 import OrdersViewModel
 import android.os.Bundle
+import android.app.Application
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -13,12 +14,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.animeboynz.kmd.ui.theme.KMDTheme
-
 
 class MainActivity : ComponentActivity() {
     private val viewModel: OrdersViewModel by viewModels()
@@ -37,7 +38,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
 
 @Composable
 fun NavigationHost(
@@ -76,8 +76,10 @@ fun NavigationHost(
         composable("search_route") {
             SearchScreen()
         }
-        composable("outgoing_transfers_route")
-        {
+        composable("dasdsa") {
+            //LogTransfer()
+        }
+        composable("log_transfer") {
             OutgoingTransfers()
         }
 
@@ -97,8 +99,9 @@ fun NavigationHost(
                 navController = navController
             )
         }
-        composable("find_sku_route") { FindSKUPage(viewModel = FindSKUViewModel(LocalContext.current)) }
-
+        composable("find_sku_route") {
+            FindSKUPage(viewModel = FindSKUViewModel(LocalContext.current))
+        }
     }
 }
 
