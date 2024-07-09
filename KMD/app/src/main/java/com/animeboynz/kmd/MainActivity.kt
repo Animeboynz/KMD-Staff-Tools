@@ -26,19 +26,8 @@ import com.animeboynz.kmd.ui.theme.KMDTheme
 class MainActivity : ComponentActivity() {
     private val viewModel: OrdersViewModel by viewModels()
 
-    companion object {
-        lateinit var database: AppDatabase
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Initialize Room database here
-        database = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "my_database"
-        ).build()
 
         enableEdgeToEdge()
         setContent {
