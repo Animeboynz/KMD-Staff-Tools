@@ -90,12 +90,14 @@ fun FindSKUPage(viewModel: FindSKUViewModel) {
         // Product List
         LazyColumn {
             items(filteredProducts) { product ->
-                ProductRow(product = product)
+                Column {
+                    ProductRow(product = product)
+                    HorizontalDivider()
+                }
             }
         }
     }
 }
-
 
 @Composable
 fun ProductRow(product: Product) {
