@@ -93,7 +93,7 @@ fun RemainingFloatScreen(
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(horizontal = 16.dp, vertical = 0.dp)
         ) {
             Text(text = "Back to Takings")
         }
@@ -107,7 +107,7 @@ fun RemainingFloatScreen(
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(horizontal = 16.dp, vertical = 4.dp)
         ) {
             Text(text = "Reset")
         }
