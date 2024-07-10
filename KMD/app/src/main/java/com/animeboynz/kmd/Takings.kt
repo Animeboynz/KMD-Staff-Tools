@@ -121,7 +121,7 @@ fun TakingsScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         // Display expected and current takings
         Text(
@@ -133,6 +133,19 @@ fun TakingsScreen(
             text = "Current Takings: $${"%.2f".format(totalTakings)}",
             fontSize = 20.sp
         )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // Button to navigate back
+        Button(
+            onClick = { navigateBack() },
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 0.dp)
+        ) {
+            Text(text = "Back to Cash Counter")
+        }
 
         // Button to navigate to RemainingFloat
         Button(
@@ -146,17 +159,6 @@ fun TakingsScreen(
                 .padding(horizontal = 16.dp, vertical = 4.dp)
         ) {
             Text(text = "Calculate Remaining Float")
-        }
-
-        // Button to navigate back
-        Button(
-            onClick = { navigateBack() },
-            shape = RoundedCornerShape(8.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 6.dp)
-        ) {
-            Text(text = "Back to Cash Counter")
         }
     }
 }
