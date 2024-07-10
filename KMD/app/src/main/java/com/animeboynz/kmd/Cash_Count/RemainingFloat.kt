@@ -1,4 +1,4 @@
-package com.animeboynz.kmd
+package com.animeboynz.kmd.Cash_Count
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -10,7 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
