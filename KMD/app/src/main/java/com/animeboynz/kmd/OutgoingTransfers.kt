@@ -3,17 +3,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.animeboynz.kmd.R
-import com.animeboynz.kmd.Transfer
+import com.animeboynz.kmd.TransferItem
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,7 +50,7 @@ fun OutgoingTransfers(
 }
 
 @Composable
-fun TransferList(transfers: List<Transfer>) {
+fun TransferList(transfers: List<TransferItem>) {
     LazyColumn {
         items(transfers) { transfer ->
             TransferListItem(transfer = transfer)
@@ -63,7 +59,7 @@ fun TransferList(transfers: List<Transfer>) {
 }
 
 @Composable
-fun TransferListItem(transfer: Transfer) {
+fun TransferListItem(transfer: TransferItem) {
     ListItem(
         modifier = Modifier.padding(vertical = 8.dp),
         headlineContent = { Text("Transfer ID: ${transfer.transferId}") },
