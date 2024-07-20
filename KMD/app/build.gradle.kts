@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation("androidx.webkit:webkit:1.11.0")
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.runtime.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
