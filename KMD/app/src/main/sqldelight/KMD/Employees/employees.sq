@@ -1,0 +1,23 @@
+CREATE TABLE employees (
+    empID INTEGER NOT NULL PRIMARY KEY,
+    firstName TEXT NOT NULL,
+    lastName TEXT NOT NULL
+);
+
+getEmpById:
+SELECT *
+FROM employees
+WHERE empID = :id;
+
+getAllEmp:
+SELECT *
+FROM employees;
+
+insertEmp:
+INSERT OR REPLACE
+INTO employees
+VALUES(?, ?, ?);
+
+deleteEmpById:
+DELETE FROM employees
+WHERE empID = :id;
