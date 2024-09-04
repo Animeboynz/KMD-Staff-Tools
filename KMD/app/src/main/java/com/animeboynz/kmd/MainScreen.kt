@@ -83,6 +83,11 @@ fun MainScreen(navController: NavController) {
                 iconResId = R.drawable.ic_person, // Ensure you have this drawable resource
                 onClick = { navController.navigate("customer_orders_route") }
             )
+            RowItem(
+                text = "Employees",
+                iconResId = R.drawable.ic_person, // Ensure you have this drawable resource
+                onClick = { navController.navigate("employees_screen") }
+            )
             // Add more rows here for additional tools
         }
     }
