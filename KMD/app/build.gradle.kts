@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-kapt")
+    id("app.cash.sqldelight")
     //id("com.google.devtools.ksp")
 }
 
@@ -42,7 +43,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
     packaging {
         resources {
@@ -81,13 +82,15 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.0")
 
-    val room_version = "2.6.1"
+    implementation("app.cash.sqldelight:android-driver:2.0.2")
+    implementation("app.cash.sqldelight:coroutines-extensions-jvm:2.0.2")
 
+}
 
-    implementation("androidx.room:room-runtime:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
-
-    // To use Kotlin annotation processing tool (kapt)
-    kapt("androidx.room:room-compiler:$room_version")
-
+sqldelight {
+    databases {
+        create("KMDB") {
+            packageName.set("com.animeboynz.kmd")
+        }
+    }
 }
