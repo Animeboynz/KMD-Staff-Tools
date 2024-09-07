@@ -15,6 +15,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import kotlinx.coroutines.withContext
+
 
 data class Product(val sku: String, val name: String)
 
@@ -46,10 +48,14 @@ class FindSKUViewModel(context: Context) : ViewModel() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            productList = products
+            // Switch to the main thread before updating the state
+            withContext(Dispatchers.Main) {
+                productList = products
+            }
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

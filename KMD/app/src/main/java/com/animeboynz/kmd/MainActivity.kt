@@ -1,7 +1,6 @@
 package com.animeboynz.kmd
 
 import OrdersViewModel
-import OutgoingTransfers
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import com.animeboynz.kmd.Cash_Count.CashRow
 import com.animeboynz.kmd.Cash_Count.RemainingFloatScreen
 import com.animeboynz.kmd.Cash_Count.TakingsScreen
+import com.animeboynz.kmd.data.EmployeeDataSourceImpl
 import com.animeboynz.kmd.ui.theme.KMDTheme
 
 class MainActivity : ComponentActivity() {
@@ -76,15 +76,6 @@ fun NavigationHost(
                 navController.popBackStack()
             })
         }
-        composable("search_route") {
-            SearchScreen()
-        }
-        composable("dasdsa") {
-            //LogTransfer()
-        }
-        composable("log_transfer") {
-            OutgoingTransfers()
-        }
 
         composable("customer_orders_route") {
 
@@ -105,6 +96,11 @@ fun NavigationHost(
         composable("find_sku_route") {
             FindSKUPage(viewModel = FindSKUViewModel(LocalContext.current))
         }
+
+        composable("employees_screen") {
+            //EmployeesScreen(employeeDataSource = EmployeeDataSourceImpl(LocalContext.current))
+        }
+
     }
 }
 
