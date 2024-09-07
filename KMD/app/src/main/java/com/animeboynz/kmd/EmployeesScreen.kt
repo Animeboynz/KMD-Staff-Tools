@@ -22,7 +22,7 @@ fun EmployeesScreen(employeeDataSource: EmployeeDataSourceImpl) {
     val showAddDialog = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        employeeDataSource.getAllEmployees().collect { employeeList ->
+        employeeDataSource  .getAllEmployees().collect { employeeList ->
             employees.value = employeeList
         }
     }
