@@ -20,9 +20,9 @@ class EmployeeDataSourceImpl(
         }
     }
 
-    override suspend fun getAllEmployees(): Flow<List<Employees>> {
+    override suspend fun getAllEmployees(): List<Employees> {
         return withContext(Dispatchers.IO){
-            queries.getAllEmp().asFlow().mapToList(coroutineContext)
+            queries.getAllEmp().executeAsList()
         }
     }
 
