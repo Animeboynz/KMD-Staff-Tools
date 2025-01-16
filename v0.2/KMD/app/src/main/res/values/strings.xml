@@ -1,3 +1,47 @@
 <resources>
     <string name="app_name">KMD</string>
+
+    /////////////////////////////
+    // Generic
+    <string name="generic_cancel">Cancel</string>
+    <string name="generic_confirm">Confirm</string>
+
+    //Orders Tab
+    <string name="orders_tab">Orders</string>
+    <string name="orders_none">No Customer Orders</string>
+    <string name="orders_add">Add Order</string>
+    <string name="orders_new">Create New Order</string>
+    <string name="orders_details">Order Details</string>
+    <string name="orders_customer_phone">Phone No:</string>
+    <string name="orders_delete_success">Order Deleted!</string>
+    <string name="orders_insert_success">Order added successfully!</string>
+
+    <string name="orders_field_date">Date</string>
+    <string name="orders_field_empid">Employee ID</string>
+    <string name="orders_field_name">Name</string>
+    <string name="orders_field_phone">Phone</string>
+    <string name="orders_field_misc">Misc</string>
+    <string name="orders_field_notes">Notes</string>
+
+    //SKU Search Tab
+    <string name="sku_tab">SKU Search</string>
+    <string name="sku_search_bar">Search products...</string>
+
+    //General Preference
+    <string name="pref_general_title">General</string>
+    <string name="pref_general_summary">Store Number, Store Name</string>
+    <string name="pref_general_category_store">Store Details</string>
+    <string name="pref_general_store_name">Store Name</string>
+    <string name="pref_general_store_name_description">Enter store name here e.g. Newmarket</string>
+    <string name="pref_general_store_number">Store Number</string>
+    <string name="pref_general_store_number_description">Enter store number here e.g. 183</string>
+
+    //Employees Preference
+    <string name="pref_employees_title">Employees</string>
+    <string name="pref_employees_summary">Add and edit employees</string>
+    <string name="pref_employees_current">Current Employees</string>
+    <string name="pref_employees_deactivated">Deactivated Employees</string>
+
+    /////////////////////////////
+    
 </resources>
