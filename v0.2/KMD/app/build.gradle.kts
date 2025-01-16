@@ -13,7 +13,7 @@ plugins {
 
 android {
     namespace = "com.animeboynz.kmd"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.animeboynz.kmd"
@@ -55,7 +55,7 @@ room {
 dependencies {
 
 //    implementation(libs.androidx.appcompat)
-//    implementation(libs.material)
+    implementation(libs.material)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
