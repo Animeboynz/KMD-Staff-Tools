@@ -42,6 +42,18 @@
     <string name="pref_employees_current">Current Employees</string>
     <string name="pref_employees_deactivated">Deactivated Employees</string>
 
+    //Crash screen
+    <string name="crash_screen_title">Oops</string>
+    <string name="crash_screen_subtitle">Looks like %s experienced an unexpected error.</string>
+    <string name="crash_screen_logs_title">Crash logs:</string>
+    <string name="crash_screen_share">Share crash logs</string>
+    <string name="crash_screen_restart">Restart the app</string>
+
+    //App Theme
+    <string name="pref_appearance_darkmode_system">System</string>
+    <string name="pref_appearance_darkmode_light">Light</string>
+    <string name="pref_appearance_darkmode_dark">Dark</string>
+
     /////////////////////////////
     
 </resources>
