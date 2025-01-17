@@ -63,7 +63,6 @@ import com.animeboynz.kmd.presentation.Screen
 import com.animeboynz.kmd.presentation.components.EmployeeDropdownItem
 import com.animeboynz.kmd.presentation.components.EmployeeRow
 import com.animeboynz.kmd.presentation.components.preferences.MultiChoiceSegmentedButton
-import com.animeboynz.kmd.ui.home.tabs.SkuTab.ProductRow
 import com.animeboynz.kmd.ui.screens.AddEmployeeScreen
 import com.animeboynz.kmd.ui.screens.CustomerOrderScreen
 import com.animeboynz.kmd.ui.theme.DarkMode

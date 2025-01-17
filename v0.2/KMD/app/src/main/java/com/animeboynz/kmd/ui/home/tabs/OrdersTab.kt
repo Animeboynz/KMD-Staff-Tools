@@ -70,7 +70,6 @@ import com.animeboynz.kmd.database.entities.CustomerOrderEntity
 import com.animeboynz.kmd.domain.CustomerOrderRepository
 import com.animeboynz.kmd.presentation.components.OrderRow
 import com.animeboynz.kmd.ui.screens.AddOrderScreen
-import com.animeboynz.kmd.ui.home.tabs.SkuTab.ProductRow
 import com.animeboynz.kmd.ui.screens.CustomerOrderScreen
 import com.animeboynz.kmd.ui.theme.MissingColor
 import com.animeboynz.kmd.ui.theme.PresentColor

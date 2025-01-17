@@ -41,6 +41,7 @@ import androidx.compose.material.icons.automirrored.filled.ManageSearch
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.lazy.items
+import com.animeboynz.kmd.presentation.components.ProductRow
 
 
 object SkuTab : Tab {
@@ -110,30 +111,6 @@ object SkuTab : Tab {
                         ProductRow(product)
                     }
                 }
-            }
-        }
-    }
-
-    @Composable
-    fun ProductRow(product: ProductsEntity) {
-        Card(
-            modifier = Modifier
-                .padding(vertical = 2.dp, horizontal = 8.dp)
-                .fillMaxWidth(),
-            shape = MaterialTheme.shapes.medium
-        ) {
-            Row(
-                modifier = Modifier
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = product.sku,
-                    modifier = Modifier.weight(0.6f)
-                )
-                Text(
-                    text = product.name,
-                    modifier = Modifier.weight(2f)
-                )
             }
         }
     }
