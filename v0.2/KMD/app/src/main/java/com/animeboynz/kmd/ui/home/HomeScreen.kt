@@ -34,17 +34,121 @@ import soup.compose.material.motion.animation.materialFadeThroughOut
 import com.animeboynz.kmd.preferences.AppearancePreferences
 import com.animeboynz.kmd.presentation.Screen
 import com.animeboynz.kmd.presentation.util.Tab
+import com.animeboynz.kmd.ui.home.tabs.OrdersTab
+import com.animeboynz.kmd.ui.home.tabs.SkuTab
+import com.animeboynz.kmd.ui.home.HomeScreen.NavigationBarItem
 
 object HomeScreen : Screen() {
     private fun readResolve(): Any = HomeScreen
+
+    private val TAB_FADE_DURATION = 200
+    private val TAB_NAVIGATOR_KEY = "HomeTabs"
 
     @Composable
     override fun Content() {
         val preferences = koinInject<AppearancePreferences>()
 
+        val tabs = buildList {
+            //if (preferences.animeIsEnabled.get()) add(AnimeTab)
+            //if (preferences.mangaIsEnabled.get()) add(MangaTab)
+            add(OrdersTab)
+            add(SkuTab)
+        }
 
         val navigator = LocalNavigator.currentOrThrow
-        Text(text = "Hello World!")
+        TabNavigator(
+            tab = tabs.first(),
+            key = TAB_NAVIGATOR_KEY,
+        ) { tabNavigator ->
+            CompositionLocalProvider(LocalNavigator provides navigator) {
+                Scaffold(
+                    bottomBar = {
+                        if (tabs.size > 1) {
+                            NavigationBar {
+                                tabs.fastForEach {
+                                    NavigationBarItem(it)
+                                }
+                            }
+                        }
+                    },
+                    contentWindowInsets = if (tabs.size > 1) {
+                        WindowInsets(0)
+                    } else {
+                        ScaffoldDefaults.contentWindowInsets
+                    },
+                ) { contentPadding ->
+                    Box(
+                        modifier = Modifier
+                            .padding(contentPadding)
+                            .consumeWindowInsets(contentPadding),
+                    ) {
+                        AnimatedContent(
+                            targetState = tabNavigator.current,
+                            transitionSpec = {
+                                materialFadeThroughIn(
+                                    initialScale = 1f,
+                                    durationMillis = TAB_FADE_DURATION,
+                                ) togetherWith
+                                        materialFadeThroughOut(durationMillis = TAB_FADE_DURATION)
+                            },
+                            label = "tabContent",
+                        ) {
+                            tabNavigator.saveableState(key = "currentTab", it) {
+                                it.Content()
+                            }
+                        }
+                    }
+                }
+            }
 
+            LaunchedEffect(Unit) {
+                launch {
+                    if (tabs.size == 1) {
+                        tabNavigator.current = tabs.first()
+                    }
+                }
+            }
+        }
+
+    }
+
+    @Composable
+    private fun RowScope.NavigationBarItem(tab: Tab) {
+        val tabNavigator = LocalTabNavigator.current
+        val navigator = LocalNavigator.currentOrThrow
+        val scope = rememberCoroutineScope()
+        val selected = tabNavigator.current::class == tab::class
+        NavigationBarItem(
+            selected = selected,
+            onClick = {
+                if (!selected) {
+                    tabNavigator.current = tab
+                } else {
+                    scope.launch { tab.onReselect(navigator) }
+                }
+            },
+            icon = { NavigationIconItem(tab) },
+            label = {
+                Text(
+                    text = tab.options.title,
+                    style = MaterialTheme.typography.labelLarge,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            },
+            alwaysShowLabel = true,
+        )
+    }
+
+    @Composable
+    private fun NavigationIconItem(tab: Tab) {
+        Box {
+            Icon(
+                painter = tab.options.icon!!,
+                contentDescription = tab.options.title,
+                // TODO: https://issuetracker.google.com/u/0/issues/316327367
+                tint = LocalContentColor.current,
+            )
+        }
     }
 }
