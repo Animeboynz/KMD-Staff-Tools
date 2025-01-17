@@ -11,6 +11,8 @@ interface CustomerOrderRepository {
 
     fun deleteOrder(orderId: Long)
 
+    fun deleteAllOrders()
+
     fun getAllOrders(): Flow<List<CustomerOrderEntity>>
 
     fun getOrderById(orderId: Long): CustomerOrderEntity

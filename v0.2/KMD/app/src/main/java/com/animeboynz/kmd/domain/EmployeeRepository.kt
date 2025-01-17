@@ -22,4 +22,6 @@ interface EmployeeRepository {
     suspend fun updateEmployeeName(id: String, name: String, status: String)
 
     suspend fun deleteEmployee(id: String)
+
+    fun deleteAllEmployees()
 }

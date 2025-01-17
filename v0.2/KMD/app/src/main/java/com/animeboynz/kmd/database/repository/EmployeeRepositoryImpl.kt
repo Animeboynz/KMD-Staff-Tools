@@ -61,4 +61,8 @@ class EmployeeRepositoryImpl(
         return database.employeeDao().deleteEmployee(id)
     }
 
+    override fun deleteAllEmployees() {
+        database.employeeDao().deleteAllEmployees()
+    }
+
 }

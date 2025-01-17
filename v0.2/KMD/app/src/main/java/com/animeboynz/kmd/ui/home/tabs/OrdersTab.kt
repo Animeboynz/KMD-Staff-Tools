@@ -68,6 +68,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import com.animeboynz.kmd.database.entities.CustomerOrderEntity
 import com.animeboynz.kmd.domain.CustomerOrderRepository
+import com.animeboynz.kmd.presentation.components.OrderRow
 import com.animeboynz.kmd.ui.screens.AddOrderScreen
 import com.animeboynz.kmd.ui.home.tabs.SkuTab.ProductRow
 import com.animeboynz.kmd.ui.screens.CustomerOrderScreen
@@ -95,21 +96,28 @@ object OrdersTab : Tab {
         val navigator = LocalNavigator.currentOrThrow
 
         val preferences = koinInject<GeneralPreferences>()
-        val screenModel = rememberScreenModel { OrdersTabScreenModel(preferences) }
-
         val orderRepository = koinInject<CustomerOrderRepository>()
-        val allOrdersFlow = orderRepository.getAllOrders()
-        val allOrders by allOrdersFlow.collectAsState(initial = emptyList())
+        val screenModel = rememberScreenModel { OrdersTabScreenModel(preferences, orderRepository) }
+
+        val allOrders by screenModel.customerOrders.collectAsState()
 
         val statusOrder = mapOf(
-            "Not Ordered" to 0,
-            "Ordered" to 1,
-            "Arrived - Not Notified" to 2,
-            "Waiting for Pickup" to 3,
-            "Cancelled" to 4,
-            "Completed" to 5
-            //else to 9
+            stringResource(R.string.orders_state_not_ordered) to 0,
+            stringResource(R.string.orders_state_ordered) to 1,
+            stringResource(R.string.orders_state_not_notified) to 2,
+            stringResource(R.string.orders_state_waiting_pickup) to 3,
+            stringResource(R.string.orders_state_cancelled) to 4,
+            stringResource(R.string.orders_state_completed) to 5
         )
+
+//        val statusOrder = mapOf(
+//            "Not Ordered" to 0,
+//            "Ordered" to 1,
+//            "Arrived - Not Notified" to 2,
+//            "Waiting for Pickup" to 3,
+//            "Cancelled" to 4,
+//            "Completed" to 5
+//        )
 
         val sortedOrders = allOrders.sortedBy { statusOrder[it.status] ?: Int.MAX_VALUE }
 
@@ -117,7 +125,7 @@ object OrdersTab : Tab {
             topBar = {
                 TopAppBar(
                     title = {
-                        Text("Customer Orders")
+                        Text(stringResource(R.string.orders_title))
                     },
                     actions = {
                         IconButton(onClick = { navigator.push(PreferencesScreen) }) {
@@ -151,7 +159,7 @@ object OrdersTab : Tab {
                                 style = MaterialTheme.typography.headlineSmall,
                             )
                             Button(
-                                onClick = {  },
+                                onClick = { navigator.push(AddOrderScreen()) },
                             ) {
                                 Text(text = stringResource(R.string.orders_new))
                             }
@@ -167,80 +175,6 @@ object OrdersTab : Tab {
                     }
                 }
             }
-        }
-    }
-
-    @Composable
-    fun OrderRow(
-        order: CustomerOrderEntity,
-        onClick: () -> Unit,
-    ) {
-        var color = Color.DarkGray
-
-        when (order.status) {
-            "Not Ordered" -> color = Color.Red
-            "Ordered" -> color = Color.Green
-            "Arrived - Not Notified" -> color = Color.Red
-            "Waiting for Pickup" -> color = Color.Yellow
-            "Cancelled" -> color = Color.Gray
-            "Completed" -> color = Color.DarkGray
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 2.dp, horizontal = 8.dp)
-                //.padding(horizontal = MaterialTheme.spacing.small)
-                .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surfaceContainerLow)
-                .combinedClickable(
-                    onClick = onClick,
-                )
-                .padding(MaterialTheme.spacing.medium),
-        ) {
-            Column {
-                Text(
-                    text = order.customerName + " • KMD-183-" + order.orderId,
-                    style = MaterialTheme.typography.titleMedium,
-                )
-                Row {
-                    Text(
-                        text = stringResource(R.string.orders_customer_phone),
-                        style = MaterialTheme.typography.bodySmall,
-                    )
-                    Text(
-                        text = " ",
-                        style = MaterialTheme.typography.bodySmall,
-                    )
-                    Text(
-                        text = order.customerPhone,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = color,
-                    )
-                }
-                Row {
-                    Text(
-                        text = stringResource(R.string.orders_status),
-                        style = MaterialTheme.typography.bodySmall,
-                    )
-                    Text(
-                        text = " ",
-                        style = MaterialTheme.typography.bodySmall,
-                    )
-                    Text(
-                        text = order.status,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = color,
-                    )
-                }
-            }
-
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = null,
-                modifier = Modifier.align(Alignment.CenterEnd),
-                tint = MaterialTheme.colorScheme.outline,
-            )
         }
     }
 }

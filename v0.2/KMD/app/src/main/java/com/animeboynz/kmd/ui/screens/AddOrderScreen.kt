@@ -39,9 +39,13 @@ import kotlinx.coroutines.coroutineScope
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import com.animeboynz.kmd.database.entities.EmployeeEntity
 import java.text.SimpleDateFormat
 import java.util.*
 import com.animeboynz.kmd.domain.CustomerOrderRepository
+import com.animeboynz.kmd.domain.EmployeeRepository
+import com.animeboynz.kmd.domain.Status
+import com.animeboynz.kmd.presentation.components.EmployeeDropdownItem
 import com.animeboynz.kmd.presentation.components.SimpleDropdown
 
 
@@ -52,9 +56,10 @@ class AddOrderScreen : Screen() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
         val customerOrderRepository = koinInject<CustomerOrderRepository>()
+        val employeeRepository = koinInject<EmployeeRepository>()
 
         val screenModel = rememberScreenModel(tag = "manga") {
-            AddOrderScreenModel(customerOrderRepository)
+            AddOrderScreenModel(customerOrderRepository, employeeRepository)
         }
 
         // State variables for user input
@@ -66,15 +71,18 @@ class AddOrderScreen : Screen() {
         var notes by remember { mutableStateOf(TextFieldValue("")) }
         //val status by screenModel.status.collectAsState()
 
-        var status by remember { mutableStateOf(AddOrderScreenModel.Status.NOT_ORDERED) } // Replace DEFAULT with your default status
+        var status by remember { mutableStateOf(Status.NOT_ORDERED) }
 
         // Collect the status from the screen model if needed
         val collectedStatus by screenModel.status.collectAsState()
         var showDatePicker by remember { mutableStateOf(false) }
 
+        val employeeList by screenModel.employees.collectAsState()
+        val dropdownItems = employeeList.map { EmployeeDropdownItem(it) }
+        var selectedEmployee by remember { mutableStateOf<EmployeeDropdownItem?>(null) }
 
         LaunchedEffect(collectedStatus) {
-            status = collectedStatus ?: AddOrderScreenModel.Status.NOT_ORDERED
+            status = collectedStatus ?: Status.NOT_ORDERED
         }
 
         if (showDatePicker) {
@@ -115,6 +123,17 @@ class AddOrderScreen : Screen() {
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                val maxWidth = Modifier.fillMaxWidth()
+
+                SimpleDropdown(
+                    label = stringResource(R.string.orders_field_empid),
+                    selectedItem = selectedEmployee,
+                    items = dropdownItems,
+                    modifier = maxWidth,
+                    onSelected = { employee ->
+                        selectedEmployee = employee
+                    }
+                )
 
                 OutlinedTextField(
                     value = orderDate,
@@ -166,15 +185,13 @@ class AddOrderScreen : Screen() {
                     singleLine = false
                 )
 
-                val maxWidth = Modifier.fillMaxWidth()
-
                 SimpleDropdown(
                     label = stringResource(R.string.orders_status),
                     selectedItem = status,
-                    items = AddOrderScreenModel.Status.entries,
+                    items = Status.entries,
                     modifier = maxWidth,
                     onSelected = { selectedStatus ->
-                        status = selectedStatus ?: AddOrderScreenModel.Status.NOT_ORDERED
+                        status = selectedStatus ?: Status.NOT_ORDERED
                     },
                 )
 
@@ -184,7 +201,7 @@ class AddOrderScreen : Screen() {
                         // Create the order entity
                         val order = CustomerOrderEntity(
                             orderDate = orderDate,
-                            employeeId = employeeId.text,
+                            employeeId = selectedEmployee!!.extraData.toString(),
                             customerName = customerName.text,
                             customerPhone = customerPhone.text,
                             customerMics = customerMics.text,

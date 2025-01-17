@@ -31,4 +31,7 @@ interface EmployeeDao {
 
     @Query("DELETE FROM EmployeeEntity WHERE employeeId = :id")
     suspend fun deleteEmployee(id: String)
+
+    @Query("DELETE FROM EmployeeEntity")
+    fun deleteAllEmployees()
 }
