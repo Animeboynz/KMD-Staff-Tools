@@ -37,6 +37,7 @@ import com.animeboynz.kmd.presentation.util.Tab
 import com.animeboynz.kmd.ui.home.tabs.OrdersTab
 import com.animeboynz.kmd.ui.home.tabs.SkuTab
 import com.animeboynz.kmd.ui.home.HomeScreen.NavigationBarItem
+import com.animeboynz.kmd.ui.home.tabs.ToolsTab
 
 object HomeScreen : Screen() {
     private fun readResolve(): Any = HomeScreen
@@ -53,6 +54,7 @@ object HomeScreen : Screen() {
             //if (preferences.mangaIsEnabled.get()) add(MangaTab)
             add(OrdersTab)
             add(SkuTab)
+            add(ToolsTab)
         }
 
         val navigator = LocalNavigator.currentOrThrow
