@@ -71,7 +71,7 @@ object SkuTab : Tab {
             topBar = {
                 TopAppBar(
                     title = {
-                        R.string.sku_tab
+                        Text(stringResource(R.string.sku_tab))
                     },
                     actions = {
                         IconButton(onClick = { navigator.push(PreferencesScreen) }) {
@@ -87,7 +87,7 @@ object SkuTab : Tab {
                 TextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
-                    placeholder = { R.string.sku_search_bar },
+                    placeholder = { Text(stringResource(R.string.sku_search_bar)) },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Search
                     ),

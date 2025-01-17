@@ -15,6 +15,9 @@ interface CustomerOrderDao {
     @Query("DELETE FROM CustomerOrderEntity WHERE orderId = :orderId")
     fun deleteOrder(orderId: Long)
 
+    @Query("DELETE FROM CustomerOrderEntity")
+    fun deleteAllOrders()
+
     @Query("SELECT * FROM CustomerOrderEntity")
     fun getAllOrders(): Flow<List<CustomerOrderEntity>>
 

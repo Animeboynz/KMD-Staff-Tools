@@ -28,6 +28,8 @@ import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import org.koin.compose.koinInject
 import com.animeboynz.kmd.R
+import com.animeboynz.kmd.domain.CustomerOrderRepository
+import com.animeboynz.kmd.domain.EmployeeRepository
 import com.animeboynz.kmd.preferences.GeneralPreferences
 import com.animeboynz.kmd.presentation.Screen
 import com.animeboynz.kmd.presentation.components.ConfirmDialog
@@ -42,7 +44,9 @@ object DataPreferencesScreen : Screen() {
 
         val preferences = koinInject<GeneralPreferences>()
 
-        val screenModel = rememberScreenModel { DataPreferencesScreenModel(preferences) }
+        val employeeRepository = koinInject<EmployeeRepository>()
+        val customerOrderRepository = koinInject<CustomerOrderRepository>()
+        val screenModel = rememberScreenModel { DataPreferencesScreenModel(preferences, employeeRepository, customerOrderRepository) }
 
         Scaffold(
             topBar = {
@@ -64,6 +68,29 @@ object DataPreferencesScreen : Screen() {
                         .padding(paddingValues),
                 ) {
                     //////////////////
+                    Preference(
+                        title = { Text(text = stringResource(R.string.pref_data_delete_all_orders)) },
+                        onClick = {
+                            screenModel.deleteAllOrders()
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.pref_data_orders_cleared),
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                        },
+                    )
+
+                    Preference(
+                        title = { Text(text = stringResource(R.string.pref_data_delete_all_employees)) },
+                        onClick = {
+                            screenModel.deleteAllEmployees()
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.pref_data_employees_cleared),
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                        },
+                    )
                 }
             }
         }

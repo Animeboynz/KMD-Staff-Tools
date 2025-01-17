@@ -8,6 +8,7 @@
 
     //Orders Tab
     <string name="orders_tab">Orders</string>
+    <string name="orders_title">Customer Orders</string>
     <string name="orders_none">No Customer Orders</string>
     <string name="orders_add">Add Order</string>
     <string name="orders_new">Create New Order</string>
@@ -25,6 +26,13 @@
     <string name="orders_field_phone">Phone</string>
     <string name="orders_field_misc">Misc</string>
     <string name="orders_field_notes">Notes</string>
+
+    <string name="orders_state_not_ordered">Not Ordered</string>
+    <string name="orders_state_ordered">Ordered</string>
+    <string name="orders_state_not_notified">Arrived - Not Notified</string>
+    <string name="orders_state_waiting_pickup">Waiting for Pickup</string>
+    <string name="orders_state_cancelled">Cancelled</string>
+    <string name="orders_state_completed">Completed</string>
 
     //SKU Search Tab
     <string name="sku_tab">SKU Search</string>
@@ -49,8 +57,11 @@
     <string name="pref_general_store_number_description">Enter store number here e.g. 183</string>
 
     //Employees Preference
+    <string name="pref_employees_add">Add New Employee</string>
     <string name="pref_employees_current">Current Employees</string>
     <string name="pref_employees_deactivated">Deactivated Employees</string>
+    <string name="employee_insert_success">Employee added successfully!</string>
+
 
     //Appearance Preferences
     <string name="pref_appearance_category_theme">Theme</string>
@@ -58,6 +69,12 @@
     <string name="pref_appearance_material_you_summary">Enable Material You dynamic colors.</string>
     <string name="pref_appearance_material_you_summary_disabled">Only available for Android 12 and newer.</string>
     <string name="pref_appearance_category_display">Display</string>
+
+    //Data Preference
+    <string name="pref_data_delete_all_orders">Delete all customer orders</string>
+    <string name="pref_data_orders_cleared">All customer orders deleted!</string>
+    <string name="pref_data_delete_all_employees">Delete all employees</string>
+    <string name="pref_data_employees_cleared">All employees deleted!</string>
 
     //Crash screen
     <string name="crash_screen_title">Oops</string>

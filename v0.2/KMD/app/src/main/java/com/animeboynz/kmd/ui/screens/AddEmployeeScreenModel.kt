@@ -9,13 +9,11 @@ import com.animeboynz.kmd.database.entities.CustomerOrderEntity
 import com.animeboynz.kmd.database.entities.EmployeeEntity
 import com.animeboynz.kmd.domain.CustomerOrderRepository
 import com.animeboynz.kmd.domain.EmployeeRepository
-import com.animeboynz.kmd.domain.Status
 import com.animeboynz.kmd.presentation.components.DropdownItem
 
-class AddOrderScreenModel(
-    private val customerOrderRepository: CustomerOrderRepository,
+class AddEmployeeScreenModel(
     private val employeeRepository: EmployeeRepository
-) : StateScreenModel<AddOrderScreenModel.State>(State.Init) {
+) : StateScreenModel<AddEmployeeScreenModel.State>(State.Init) {
 
     sealed class State {
         data object Init : State()
@@ -23,25 +21,9 @@ class AddOrderScreenModel(
         data object Finished : State()
     }
 
-    var status = MutableStateFlow<Status?>(null)
-
-    var employees = MutableStateFlow<List<EmployeeEntity>>(emptyList())
-
-    init {
-        getActiveEmployees()
-    }
-
-    fun getActiveEmployees() {
+    fun addEmployees(employee: EmployeeEntity) {
         screenModelScope.launch(Dispatchers.IO) {
-            employeeRepository.getActiveEmployee().collect { employeeList ->
-                employees.value = employeeList.filterNotNull() // Filter out nulls if any
-            }
-        }
-    }
-
-    fun addOrder(order: CustomerOrderEntity) {
-        screenModelScope.launch(Dispatchers.IO) {
-            customerOrderRepository.insertOrder(order)
+            employeeRepository.upsert(employee)
         }
     }
 }

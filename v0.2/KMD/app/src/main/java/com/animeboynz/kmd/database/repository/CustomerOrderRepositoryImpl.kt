@@ -21,6 +21,10 @@ class CustomerOrderRepositoryImpl(
         database.customerOrderDao().deleteOrder(orderId)
     }
 
+    override fun deleteAllOrders() {
+        database.customerOrderDao().deleteAllOrders()
+    }
+
     override fun getAllOrders(): Flow<List<CustomerOrderEntity>> {
         return database.customerOrderDao().getAllOrders()
     }

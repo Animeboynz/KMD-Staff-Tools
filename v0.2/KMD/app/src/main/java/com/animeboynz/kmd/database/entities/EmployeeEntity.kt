@@ -2,6 +2,7 @@ package com.animeboynz.kmd.database.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.animeboynz.kmd.presentation.components.DropdownItem
 
 @Entity
 data class EmployeeEntity(
