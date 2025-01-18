@@ -20,6 +20,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -84,6 +86,11 @@ object EmployeePreferencesScreen : Screen() {
         val employeeActiveList by screenModel.employeesActive.collectAsState()
         val employeeDisablesList by screenModel.employeesDisabled.collectAsState()
 
+        var showDialog by remember { mutableStateOf(false) }
+        var selectedEmployeeName by remember { mutableStateOf("") }
+        var selectedEmployeeId by remember { mutableStateOf("") }
+        var selectedEmployeeStatus by remember { mutableStateOf("") }
+
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -118,7 +125,13 @@ object EmployeePreferencesScreen : Screen() {
 
                     LazyColumn {
                         items(employeeActiveList) { employee ->
-                            EmployeeRow(employee, {})
+                            EmployeeRow(employee, {
+                                // Show dialog when an employee is clicked
+                                selectedEmployeeName = employee.employeeName // Assuming EmployeeEntity has a name property
+                                selectedEmployeeId = employee.employeeId // Assuming EmployeeEntity has an id property
+                                selectedEmployeeStatus = employee.employeeStatus
+                                showDialog = true
+                            })
                         }
                     }
 
@@ -128,13 +141,70 @@ object EmployeePreferencesScreen : Screen() {
 
                     LazyColumn {
                         items(employeeDisablesList) { employee ->
-                            EmployeeRow(employee, {})
+                            EmployeeRow(employee, {
+                                // Show dialog when an employee is clicked
+                                selectedEmployeeName = employee.employeeName // Assuming EmployeeEntity has a name property
+                                selectedEmployeeId = employee.employeeId // Assuming EmployeeEntity has an id property
+                                selectedEmployeeStatus = employee.employeeStatus
+                                showDialog = true
+                            })
                         }
                     }
-
-
                 }
             }
         }
+
+        if (showDialog) {
+            EmpChangeDialog(
+                onDismissRequest = { showDialog = false },
+                onConfirm = {
+                    val newStatus: String = when (selectedEmployeeStatus) {
+                        "Active" -> "Disabled"
+                        "Disabled" -> "Active"
+                        else -> selectedEmployeeStatus // Handle unexpected statuses if necessary
+                    }
+                    screenModel.changeEmployeeStatus(selectedEmployeeId, newStatus)
+                    Toast.makeText(context, "Changed status for $selectedEmployeeName (ID: $selectedEmployeeId)", Toast.LENGTH_SHORT).show()
+                },
+                empName = selectedEmployeeName,
+                empId = selectedEmployeeId
+            )
+        }
+
+    }
+
+    @Composable
+    fun EmpChangeDialog(
+        onDismissRequest: () -> Unit,
+        onConfirm: () -> Unit,
+        empName: String,
+        empId: String
+    ) {
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            confirmButton = {
+                TextButton(onClick = {
+                    onConfirm()
+                    onDismissRequest()
+                }) {
+                    //Text(text = stringResource(MR.strings.action_ok))
+                    Text(text = "OK")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismissRequest) {
+                    Text(text = "Cancel")
+                    //Text(text = stringResource(MR.strings.action_ok))
+                }
+            },
+            title = {
+                Text(text = "Employee Modify")
+                //Text(text = stringResource(MR.strings.action_delete_repo))
+            },
+            text = {
+                Text(text = "Do you want to change the status of $empName?")
+                //Text(text = stringResource(MR.strings.delete_repo_confirmation, repo))
+            },
+        )
     }
 }
