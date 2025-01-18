@@ -57,6 +57,10 @@ class EmployeeRepositoryImpl(
         }
     }
 
+    override fun updateEmployeeStatus(id: String, status: String) {
+        database.employeeDao().updateEmployeeStatus(id, status)
+    }
+
     override suspend fun deleteEmployee(id: String) {
         return database.employeeDao().deleteEmployee(id)
     }

@@ -40,4 +40,10 @@ class EmployeePreferencesScreenModel(
             }
         }
     }
+
+    fun changeEmployeeStatus(id:String, status: String) {
+        screenModelScope.launch(Dispatchers.IO) {
+            employeeRepository.updateEmployeeStatus(id, status)
+        }
+    }
 }
