@@ -10,6 +10,8 @@ interface ProductsRepository {
 
     fun getAllProducts(): Flow<List<ProductsEntity>>
 
+    fun getProductName(sku: String): ProductsEntity
+
     suspend fun insertAll(products: List<ProductsEntity>)
 }
 

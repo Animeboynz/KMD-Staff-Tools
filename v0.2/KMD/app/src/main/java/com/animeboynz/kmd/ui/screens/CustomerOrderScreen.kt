@@ -107,7 +107,7 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
                     )
                 }
 
-                OrderItemsHeader({})
+                OrderItemsHeader({navigator.push(AddItemScreen(orderId))})
 
                 OrderItemsList(orderItems)
 
@@ -155,6 +155,7 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
 
     @Composable
     fun OrderItemCard(item: OrderItemEntity) {
+        val pName =
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -166,10 +167,20 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
                 modifier = Modifier.padding(MaterialTheme.spacing.medium),
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
             ) {
+
+                Text(text = "${item.productName}", style = MaterialTheme.typography.titleMedium)
+                Text(text = "${item.productName}", style = MaterialTheme.typography.titleMedium)
                 Text(text = "SKU: ${item.sku}/${item.color}/${item.size}", style = MaterialTheme.typography.bodyMedium)
 
                 Text(text = "Price: ${item.price}", style = MaterialTheme.typography.bodyMedium)
                 Text(text = "Quantity: ${item.quantity}", style = MaterialTheme.typography.bodyMedium)
+
+                if(item.store.isNotEmpty())
+                {
+                    Text(text = "Store: ${item.store}", style = MaterialTheme.typography.bodyMedium)
+                }
+
+                Text(text = "Status: ${item.status}", style = MaterialTheme.typography.bodyMedium)
             }
         }
     }

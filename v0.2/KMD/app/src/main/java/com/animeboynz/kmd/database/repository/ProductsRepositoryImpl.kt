@@ -16,6 +16,10 @@ class ProductsRepositoryImpl(
         return database.productsDao().getAllProducts()
     }
 
+    override fun getProductName(sku: String): ProductsEntity {
+        return database.productsDao().getProductName(sku)
+    }
+
     override suspend fun insertAll(products: List<ProductsEntity>) {
         database.productsDao().insertAll(products)
     }

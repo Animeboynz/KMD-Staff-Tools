@@ -9,11 +9,14 @@ data class OrderItemEntity(
     val orderItemId: Long = 0, // Auto-generated ID for the order item
     val orderId: Long, // Foreign key referencing the order
 
+    val productName: String?, // Name of the product
+    val productColor: String?,
+
     val sku: String, // SKU of the product
     val color: String,
     val size: String,
 
-    val price: Long,
+    val price: String,
     val store: String,
     val status: String,
 

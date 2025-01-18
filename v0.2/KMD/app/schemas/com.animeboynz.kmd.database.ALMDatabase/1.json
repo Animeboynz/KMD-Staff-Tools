@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e7b3b657365f6ec4595e6e2bc1b6da66",
+    "identityHash": "fb4654d74ec29485a25fee3231dee060",
     "entities": [
       {
         "tableName": "EmployeeEntity",
@@ -126,7 +126,7 @@
       },
       {
         "tableName": "OrderItemEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`orderItemId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `orderId` INTEGER NOT NULL, `sku` TEXT NOT NULL, `color` TEXT NOT NULL, `size` TEXT NOT NULL, `price` INTEGER NOT NULL, `store` TEXT NOT NULL, `status` TEXT NOT NULL, `quantity` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`orderItemId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `orderId` INTEGER NOT NULL, `productName` TEXT, `productColor` TEXT, `sku` TEXT NOT NULL, `color` TEXT NOT NULL, `size` TEXT NOT NULL, `price` TEXT NOT NULL, `store` TEXT NOT NULL, `status` TEXT NOT NULL, `quantity` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "orderItemId",
@@ -139,6 +139,18 @@
             "columnName": "orderId",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "productName",
+            "columnName": "productName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "productColor",
+            "columnName": "productColor",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "sku",
@@ -161,7 +173,7 @@
           {
             "fieldPath": "price",
             "columnName": "price",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -196,7 +208,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e7b3b657365f6ec4595e6e2bc1b6da66')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fb4654d74ec29485a25fee3231dee060')"
     ]
   }
 }
