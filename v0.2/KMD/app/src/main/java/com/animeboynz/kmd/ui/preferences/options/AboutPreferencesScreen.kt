@@ -1,11 +1,7 @@
 package com.animeboynz.kmd.ui.preferences.options
 
 import androidx.compose.runtime.Composable
-import com.animeboynz.kmd.BuildConfig
 import com.animeboynz.kmd.presentation.Screen
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
 
 object AboutPreferencesScreen : Screen() {
     private fun readResolve(): Any = AboutPreferencesScreen

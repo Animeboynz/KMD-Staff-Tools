@@ -1,19 +1,15 @@
 package com.animeboynz.kmd.ui.screens
 
-import android.net.Uri
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.animeboynz.kmd.database.entities.CustomerOrderEntity
-import com.animeboynz.kmd.database.entities.EmployeeEntity
 import com.animeboynz.kmd.database.entities.OrderItemEntity
 import com.animeboynz.kmd.domain.CustomerOrderRepository
 import com.animeboynz.kmd.domain.OrderItemRepository
-import com.github.k1rakishou.fsaf.FileManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CustomerOrderScreenModel(
@@ -23,11 +19,6 @@ class CustomerOrderScreenModel(
 ) : ScreenModel {
 
     var orderedItems = MutableStateFlow<List<OrderItemEntity>>(emptyList())
-
-//    private val _order = MutableStateFlow<CustomerOrderEntity?>(null) // Use nullable type
-//    val order: StateFlow<CustomerOrderEntity?> = _order.asStateFlow() // Expose as StateFlow
-
-    //lateinit var order:CustomerOrderEntity
 
     private val _order = MutableStateFlow<CustomerOrderEntity>(CustomerOrderEntity(0, "", "", "", "", "", "", "")) // Use nullable type
     val order: StateFlow<CustomerOrderEntity> = _order.asStateFlow() // Expose as StateFlow

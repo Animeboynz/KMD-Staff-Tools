@@ -1,6 +1,5 @@
 package com.animeboynz.kmd.database.repository
 
-import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import com.animeboynz.kmd.database.ALMDatabase
 import com.animeboynz.kmd.database.entities.EmployeeEntity

@@ -19,6 +19,4 @@ class ProductsRepositoryImpl(
     override suspend fun insertAll(products: List<ProductsEntity>) {
         database.productsDao().insertAll(products)
     }
-
-
 }
