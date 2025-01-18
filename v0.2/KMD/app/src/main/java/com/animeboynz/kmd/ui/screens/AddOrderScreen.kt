@@ -18,28 +18,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.github.k1rakishou.fsaf.FileManager
-import nl.adaptivity.xmlutil.serialization.XML
 import org.koin.compose.koinInject
 import com.animeboynz.kmd.R
 import com.animeboynz.kmd.database.entities.CustomerOrderEntity
 import com.animeboynz.kmd.presentation.Screen
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import kotlinx.coroutines.coroutineScope
-import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import com.animeboynz.kmd.database.entities.EmployeeEntity
 import java.text.SimpleDateFormat
 import java.util.*
 import com.animeboynz.kmd.domain.CustomerOrderRepository
@@ -63,13 +58,15 @@ class AddOrderScreen : Screen() {
         }
 
         // State variables for user input
+        val employeeList by screenModel.employees.collectAsState()
+        val dropdownItems = employeeList.map { EmployeeDropdownItem(it) }
+        var selectedEmployee by remember { mutableStateOf<EmployeeDropdownItem?>(null) }
+
         var orderDate by remember { mutableStateOf("") }
-        var employeeId by remember { mutableStateOf(TextFieldValue("")) }
         var customerName by remember { mutableStateOf(TextFieldValue("")) }
         var customerPhone by remember { mutableStateOf(TextFieldValue("")) }
         var customerMics by remember { mutableStateOf(TextFieldValue("")) }
         var notes by remember { mutableStateOf(TextFieldValue("")) }
-        //val status by screenModel.status.collectAsState()
 
         var status by remember { mutableStateOf(Status.NOT_ORDERED) }
 
@@ -77,9 +74,11 @@ class AddOrderScreen : Screen() {
         val collectedStatus by screenModel.status.collectAsState()
         var showDatePicker by remember { mutableStateOf(false) }
 
-        val employeeList by screenModel.employees.collectAsState()
-        val dropdownItems = employeeList.map { EmployeeDropdownItem(it) }
-        var selectedEmployee by remember { mutableStateOf<EmployeeDropdownItem?>(null) }
+        // Error states
+        var hasNameError by remember { mutableStateOf(false) }
+        var hasPhoneError by remember { mutableStateOf(false) }
+        var hasDateError by remember { mutableStateOf(false) }
+        var hasEmployeeError by remember { mutableStateOf(false) }
 
         LaunchedEffect(collectedStatus) {
             status = collectedStatus ?: Status.NOT_ORDERED
@@ -100,17 +99,18 @@ class AddOrderScreen : Screen() {
         Scaffold(
             topBar = {
                 TopAppBar(
+                    navigationIcon = {
+                        IconButton(onClick = { navigator.pop() }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Localized description"
+                            )
+                        }
+                    },
                     title = {
                         Text(stringResource(R.string.orders_new))
                     },
-                    actions = {
-//                        IconButton(onClick = { navigator.push(PreferencesScreen) }) {
-//                            Icon(Icons.Default.FilterList, null)
-//                        }
-//                        IconButton(onClick = { navigator.push(PreferencesScreen) }) {
-//                            Icon(Icons.Default.Settings, null)
-//                        }
-                    },
+                    actions = {},
                 )
             }
         ) { paddingValues ->
@@ -138,35 +138,30 @@ class AddOrderScreen : Screen() {
                 OutlinedTextField(
                     value = orderDate,
                     onValueChange = { /* No-op */ },
-                    label = { Text(stringResource(R.string.orders_field_date)) },
+                    label = { Text(if (hasDateError) "Date is Required" else stringResource(R.string.orders_field_date)) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { showDatePicker = true }, // Open date picker on click
-                    enabled = false // Disable manual input
-                )
-
-                OutlinedTextField(
-                    value = employeeId,
-                    onValueChange = { employeeId = it },
-                    label = { Text(stringResource(R.string.orders_field_empid)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
+                        .clickable { showDatePicker = true },
+                    enabled = false, // Disable manual input
+                    isError = hasDateError
                 )
 
                 OutlinedTextField(
                     value = customerName,
                     onValueChange = { customerName = it },
-                    label = { Text(stringResource(R.string.orders_field_name)) },
+                    label = { Text(if (hasNameError) "Name is Required" else stringResource(R.string.orders_field_name)) },
                     modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
+                    singleLine = true,
+                    isError = hasNameError
                 )
 
                 OutlinedTextField(
                     value = customerPhone,
                     onValueChange = { customerPhone = it },
-                    label = { Text(stringResource(R.string.orders_field_phone)) },
+                    label = { Text(if (hasPhoneError) "Phone is Required" else stringResource(R.string.orders_field_phone)) },
                     modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
+                    singleLine = true,
+                    isError = hasPhoneError
                 )
 
                 OutlinedTextField(
@@ -197,7 +192,30 @@ class AddOrderScreen : Screen() {
 
                 Button(
                     onClick = {
-                        // Generate order ID
+                        // Reset error states
+                        hasNameError = false
+                        hasPhoneError = false
+                        hasDateError = false
+                        hasEmployeeError = false
+
+                        // Validate required fields
+                        if (customerName.text.isBlank()) {
+                            hasNameError = true
+                        }
+                        if (customerPhone.text.isBlank()) {
+                            hasPhoneError = true
+                        }
+                        if (orderDate.isBlank()) {
+                            hasDateError = true
+                        }
+                        if (selectedEmployee == null) {
+                            hasEmployeeError = true
+                        }
+                        if (hasNameError || hasPhoneError || hasDateError || hasEmployeeError) {
+                            Toast.makeText(context, "Complete all required fields", Toast.LENGTH_SHORT).show()
+                            return@Button
+                        }
+
                         // Create the order entity
                         val order = CustomerOrderEntity(
                             orderDate = orderDate,
@@ -208,9 +226,11 @@ class AddOrderScreen : Screen() {
                             notes = notes.text,
                             status = status.displayName
                         )
+
                         // Insert the order into the database
                         screenModel.addOrder(order)
                         //customerOrderRepository.insertOrder(order)
+
                         // Show a success message
                         navigator.pop()
                         Toast.makeText(context, R.string.orders_insert_success, Toast.LENGTH_SHORT).show()

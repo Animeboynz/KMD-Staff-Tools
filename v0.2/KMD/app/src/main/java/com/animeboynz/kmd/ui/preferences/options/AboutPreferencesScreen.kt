@@ -8,6 +8,8 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 
 object AboutPreferencesScreen : Screen() {
+    private fun readResolve(): Any = AboutPreferencesScreen
+
     @Composable
     override fun Content() {
         TODO("Not yet implemented")

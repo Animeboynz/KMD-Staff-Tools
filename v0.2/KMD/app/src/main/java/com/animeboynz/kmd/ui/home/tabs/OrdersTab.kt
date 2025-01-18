@@ -53,6 +53,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ReceiptLong
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.Button
@@ -81,7 +82,7 @@ object OrdersTab : Tab {
     override val options: TabOptions
         @Composable
         get() {
-            val image = rememberVectorPainter(Icons.AutoMirrored.Filled.ChromeReaderMode)
+            val image = rememberVectorPainter(Icons.AutoMirrored.Filled.ReceiptLong)
             return TabOptions(
                 index = 0u,
                 title = stringResource(R.string.orders_tab),

@@ -78,7 +78,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-
+import androidx.compose.material.icons.filled.*
 
 
 object ToolsTab : Tab {
@@ -87,7 +87,7 @@ object ToolsTab : Tab {
     override val options: TabOptions
         @Composable
         get() {
-            val image = rememberVectorPainter(Icons.AutoMirrored.Filled.ManageSearch)
+            val image = rememberVectorPainter(Icons.Filled.Construction)
             return TabOptions(
                 index = 0u,
                 title = stringResource(R.string.tools_tab),
