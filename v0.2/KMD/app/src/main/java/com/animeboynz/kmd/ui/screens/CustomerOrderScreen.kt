@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.CoPresent
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
@@ -55,18 +57,32 @@ import com.animeboynz.kmd.presentation.Screen
 import com.github.k1rakishou.fsaf.FileManager
 import org.koin.compose.koinInject
 import com.animeboynz.kmd.R
-import com.animeboynz.kmd.presentation.components.SelectItem
+import com.animeboynz.kmd.database.entities.OrderItemEntity
+import com.animeboynz.kmd.domain.OrderItemRepository
+import com.animeboynz.kmd.presentation.components.CustomerOrderCard
+import com.animeboynz.kmd.presentation.components.NotesItem
 import com.animeboynz.kmd.ui.theme.spacing
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.filled.Add
+import com.animeboynz.kmd.ui.preferences.options.EmployeePreferencesScreen
 
-class CustomerOrderScreen(val order: CustomerOrderEntity) : Screen() {
+class CustomerOrderScreen(val orderId: Long) : Screen() {
+
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val context = LocalContext.current
 
-        val fileManager = koinInject<FileManager>()
         val customerOrderRepository = koinInject<CustomerOrderRepository>()
-        val screenModel = rememberScreenModel { CustomerOrderScreenModel(customerOrderRepository) }
+        val orderItemRepository = koinInject<OrderItemRepository>()
+        val screenModel = rememberScreenModel { CustomerOrderScreenModel(customerOrderRepository, orderItemRepository, orderId) }
+        //screenModel.getOrder(orderId)
+        val order by screenModel.order.collectAsState() // Collect the order state
+        val orderItems by screenModel.orderedItems.collectAsState()
+
+        //val orderItems = screenModel.getOrderItems(order.orderId)
 
         Scaffold(
             topBar = {
@@ -102,42 +118,72 @@ class CustomerOrderScreen(val order: CustomerOrderEntity) : Screen() {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues),
+                    .padding(paddingValues)
+                    .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
             ) {
                 CustomerOrderCard(order)
 
-                SelectItem(
-                    title = order.status,
-                    present = true,
-                    onClick = { },
-                )
+                if (order.notes.isNotEmpty())
+                {
+                    NotesItem(
+                        note = order.notes,
+                        onClick = { },
+                    )
+                }
 
+                OrderItemsHeader({})
 
+                OrderItemsList(orderItems)
 
-                Spacer(modifier = Modifier.weight(1f))
+                //Spacer(modifier = Modifier.weight(1f))
 
-//                Text(text = order.orderDate)
-//                Text(text = order.customerName)
-//                Text(text = order.status)
-//                Text(text = order.employeeId)
-//                Text(text = order.customerMics)
-//                Text(text = order.customerPhone)
-//                Text(text = order.notes)
-
-                Spacer(modifier = Modifier.width(MaterialTheme.spacing.extraSmall))
+                //Spacer(modifier = Modifier.width(MaterialTheme.spacing.extraSmall))
             }
         }
     }
 
     @Composable
-    fun CustomerOrderCard(
-        order: CustomerOrderEntity,
-    ) {
+    fun OrderItemsHeader(onAddItemClick: () -> Unit) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = MaterialTheme.spacing.large),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween // Space between title and button
+        ) {
+            Text(
+                text = "Order Items",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier
+                    .padding(end = MaterialTheme.spacing.large)
+                    .weight(1f) // Allows the title to take remaining space
+            )
+            AddItemButton(onClick = onAddItemClick)
+        }
+    }
+
+
+    @Composable
+    fun AddItemButton(onClick: () -> Unit) {
+        IconButton(onClick = onClick) {
+            Icon(Icons.Default.Add, contentDescription = "Add Item")
+        }
+    }
+
+    @Composable
+    fun OrderItemsList(orderItems: List<OrderItemEntity>) {
+        orderItems.forEach { item ->
+            OrderItemCard(item)
+        }
+    }
+
+    @Composable
+    fun OrderItemCard(item: OrderItemEntity) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = MaterialTheme.spacing.small, vertical = MaterialTheme.spacing.extraSmall),
+                .padding(horizontal = MaterialTheme.spacing.small, vertical = 0.dp),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
         ) {
@@ -145,48 +191,11 @@ class CustomerOrderScreen(val order: CustomerOrderEntity) : Screen() {
                 modifier = Modifier.padding(MaterialTheme.spacing.medium),
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
             ) {
-                Text(
-                    text = stringResource(R.string.orders_details),
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(bottom = MaterialTheme.spacing.small)
-                )
+                Text(text = "SKU: ${item.sku}/${item.color}/${item.size}", style = MaterialTheme.typography.bodyMedium)
 
-                // Order Date
-                InfoRow(icon = Icons.Default.DateRange, text = order.orderDate)
-
-                // Customer Name
-                InfoRow(icon = Icons.Default.Person, text = order.customerName)
-
-                // Customer Mics
-                InfoRow(icon = Icons.Default.Info, text = order.customerMics)
-
-                // Customer Phone
-                InfoRow(icon = Icons.Default.Phone, text = order.customerPhone)
-
-                // Employee ID
-                InfoRow(icon = Icons.Default.CoPresent, text = order.employeeId)
+                Text(text = "Price: ${item.price}", style = MaterialTheme.typography.bodyMedium)
+                Text(text = "Quantity: ${item.quantity}", style = MaterialTheme.typography.bodyMedium)
             }
-        }
-    }
-
-    @Composable
-    fun InfoRow(icon: ImageVector, text: String) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                modifier = Modifier.size(24.dp),
-                tint = MaterialTheme.colorScheme.primary
-            )
-            Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
-            Text(
-                text = text,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(1f) // Allows text to take remaining space
-            )
         }
     }
 

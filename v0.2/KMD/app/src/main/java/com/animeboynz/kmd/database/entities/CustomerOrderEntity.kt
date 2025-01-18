@@ -1,9 +1,12 @@
 package com.animeboynz.kmd.database.entities
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.Date
+//import kotlinx.parcelize.Parcelize
 
+//@Parcelize
 @Entity
 data class CustomerOrderEntity(
     @PrimaryKey(autoGenerate = true)
@@ -17,4 +20,4 @@ data class CustomerOrderEntity(
 
     val notes: String,
     val status: String //Completed, In Progress, Pending
-)
+)// : Parcelable

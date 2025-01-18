@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.serialization)
     alias(libs.plugins.room)
     alias(libs.plugins.spotless.gradle)
+    id("kotlin-parcelize")
 }
 
 android {
