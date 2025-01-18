@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
@@ -36,7 +35,6 @@ import com.animeboynz.kmd.presentation.Screen
 import com.animeboynz.kmd.presentation.util.Tab
 import com.animeboynz.kmd.ui.home.tabs.OrdersTab
 import com.animeboynz.kmd.ui.home.tabs.SkuTab
-import com.animeboynz.kmd.ui.home.HomeScreen.NavigationBarItem
 import com.animeboynz.kmd.ui.home.tabs.ToolsTab
 
 object HomeScreen : Screen() {

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,7 +28,6 @@ import org.koin.compose.koinInject
 import com.animeboynz.kmd.R
 import com.animeboynz.kmd.database.entities.CustomerOrderEntity
 import com.animeboynz.kmd.presentation.Screen
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -227,11 +225,8 @@ class AddOrderScreen : Screen() {
                             status = status.displayName
                         )
 
-                        // Insert the order into the database
                         screenModel.addOrder(order)
                         //customerOrderRepository.insertOrder(order)
-
-                        // Show a success message
                         navigator.pop()
                         Toast.makeText(context, R.string.orders_insert_success, Toast.LENGTH_SHORT).show()
                     },

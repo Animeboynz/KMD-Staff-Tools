@@ -13,9 +13,6 @@ interface ProductsDao {
     @Upsert
     suspend fun upsert(productsEntity: ProductsEntity)
 
-//    @Query("SELECT * FROM ProductsEntity")
-//    fun getAllProducts(): Flow<ProductsEntity?>
-
     @Query("SELECT * FROM ProductsEntity")
     fun getAllProducts(): Flow<List<ProductsEntity>>
 

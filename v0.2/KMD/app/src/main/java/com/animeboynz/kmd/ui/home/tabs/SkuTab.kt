@@ -1,8 +1,6 @@
 package com.animeboynz.kmd.ui.home.tabs
 
-/////
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -31,12 +29,9 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import org.koin.compose.koinInject
 import com.animeboynz.kmd.R
-import com.animeboynz.kmd.database.entities.ProductsEntity
 import com.animeboynz.kmd.domain.ProductsRepository
 import com.animeboynz.kmd.presentation.util.Tab
 import com.animeboynz.kmd.ui.preferences.PreferencesScreen
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.icons.automirrored.filled.ManageSearch
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
