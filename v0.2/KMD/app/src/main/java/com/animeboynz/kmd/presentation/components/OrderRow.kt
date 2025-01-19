@@ -27,6 +27,7 @@ import com.animeboynz.kmd.ui.theme.spacing
 @Composable
 fun OrderRow(
     order: CustomerOrderEntity,
+    storeNumber: String,
     onClick: () -> Unit,
 ) {
     var color = Color.DarkGray
@@ -54,7 +55,7 @@ fun OrderRow(
     ) {
         Column {
             Text(
-                text = order.customerName + " • KMD-183-" + order.orderId,
+                text = order.customerName + " • KMD-${storeNumber}-" + order.orderId,
                 style = MaterialTheme.typography.titleMedium,
             )
             Row {

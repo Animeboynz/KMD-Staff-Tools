@@ -125,9 +125,10 @@ object OrdersTab : Tab {
                 } else {
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
                         items(sortedOrders) { order ->
-                            OrderRow(order, {
-                                navigator.push(CustomerOrderScreen(order.orderId))
-                            })
+                            OrderRow(order,
+                                preferences.storeNumber.get(),
+                                { navigator.push(CustomerOrderScreen(order.orderId)) }
+                            )
                         }
                     }
                 }
