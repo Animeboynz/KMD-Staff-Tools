@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
@@ -33,6 +34,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.text.input.KeyboardType
 import com.animeboynz.kmd.database.entities.OrderItemEntity
 import java.text.SimpleDateFormat
 import java.util.*
@@ -150,6 +152,7 @@ class AddItemScreen(val orderId: Long) : Screen() {
                     value = quantity,
                     onValueChange = { quantity = it },
                     label = { Text(if (hasQuantityError) "Quantity is Required" else "Quantity") },
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     isError = hasQuantityError
@@ -203,13 +206,10 @@ class AddItemScreen(val orderId: Long) : Screen() {
                             return@Button
                         }
 
-                        screenModel.getProductName(sku.text)
-                        val itemName = screenModel.productName.value?.name
-
                         // Create the order entity
                         val orderItem = OrderItemEntity(
                             orderId = orderId,
-                            productName = itemName,
+                            productName = "",
                             productColor = "",
                             sku = sku.text,
                             color = color.text,

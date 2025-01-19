@@ -32,9 +32,9 @@ class AddItemScreenModel(
         }
     }
 
-    fun getProductName(sku: String) {
-        screenModelScope.launch(Dispatchers.IO) {
-            productName.value = productsRepository.getProductName(sku)
-        }
-    }
+//    fun getProductName(sku: String) {
+//        screenModelScope.launch(Dispatchers.IO) {
+//            productName.value = productsRepository.getProductName(sku)
+//        }
+//    }
 }
