@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Person
@@ -58,7 +59,7 @@ object PreferencesScreen : Screen() {
                         key = "general",
                         title = { Text(text = stringResource(R.string.pref_general_title)) },
                         summary = { Text(text = stringResource(R.string.pref_general_summary)) },
-                        icon = { Icon(Icons.Outlined.Palette, null) },
+                        icon = { Icon(Icons.Default.Settings, null) },
                         onClick = { navigator.push(GeneralPreferencesScreen) },
                     )
                     preference(
