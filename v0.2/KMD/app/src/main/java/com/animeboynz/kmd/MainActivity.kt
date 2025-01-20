@@ -14,9 +14,11 @@ import cafe.adriel.voyager.transitions.SlideTransition
 import org.koin.android.ext.android.inject
 import com.animeboynz.kmd.preferences.AppearancePreferences
 import com.animeboynz.kmd.preferences.preference.collectAsState
+import com.animeboynz.kmd.presentation.components.preferences.TachiyomiTheme
 import com.animeboynz.kmd.ui.home.HomeScreen
 import com.animeboynz.kmd.ui.theme.KMDTheme
 import com.animeboynz.kmd.ui.theme.DarkMode
+import com.animeboynz.kmd.ui.theme.ThemeMode
 
 class MainActivity : ComponentActivity() {
     private val appearancePreferences by inject<AppearancePreferences>()
@@ -24,16 +26,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val dark by appearancePreferences.darkMode.collectAsState()
+            val dark by appearancePreferences.themeMode.collectAsState()
             val isSystemInDarkTheme = isSystemInDarkTheme()
             enableEdgeToEdge(
                 SystemBarStyle.auto(
                     lightScrim = Color.White.toArgb(),
                     darkScrim = Color.White.toArgb(),
-                ) { dark == DarkMode.Dark || (dark == DarkMode.System && isSystemInDarkTheme) },
+                ) { dark == ThemeMode.DARK || (dark == ThemeMode.SYSTEM && isSystemInDarkTheme) },
             )
 
-            KMDTheme {
+            TachiyomiTheme() {
                 Navigator(screen = HomeScreen) {
                     SlideTransition(navigator = it)
                 }

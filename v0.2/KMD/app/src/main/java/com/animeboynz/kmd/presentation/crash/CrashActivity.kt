@@ -55,6 +55,7 @@ import kotlinx.coroutines.withContext
 import com.animeboynz.kmd.BuildConfig
 import com.animeboynz.kmd.MainActivity
 import com.animeboynz.kmd.R
+import com.animeboynz.kmd.presentation.components.preferences.TachiyomiTheme
 import com.animeboynz.kmd.ui.theme.KMDTheme
 import com.animeboynz.kmd.ui.theme.spacing
 import java.io.BufferedReader
@@ -73,7 +74,7 @@ class CrashActivity : ComponentActivity() {
             logcat = collectLogcat()
         }
         setContent {
-            KMDTheme {
+            TachiyomiTheme {
                 CrashScreen(intent.getStringExtra("exception") ?: "")
             }
         }
