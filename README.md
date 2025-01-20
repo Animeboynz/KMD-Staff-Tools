@@ -14,7 +14,7 @@
 ## Settings
 | Settings Screen | Employees | Appearance |
 |---|---|---|
-| <img src="https://github.com/user-attachments/assets/b0708817-1038-43fd-86cc-254f8c6e9547" width="300"> | <img src="https://github.com/user-attachments/assets/4f25326e-aa65-4d71-9996-80038e6e1a8d" width="300"> | <img src="https://github.com/user-attachments/assets/d26a66de-bdfc-4a4b-ade9-c17e3aa25a3d" width="300"> |
+| <img src="https://github.com/user-attachments/assets/b0708817-1038-43fd-86cc-254f8c6e9547" width="300"> | <img src="https://github.com/user-attachments/assets/4f25326e-aa65-4d71-9996-80038e6e1a8d" width="300"> | <img src="https://github.com/user-attachments/assets/b3760cc1-68df-4351-baf4-7815e261ff49" width="300"> |
 
 ## EOD Cash Count
 | Cash Count | Takings | Remaining Float |
