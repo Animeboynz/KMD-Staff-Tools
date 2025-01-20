@@ -29,9 +29,12 @@ import org.koin.compose.koinInject
 import com.animeboynz.kmd.R
 import com.animeboynz.kmd.preferences.AppearancePreferences
 import com.animeboynz.kmd.preferences.preference.collectAsState
+import com.animeboynz.kmd.presentation.AppThemeModePreferenceWidget
 import com.animeboynz.kmd.presentation.Screen
+import com.animeboynz.kmd.presentation.components.preferences.AppThemePreferenceWidget
 import com.animeboynz.kmd.presentation.components.preferences.MultiChoiceSegmentedButton
 import com.animeboynz.kmd.ui.theme.DarkMode
+import com.animeboynz.kmd.ui.theme.setAppCompatDelegateThemeMode
 
 object AppearancePreferencesScreen : Screen() {
     private fun readResolve(): Any = AppearancePreferencesScreen
@@ -64,31 +67,28 @@ object AppearancePreferencesScreen : Screen() {
                     PreferenceCategory(
                         title = { Text(text = stringResource(id = R.string.pref_appearance_category_theme)) },
                     )
-                    val darkMode by preferences.darkMode.collectAsState()
-                    MultiChoiceSegmentedButton(
-                        choices = DarkMode.entries.map { context.getString(it.titleRes) }.toImmutableList(),
-                        selectedIndices = persistentListOf(DarkMode.entries.indexOf(darkMode)),
-                        onClick = { preferences.darkMode.set(DarkMode.entries[it]) },
+
+                    val themeModePref = preferences.themeMode
+                    val themeMode by themeModePref.collectAsState()
+
+                    val appThemePref = preferences.appTheme
+                    val appTheme by appThemePref.collectAsState()
+
+                    val amoledPref = preferences.themeDarkAmoled
+                    val amoled by amoledPref.collectAsState()
+
+                    AppThemeModePreferenceWidget(
+                        value = themeMode,
+                        onItemClick = {
+                            themeModePref.set(it)
+                            setAppCompatDelegateThemeMode(it)
+                        },
                     )
 
-                    val materialYou by preferences.materialYou.collectAsState()
-                    val isMaterialYouAvailable = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-                    SwitchPreference(
-                        value = materialYou,
-                        onValueChange = { preferences.materialYou.set(it) },
-                        title = { Text(text = stringResource(R.string.pref_appearance_material_you_title)) },
-                        summary = {
-                            Text(
-                                text = stringResource(
-                                    if (isMaterialYouAvailable) {
-                                        R.string.pref_appearance_material_you_summary
-                                    } else {
-                                        R.string.pref_appearance_material_you_summary_disabled
-                                    },
-                                ),
-                            )
-                        },
-                        enabled = isMaterialYouAvailable,
+                    AppThemePreferenceWidget(
+                        value = appTheme,
+                        amoled = amoled,
+                        onItemClick = { appThemePref.set(it) },
                     )
 
                     PreferenceCategory(

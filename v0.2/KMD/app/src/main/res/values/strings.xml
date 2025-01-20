@@ -5,6 +5,7 @@
     // Generic
     <string name="generic_cancel">Cancel</string>
     <string name="generic_confirm">Confirm</string>
+    <string name="selected">Selected</string>
 
     //Orders Tab
     <string name="orders_tab">Orders</string>
@@ -72,6 +73,18 @@
     <string name="pref_appearance_material_you_summary">Enable Material You dynamic colors.</string>
     <string name="pref_appearance_material_you_summary_disabled">Only available for Android 12 and newer.</string>
     <string name="pref_appearance_category_display">Display</string>
+    <string name="label_default">Default</string>
+    <string name="theme_monet">Dynamic</string>
+    <string name="theme_greenapple">Green Apple</string>
+    <string name="theme_lavender">Lavender</string>
+    <string name="theme_midnightdusk">Midnight Dusk</string>
+    <string name="theme_nord">Nord</string>
+    <string name="theme_strawberrydaiquiri">Strawberry Daiquiri</string>
+    <string name="theme_tako">Tako</string>
+    <string name="theme_tealturquoise">Teal &amp; Turquoise</string>
+    <string name="theme_yinyang">Yin &amp; Yang</string>
+    <string name="theme_yotsuba">Yotsuba</string>
+    <string name="theme_tidalwave">Tidal Wave</string>
 
     //Data Preference
     <string name="pref_data_delete_all_orders">Delete all customer orders</string>
