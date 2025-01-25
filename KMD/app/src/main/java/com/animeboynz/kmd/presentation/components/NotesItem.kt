@@ -2,6 +2,7 @@ package com.animeboynz.kmd.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,10 +43,20 @@ fun NotesItem(
                     text = "Notes",
                     style = MaterialTheme.typography.titleMedium,
                 )
-                Row {
+                Row(
+                    modifier = Modifier.fillMaxWidth(), // Ensures the row spans the entire width
+                    horizontalArrangement = Arrangement.SpaceBetween // This helps separate the text and icon
+                ) {
                     Text(
                         text = note,
                         style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.weight(1f) // Ensures the text takes all available space
+                    )
+                    Icon(
+                        imageVector = Icons.Filled.Edit,
+                        contentDescription = null,
+                        modifier = Modifier.align(Alignment.CenterVertically),
+                        tint = MaterialTheme.colorScheme.outline,
                     )
                 }
             } else {
@@ -55,12 +66,13 @@ fun NotesItem(
                 )
             }
         }
-
-        Icon(
-            imageVector = Icons.Filled.Edit,
-            contentDescription = null,
-            modifier = Modifier.align(Alignment.CenterEnd),
-            tint = MaterialTheme.colorScheme.outline,
-        )
+        if (note.isEmpty()) {
+            Icon(
+                imageVector = Icons.Filled.Edit,
+                contentDescription = null,
+                modifier = Modifier.align(Alignment.CenterEnd),
+                tint = MaterialTheme.colorScheme.outline,
+            )
+        }
     }
 }

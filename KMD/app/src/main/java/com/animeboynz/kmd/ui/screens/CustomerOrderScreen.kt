@@ -65,7 +65,7 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
         val orderItems by screenModel.orderedItems.collectAsState()
 
         var isNotesDialogVisible by remember { mutableStateOf(false) }
-        var editedNote by remember { mutableStateOf(order.notes) }
+        var editedNote by remember { mutableStateOf("") }
 
         Scaffold(
             topBar = {
@@ -107,20 +107,16 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
             ) {
                 CustomerOrderCard(order)
 
-                if (true)
-                {
-                    editedNote.ifEmpty {
-                        editedNote = order.notes
-                    }
-
-                    NotesItem(
-                        note = editedNote,
-                        onClick = {
-                            editedNote = order.notes // Prefill with the current note
-                            isNotesDialogVisible = true
-                        },
-                    )
+                editedNote.ifEmpty {
+                    editedNote = order.notes
                 }
+
+                NotesItem(
+                    note = editedNote,
+                    onClick = {
+                        isNotesDialogVisible = true
+                    },
+                )
 
                 OrderItemsHeader({navigator.push(AddItemScreen(orderId))})
 
@@ -133,8 +129,7 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
                 if (isNotesDialogVisible) {
                     AlertDialog(
                         onDismissRequest = {
-                            isNotesDialogVisible = false
-                            editedNote = order.notes
+                            //isNotesDialogVisible = false
                         },
                         title = { Text(text = "Edit Notes") },
                         text = {
@@ -150,20 +145,20 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
                             Button(onClick = {
                                 screenModel.updateOrderNotes(order.orderId, editedNote)
                                 isNotesDialogVisible = false
-                                screenModel.getOrder(orderId)
+                                //screenModel.getOrder(orderId)
                             }) {
                                 Text("Save")
                             }
                         },
-                        dismissButton = {
-                            Button(
-                                onClick = { isNotesDialogVisible = false
-                                            editedNote = order.notes
-                                }
-                            ) {
-                                Text("Cancel")
-                            }
-                        },
+//                        dismissButton = {
+//                            Button(
+//                                onClick = {
+//                                    isNotesDialogVisible = false
+//                                }
+//                            ) {
+//                                Text("Cancel")
+//                            }
+//                        },
                     )
                 }
 
