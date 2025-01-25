@@ -73,7 +73,7 @@ fun OrderItemCard(item: OrderItemEntity, name: String) {
             }
 
             Text(
-                text = "Ordered",
+                text = item.status,
                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier
