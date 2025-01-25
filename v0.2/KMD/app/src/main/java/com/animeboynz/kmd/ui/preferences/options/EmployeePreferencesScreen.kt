@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.AlertDialog
@@ -53,7 +55,7 @@ object EmployeePreferencesScreen : Screen() {
         val screenModel = rememberScreenModel { EmployeePreferencesScreenModel(employeeRepository) }
 
         val employeeActiveList by screenModel.employeesActive.collectAsState()
-        val employeeDisablesList by screenModel.employeesDisabled.collectAsState()
+        val employeeDisabledList by screenModel.employeesDisabled.collectAsState()
 
         var showDialog by remember { mutableStateOf(false) }
         var selectedEmployeeName by remember { mutableStateOf("") }
@@ -76,7 +78,7 @@ object EmployeePreferencesScreen : Screen() {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        //.verticalScroll(rememberScrollState())
+                        .verticalScroll(rememberScrollState())
                         .padding(paddingValues)
                 ) {
                     Button(
@@ -90,12 +92,12 @@ object EmployeePreferencesScreen : Screen() {
                         Text(stringResource(R.string.pref_employees_add))
                     }
 
-                    PreferenceCategory(
-                        title = { Text(text = stringResource(id = R.string.pref_employees_current)) },
-                    )
+                    if (employeeActiveList.isNotEmpty()) {
+                        PreferenceCategory(
+                            title = { Text(text = stringResource(id = R.string.pref_employees_current)) },
+                        )
 
-                    LazyColumn {
-                        items(employeeActiveList) { employee ->
+                        employeeActiveList.forEach { employee ->
                             EmployeeRow(employee, {
                                 selectedEmployeeName = employee.employeeName
                                 selectedEmployeeId = employee.employeeId
@@ -105,12 +107,12 @@ object EmployeePreferencesScreen : Screen() {
                         }
                     }
 
-                    PreferenceCategory(
-                        title = { Text(text = stringResource(id = R.string.pref_employees_deactivated)) },
-                    )
+                    if (employeeDisabledList.isNotEmpty()) {
+                        PreferenceCategory(
+                            title = { Text(text = stringResource(id = R.string.pref_employees_deactivated)) },
+                        )
 
-                    LazyColumn {
-                        items(employeeDisablesList) { employee ->
+                        employeeDisabledList.forEach { employee ->
                             EmployeeRow(employee, {
                                 selectedEmployeeName = employee.employeeName
                                 selectedEmployeeId = employee.employeeId
