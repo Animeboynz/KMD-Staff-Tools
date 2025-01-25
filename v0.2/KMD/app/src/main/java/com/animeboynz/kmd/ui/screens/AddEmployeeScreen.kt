@@ -27,6 +27,8 @@ import com.animeboynz.kmd.R
 import com.animeboynz.kmd.presentation.Screen
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.ui.text.input.KeyboardType
 import com.animeboynz.kmd.database.entities.EmployeeEntity
@@ -57,6 +59,11 @@ class AddEmployeeScreen : Screen() {
                     },
                     actions = {
 //
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navigator.pop() }) {
+                            Icon(Icons.AutoMirrored.Outlined.ArrowBack, null)
+                        }
                     },
                 )
             }
@@ -99,7 +106,7 @@ class AddEmployeeScreen : Screen() {
                         )
                         screenModel.addEmployees(emp)
                         navigator.pop()
-                        Toast.makeText(context, R.string.orders_insert_success, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, R.string.employee_insert_success, Toast.LENGTH_SHORT).show()
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {

@@ -23,11 +23,15 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
+import com.animeboynz.kmd.R
 import com.animeboynz.kmd.ui.home.tabs.ToolsTab
 import com.animeboynz.kmd.ui.home.tabs.ToolsTab.rememberImeState
 import kotlin.collections.component1
@@ -45,7 +49,20 @@ class CashRow : Screen() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
         Scaffold(
-            
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = {
+                        Text("Cash counter")
+                    },
+                    actions = {
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navigator.pop() }) {
+                            Icon(Icons.AutoMirrored.Outlined.ArrowBack, null)
+                        }
+                    },
+                )
+            }
         ) { paddingValues ->
             val paddingModifier = Modifier.padding(paddingValues)
 
@@ -60,12 +77,6 @@ class CashRow : Screen() {
                     .imePadding(), // Ensures padding to handle the keyboard
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "Cash counter",
-                    fontSize = 24.sp,
-                    modifier = Modifier.padding(16.dp)
-                )
-
                 //Spacer(modifier = Modifier.height(10.dp))
 
                 LazyVerticalGrid(

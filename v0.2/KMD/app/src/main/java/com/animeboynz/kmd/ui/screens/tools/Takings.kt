@@ -24,6 +24,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -48,21 +50,35 @@ class Takings : Screen() {
     override fun Content() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
-        Scaffold(
 
+        var inputValues by rememberSaveable { mutableStateOf(currencyList2.associateWith { "" }) }
+        var errorMessages by remember { mutableStateOf(currencyList2.associateWith { "" }) }
+
+        val totalTakings = inputValues.entries.sumByDouble { (currency, quantity) ->
+            val denominationValue = when {
+                currency.endsWith("c") -> currency.replace("c", "").toDouble() / 100
+                else -> currency.replace("$", "").toDouble()
+            }
+            (quantity.toIntOrNull() ?: 0) * denominationValue
+        }
+
+        Scaffold(
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = {
+                        Text("Left to take: $${"%.2f".format(AppData.bankingValue - totalTakings)}", fontSize = 24.sp)
+                    },
+                    actions = {
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navigator.pop() }) {
+                            Icon(Icons.AutoMirrored.Outlined.ArrowBack, null)
+                        }
+                    },
+                )
+            }
         ) { paddingValues ->
             val paddingModifier = Modifier.padding(paddingValues)
-
-            var inputValues by rememberSaveable { mutableStateOf(currencyList2.associateWith { "" }) }
-            var errorMessages by remember { mutableStateOf(currencyList2.associateWith { "" }) }
-
-            val totalTakings = inputValues.entries.sumByDouble { (currency, quantity) ->
-                val denominationValue = when {
-                    currency.endsWith("c") -> currency.replace("c", "").toDouble() / 100
-                    else -> currency.replace("$", "").toDouble()
-                }
-                (quantity.toIntOrNull() ?: 0) * denominationValue
-            }
 
             val scrollState = rememberScrollState()
 
@@ -73,12 +89,6 @@ class Takings : Screen() {
                     .imePadding(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "Left to take: $${"%.2f".format(AppData.bankingValue - totalTakings)}",
-                    fontSize = 24.sp,
-                    modifier = Modifier.padding(16.dp)
-                )
-
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(1),
                     modifier = Modifier.weight(1f)
