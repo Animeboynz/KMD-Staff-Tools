@@ -23,4 +23,7 @@ interface CustomerOrderDao {
     @Query("SELECT * FROM CustomerOrderEntity WHERE orderId = :orderId LIMIT 1")
     fun getOrderById(orderId: Long): CustomerOrderEntity
 
+    @Query("UPDATE CustomerOrderEntity SET notes = :newNotes WHERE orderId = :orderId")
+    fun updateNotes(orderId: Long, newNotes: String)
+
 }

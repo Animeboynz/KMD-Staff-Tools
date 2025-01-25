@@ -14,4 +14,6 @@ interface CustomerOrderRepository {
     fun getAllOrders(): Flow<List<CustomerOrderEntity>>
 
     fun getOrderById(orderId: Long): CustomerOrderEntity
+
+    fun updateNotes(orderId: Long, newNotes: String)
 }

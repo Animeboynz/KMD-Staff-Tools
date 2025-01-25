@@ -37,14 +37,21 @@ fun NotesItem(
             .padding(MaterialTheme.spacing.medium),
     ) {
         Column {
-            Text(
-                text = "Notes",
-                style = MaterialTheme.typography.titleMedium,
-            )
-            Row {
+            if (note.isNotEmpty()) {
                 Text(
-                    text = note,
-                    style = MaterialTheme.typography.bodyMedium,
+                    text = "Notes",
+                    style = MaterialTheme.typography.titleMedium,
+                )
+                Row {
+                    Text(
+                        text = note,
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
+            } else {
+                Text(
+                    text = "Add Notes",
+                    style = MaterialTheme.typography.titleMedium,
                 )
             }
         }

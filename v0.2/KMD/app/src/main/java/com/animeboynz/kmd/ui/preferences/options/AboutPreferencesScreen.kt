@@ -1,5 +1,6 @@
 package com.animeboynz.kmd.ui.preferences.options
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -45,6 +46,7 @@ import com.animeboynz.kmd.presentation.components.icons.CustomIcons
 import com.animeboynz.kmd.presentation.components.icons.Github
 import com.animeboynz.kmd.ui.preferences.options.OpenSourceLicensesScreen
 import com.animeboynz.kmd.utils.CrashLogUtil
+import com.animeboynz.kmd.utils.toast
 
 object AboutPreferencesScreen : Screen() {
     private fun readResolve(): Any = AboutPreferencesScreen
@@ -58,7 +60,6 @@ object AboutPreferencesScreen : Screen() {
         val navigator = LocalNavigator.currentOrThrow
         //var isCheckingUpdates by remember { mutableStateOf(false) }
 
-        ///////////////////////
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -92,7 +93,7 @@ object AboutPreferencesScreen : Screen() {
                 TextPreferenceWidget(
                     title = stringResource(R.string.check_for_updates),
                     widget = {},
-                    onPreferenceClick = {},
+                    onPreferenceClick = { context.toast("Not yet implemented!", Toast.LENGTH_SHORT) },
                 )
 
                 TextPreferenceWidget(
@@ -115,11 +116,6 @@ object AboutPreferencesScreen : Screen() {
 
             }
         }
-
-
-        ///////////////////////
-
-
     }
 
     fun getVersionName(withBuildDate: Boolean): String {
