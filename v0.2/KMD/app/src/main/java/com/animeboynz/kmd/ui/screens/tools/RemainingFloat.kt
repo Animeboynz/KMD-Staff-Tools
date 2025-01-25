@@ -30,9 +30,9 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.animeboynz.kmd.presentation.Screen
+import com.animeboynz.kmd.ui.screens.tools.AppData.currencyList
 import kotlin.collections.component1
 import kotlin.collections.component2
-import com.animeboynz.kmd.ui.screens.tools.AppData.currencyList
 
 class RemainingFloat : Screen() {
 

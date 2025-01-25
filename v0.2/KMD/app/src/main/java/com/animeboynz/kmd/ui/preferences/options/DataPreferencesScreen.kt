@@ -20,14 +20,14 @@ import androidx.compose.ui.res.stringResource
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import me.zhanghai.compose.preference.Preference
-import me.zhanghai.compose.preference.ProvidePreferenceLocals
-import org.koin.compose.koinInject
 import com.animeboynz.kmd.R
 import com.animeboynz.kmd.domain.CustomerOrderRepository
 import com.animeboynz.kmd.domain.EmployeeRepository
 import com.animeboynz.kmd.preferences.GeneralPreferences
 import com.animeboynz.kmd.presentation.Screen
+import me.zhanghai.compose.preference.Preference
+import me.zhanghai.compose.preference.ProvidePreferenceLocals
+import org.koin.compose.koinInject
 
 object DataPreferencesScreen : Screen() {
     private fun readResolve(): Any = DataPreferencesScreen

@@ -9,10 +9,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.animeboynz.kmd.R
 import com.animeboynz.kmd.presentation.components.preferences.BasePreferenceWidget
 import com.animeboynz.kmd.presentation.components.preferences.PrefsHorizontalPadding
 import com.animeboynz.kmd.ui.theme.ThemeMode
-import com.animeboynz.kmd.R
 
 private val options = mapOf(
     ThemeMode.SYSTEM to R.string.pref_appearance_darkmode_system,

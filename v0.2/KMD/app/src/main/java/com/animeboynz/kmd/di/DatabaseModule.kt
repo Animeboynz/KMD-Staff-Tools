@@ -3,13 +3,6 @@ package com.animeboynz.kmd.di
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.module.dsl.singleOf
-import org.koin.dsl.bind
-import org.koin.dsl.module
 import com.animeboynz.kmd.database.ALMDatabase
 import com.animeboynz.kmd.database.Migrations
 import com.animeboynz.kmd.database.entities.ProductsEntity
@@ -23,6 +16,13 @@ import com.animeboynz.kmd.domain.OrderItemRepository
 import com.animeboynz.kmd.domain.ProductsRepository
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 
 val DatabaseModule = module {
     single<ALMDatabase> {

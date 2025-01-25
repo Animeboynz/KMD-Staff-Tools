@@ -1,8 +1,8 @@
 package com.animeboynz.kmd.domain
 
 import androidx.room.Upsert
-import kotlinx.coroutines.flow.Flow
 import com.animeboynz.kmd.database.entities.ProductsEntity
+import kotlinx.coroutines.flow.Flow
 
 interface ProductsRepository {
     @Upsert
