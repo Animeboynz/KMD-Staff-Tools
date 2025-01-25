@@ -3,6 +3,7 @@ package com.animeboynz.kmd.database.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.animeboynz.kmd.database.entities.CustomerOrderEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -25,5 +26,8 @@ interface CustomerOrderDao {
 
     @Query("UPDATE CustomerOrderEntity SET notes = :newNotes WHERE orderId = :orderId")
     fun updateNotes(orderId: Long, newNotes: String)
+
+    @Update
+    fun updateOrder(order: CustomerOrderEntity)
 
 }

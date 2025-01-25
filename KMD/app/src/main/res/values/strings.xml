@@ -13,11 +13,13 @@
     <string name="orders_none">No Customer Orders</string>
     <string name="orders_add">Add Order</string>
     <string name="orders_new">Create New Order</string>
+    <string name="orders_edit">Edit Order</string>
     <string name="orders_details">Order Details</string>
     <string name="orders_status">Status: </string>
     <string name="orders_customer_phone">Phone No:</string>
     <string name="orders_delete_success">Order Deleted!</string>
     <string name="orders_insert_success">Order added successfully!</string>
+    <string name="orders_update_success">Order updated successfully!</string>
     <string name="entry_item_present">Present</string>
     <string name="entry_item_missing">Missing</string>
 

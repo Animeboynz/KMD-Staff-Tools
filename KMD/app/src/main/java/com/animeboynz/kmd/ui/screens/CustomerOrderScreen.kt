@@ -90,6 +90,7 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
                         }
                         IconButton(
                             onClick = {
+                                navigator.push(AddOrderScreen(true, orderId))
                             }
                         ) {
                             Icon(Icons.Default.EditNote, null)

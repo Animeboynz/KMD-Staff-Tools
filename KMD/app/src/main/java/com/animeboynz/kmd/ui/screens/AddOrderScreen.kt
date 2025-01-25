@@ -42,7 +42,7 @@ import java.util.*
 import org.koin.compose.koinInject
 
 
-class AddOrderScreen : Screen() {
+class AddOrderScreen(val editMode: Boolean = false, val orderId: Long? = null) : Screen() {
 
     @Composable
     override fun Content() {
@@ -51,23 +51,34 @@ class AddOrderScreen : Screen() {
         val customerOrderRepository = koinInject<CustomerOrderRepository>()
         val employeeRepository = koinInject<EmployeeRepository>()
 
+
         val screenModel = rememberScreenModel(tag = "manga") {
-            AddOrderScreenModel(customerOrderRepository, employeeRepository)
+            AddOrderScreenModel(
+                customerOrderRepository, employeeRepository, orderId
+            )
         }
 
         // State variables for user input
         val employeeList by screenModel.employees.collectAsState()
         val dropdownItems = employeeList.map { EmployeeDropdownItem(it) }
-        var selectedEmployee by remember { mutableStateOf<EmployeeDropdownItem?>(null) }
 
+        var selectedEmployee by remember { mutableStateOf<EmployeeDropdownItem?>(null) }
         var orderDate by remember { mutableStateOf("") }
         var customerName by remember { mutableStateOf(TextFieldValue("")) }
         var customerPhone by remember { mutableStateOf(TextFieldValue("")) }
         var customerMics by remember { mutableStateOf(TextFieldValue("")) }
         var notes by remember { mutableStateOf(TextFieldValue("")) }
-
         var status by remember { mutableStateOf(Status.NOT_ORDERED) }
 
+        if (editMode) {
+            val order by screenModel.order.collectAsState()
+            selectedEmployee = dropdownItems.find { it.employee.employeeId == order.employeeId }
+            orderDate = order.orderDate
+            customerName = TextFieldValue(order.customerName)
+            customerPhone = TextFieldValue(order.customerPhone)
+            customerMics = TextFieldValue(order.customerMics)
+            notes = TextFieldValue(order.notes)
+        }
         // Collect the status from the screen model if needed
         val collectedStatus by screenModel.status.collectAsState()
         var showDatePicker by remember { mutableStateOf(false) }
@@ -106,7 +117,7 @@ class AddOrderScreen : Screen() {
                         }
                     },
                     title = {
-                        Text(stringResource(R.string.orders_new))
+                        Text(stringResource(if (editMode) R.string.orders_edit else R.string.orders_new))
                     },
                     actions = {},
                 )
@@ -215,24 +226,41 @@ class AddOrderScreen : Screen() {
                         }
 
                         // Create the order entity
-                        val order = CustomerOrderEntity(
-                            orderDate = orderDate,
-                            employeeId = selectedEmployee!!.extraData.toString(),
-                            customerName = customerName.text,
-                            customerPhone = customerPhone.text,
-                            customerMics = customerMics.text,
-                            notes = notes.text,
-                            status = status.displayName
-                        )
-
-                        screenModel.addOrder(order)
-                        //customerOrderRepository.insertOrder(order)
-                        navigator.pop()
-                        Toast.makeText(context, R.string.orders_insert_success, Toast.LENGTH_SHORT).show()
+                        var order: CustomerOrderEntity
+                        if (editMode) {
+                            order = CustomerOrderEntity(
+                                orderId = orderId!!,
+                                orderDate = orderDate,
+                                employeeId = selectedEmployee!!.extraData.toString(),
+                                customerName = customerName.text,
+                                customerPhone = customerPhone.text,
+                                customerMics = customerMics.text,
+                                notes = notes.text,
+                                status = status.displayName
+                            )
+                            screenModel.updateOrder(order)
+                            navigator.pop()
+                            navigator.pop()
+                            navigator.push(CustomerOrderScreen(order.orderId))
+                            Toast.makeText(context, R.string.orders_update_success, Toast.LENGTH_SHORT).show()
+                        } else {
+                            order = CustomerOrderEntity(
+                                orderDate = orderDate,
+                                employeeId = selectedEmployee!!.extraData.toString(),
+                                customerName = customerName.text,
+                                customerPhone = customerPhone.text,
+                                customerMics = customerMics.text,
+                                notes = notes.text,
+                                status = status.displayName
+                            )
+                            screenModel.addOrder(order)
+                            navigator.pop()
+                            Toast.makeText(context, R.string.orders_insert_success, Toast.LENGTH_SHORT).show()
+                        }
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(stringResource(R.string.orders_add))
+                    Text(stringResource(if (editMode) R.string.orders_edit else R.string.orders_add))
                 }
             }
 

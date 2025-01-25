@@ -16,4 +16,6 @@ interface CustomerOrderRepository {
     fun getOrderById(orderId: Long): CustomerOrderEntity
 
     fun updateNotes(orderId: Long, newNotes: String)
+
+    fun updateOrder(order: CustomerOrderEntity)
 }

@@ -31,4 +31,8 @@ class CustomerOrderRepositoryImpl(
     override fun updateNotes(orderId: Long, newNotes: String) {
         database.customerOrderDao().updateNotes(orderId, newNotes)
     }
+
+    override fun updateOrder(order: CustomerOrderEntity) {
+        database.customerOrderDao().updateOrder(order)
+    }
 }
