@@ -12,9 +12,15 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,7 +45,20 @@ class RemainingFloat : Screen() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
         Scaffold(
-
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = {
+                        Text("Remaining Float")
+                    },
+                    actions = {
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navigator.pop() }) {
+                            Icon(Icons.AutoMirrored.Outlined.ArrowBack, null)
+                        }
+                    },
+                )
+            }
         ) { paddingValues ->
             val paddingModifier = Modifier.padding(paddingValues)
 
@@ -59,12 +78,6 @@ class RemainingFloat : Screen() {
                 modifier = paddingModifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "Remaining Float",
-                    fontSize = 24.sp,
-                    modifier = Modifier.padding(16.dp)
-                )
-
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(1),
                     modifier = Modifier.weight(1f)

@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -76,13 +77,16 @@ object EmployeePreferencesScreen : Screen() {
                     modifier = Modifier
                         .fillMaxSize()
                         //.verticalScroll(rememberScrollState())
-                        .padding(paddingValues),
+                        .padding(paddingValues)
+                        .padding(16.dp),
                 ) {
                     Button(
                         onClick = {
                             navigator.push(AddEmployeeScreen())
                         },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            //.padding(paddingValues),
                     ) {
                         Text(stringResource(R.string.pref_employees_add))
                     }
