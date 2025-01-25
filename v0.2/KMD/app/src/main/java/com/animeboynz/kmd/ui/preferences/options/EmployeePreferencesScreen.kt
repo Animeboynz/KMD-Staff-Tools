@@ -78,7 +78,6 @@ object EmployeePreferencesScreen : Screen() {
                         .fillMaxSize()
                         //.verticalScroll(rememberScrollState())
                         .padding(paddingValues)
-                        .padding(16.dp),
                 ) {
                     Button(
                         onClick = {
@@ -86,7 +85,7 @@ object EmployeePreferencesScreen : Screen() {
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            //.padding(paddingValues),
+                            .padding(horizontal = 8.dp),
                     ) {
                         Text(stringResource(R.string.pref_employees_add))
                     }

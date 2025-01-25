@@ -17,7 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import com.animeboynz.kmd.ui.theme.spacing
-import com.animeboynz.kmd.utils.Constants.disabledAlpha
+import com.animeboynz.kmd.utils.Constants.DISABLED_ALPHA
 
 interface DropdownItem {
     val displayName: String
@@ -50,7 +50,7 @@ fun <T : DropdownItem> SimpleDropdown(
                 if (selectedItem?.extraData != null) {
                     Text(
                         text = "(${selectedItem.extraData!!})",
-                        modifier = Modifier.alpha(disabledAlpha),
+                        modifier = Modifier.alpha(DISABLED_ALPHA),
                     )
                 }
             },
@@ -71,7 +71,7 @@ fun <T : DropdownItem> SimpleDropdown(
                             if (item.extraData != null) {
                                 Text(
                                     text = "(${item.extraData!!})",
-                                    modifier = Modifier.alpha(disabledAlpha),
+                                    modifier = Modifier.alpha(DISABLED_ALPHA),
                                 )
                             }
                         }
