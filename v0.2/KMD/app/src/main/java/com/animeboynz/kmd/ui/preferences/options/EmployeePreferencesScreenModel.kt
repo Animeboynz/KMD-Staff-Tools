@@ -3,10 +3,10 @@ package com.animeboynz.kmd.ui.preferences.options
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.animeboynz.kmd.database.entities.EmployeeEntity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import com.animeboynz.kmd.domain.EmployeeRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 class EmployeePreferencesScreenModel(
     private val employeeRepository: EmployeeRepository,

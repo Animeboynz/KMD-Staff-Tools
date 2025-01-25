@@ -2,10 +2,10 @@ package com.animeboynz.kmd.ui.screens
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import com.animeboynz.kmd.database.entities.EmployeeEntity
 import com.animeboynz.kmd.domain.EmployeeRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AddEmployeeScreenModel(
     private val employeeRepository: EmployeeRepository

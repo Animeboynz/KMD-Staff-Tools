@@ -20,12 +20,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
-import me.zhanghai.compose.preference.PreferenceCategory
-import me.zhanghai.compose.preference.ProvidePreferenceLocals
-import me.zhanghai.compose.preference.SwitchPreference
-import org.koin.compose.koinInject
 import com.animeboynz.kmd.R
 import com.animeboynz.kmd.preferences.AppearancePreferences
 import com.animeboynz.kmd.preferences.preference.collectAsState
@@ -35,6 +29,12 @@ import com.animeboynz.kmd.presentation.components.preferences.AppThemePreference
 import com.animeboynz.kmd.presentation.components.preferences.MultiChoiceSegmentedButton
 import com.animeboynz.kmd.ui.theme.DarkMode
 import com.animeboynz.kmd.ui.theme.setAppCompatDelegateThemeMode
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
+import me.zhanghai.compose.preference.PreferenceCategory
+import me.zhanghai.compose.preference.ProvidePreferenceLocals
+import me.zhanghai.compose.preference.SwitchPreference
+import org.koin.compose.koinInject
 
 object AppearancePreferencesScreen : Screen() {
     private fun readResolve(): Any = AppearancePreferencesScreen

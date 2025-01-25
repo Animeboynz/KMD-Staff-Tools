@@ -3,8 +3,6 @@ package com.animeboynz.kmd.preferences.preference
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.callbackFlow
 import com.animeboynz.kmd.preferences.preference.AndroidPreference.BooleanPrimitive
 import com.animeboynz.kmd.preferences.preference.AndroidPreference.FloatPrimitive
 import com.animeboynz.kmd.preferences.preference.AndroidPreference.IntPrimitive
@@ -12,6 +10,8 @@ import com.animeboynz.kmd.preferences.preference.AndroidPreference.LongPrimitive
 import com.animeboynz.kmd.preferences.preference.AndroidPreference.Object
 import com.animeboynz.kmd.preferences.preference.AndroidPreference.StringPrimitive
 import com.animeboynz.kmd.preferences.preference.AndroidPreference.StringSetPrimitive
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
 
 class AndroidPreferenceStore(
     context: Context,

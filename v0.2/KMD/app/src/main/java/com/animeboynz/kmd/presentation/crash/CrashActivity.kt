@@ -48,10 +48,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.lifecycle.coroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import com.animeboynz.kmd.BuildConfig
 import com.animeboynz.kmd.MainActivity
 import com.animeboynz.kmd.R
@@ -61,6 +57,10 @@ import com.animeboynz.kmd.ui.theme.spacing
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CrashActivity : ComponentActivity() {
 

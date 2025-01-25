@@ -22,8 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import me.zhanghai.compose.preference.ProvidePreferenceLocals
-import me.zhanghai.compose.preference.preference
 import com.animeboynz.kmd.R
 import com.animeboynz.kmd.presentation.Screen
 import com.animeboynz.kmd.ui.preferences.options.AboutPreferencesScreen
@@ -31,6 +29,8 @@ import com.animeboynz.kmd.ui.preferences.options.AppearancePreferencesScreen
 import com.animeboynz.kmd.ui.preferences.options.DataPreferencesScreen
 import com.animeboynz.kmd.ui.preferences.options.EmployeePreferencesScreen
 import com.animeboynz.kmd.ui.preferences.options.GeneralPreferencesScreen
+import me.zhanghai.compose.preference.ProvidePreferenceLocals
+import me.zhanghai.compose.preference.preference
 
 object PreferencesScreen : Screen() {
     private fun readResolve(): Any = PreferencesScreen

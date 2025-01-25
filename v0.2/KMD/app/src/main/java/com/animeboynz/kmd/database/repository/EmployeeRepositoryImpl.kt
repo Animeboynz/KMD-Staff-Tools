@@ -1,9 +1,9 @@
 package com.animeboynz.kmd.database.repository
 
-import kotlinx.coroutines.flow.Flow
 import com.animeboynz.kmd.database.ALMDatabase
 import com.animeboynz.kmd.database.entities.EmployeeEntity
 import com.animeboynz.kmd.domain.EmployeeRepository
+import kotlinx.coroutines.flow.Flow
 
 class EmployeeRepositoryImpl(
     private val database: ALMDatabase,

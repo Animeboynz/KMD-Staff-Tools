@@ -3,8 +3,8 @@ package com.animeboynz.kmd.database.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import kotlinx.coroutines.flow.Flow
 import com.animeboynz.kmd.database.entities.CustomerOrderEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CustomerOrderDao {

@@ -32,15 +32,15 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import me.zhanghai.compose.preference.PreferenceCategory
-import me.zhanghai.compose.preference.ProvidePreferenceLocals
-import org.koin.compose.koinInject
 import com.animeboynz.kmd.R
 import com.animeboynz.kmd.domain.EmployeeRepository
 import com.animeboynz.kmd.preferences.GeneralPreferences
 import com.animeboynz.kmd.presentation.Screen
 import com.animeboynz.kmd.presentation.components.EmployeeRow
 import com.animeboynz.kmd.ui.screens.AddEmployeeScreen
+import me.zhanghai.compose.preference.PreferenceCategory
+import me.zhanghai.compose.preference.ProvidePreferenceLocals
+import org.koin.compose.koinInject
 
 object EmployeePreferencesScreen : Screen() {
     private fun readResolve(): Any = EmployeePreferencesScreen

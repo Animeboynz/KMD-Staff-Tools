@@ -11,14 +11,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
-import org.koin.android.ext.android.inject
 import com.animeboynz.kmd.preferences.AppearancePreferences
 import com.animeboynz.kmd.preferences.preference.collectAsState
 import com.animeboynz.kmd.presentation.components.preferences.TachiyomiTheme
 import com.animeboynz.kmd.ui.home.HomeScreen
-import com.animeboynz.kmd.ui.theme.KMDTheme
 import com.animeboynz.kmd.ui.theme.DarkMode
+import com.animeboynz.kmd.ui.theme.KMDTheme
 import com.animeboynz.kmd.ui.theme.ThemeMode
+import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
     private val appearancePreferences by inject<AppearancePreferences>()

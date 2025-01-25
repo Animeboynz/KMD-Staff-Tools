@@ -12,10 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import org.koin.compose.koinInject
 import com.animeboynz.kmd.R
 import com.animeboynz.kmd.preferences.AppearancePreferences
 import com.animeboynz.kmd.preferences.preference.collectAsState
+import org.koin.compose.koinInject
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,

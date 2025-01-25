@@ -1,7 +1,7 @@
 package com.animeboynz.kmd.domain
 
-import kotlinx.coroutines.flow.Flow
 import com.animeboynz.kmd.database.entities.CustomerOrderEntity
+import kotlinx.coroutines.flow.Flow
 
 interface CustomerOrderRepository {
 
