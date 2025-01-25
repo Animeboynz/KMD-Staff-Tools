@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
@@ -25,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.animeboynz.kmd.R
@@ -103,6 +105,24 @@ object GeneralPreferencesScreen : Screen() {
                             it
                         },
                     )
+
+                    var orderNumberPadding by remember {
+                        mutableStateOf(preferences.orderNumberPadding.get())
+                    }
+                    ReplacingTextFieldPreference(
+                        value = orderNumberPadding,
+                        onValueChange = { orderNumberPadding = it.toString().toInt() },
+                        title = stringResource(R.string.pref_general_order_number_pad),
+                        description = stringResource(R.string.pref_general_order_number_pad_description),
+                        textToValue = {
+                            preferences.orderNumberPadding.set(
+                                if (it.toInt() < 1) 1
+                                else if (it.toInt() > 8) 8
+                                else it.toInt())
+                            it
+                        },
+                        keyboardType = KeyboardType.Number,
+                    )
                 }
             }
         }
@@ -115,6 +135,7 @@ object GeneralPreferencesScreen : Screen() {
         title: String,
         description: String?,
         textToValue: (String) -> T?,
+        keyboardType: KeyboardType = KeyboardType.Unspecified,
     ) {
         TextFieldPreference(
             value = value,
@@ -131,6 +152,7 @@ object GeneralPreferencesScreen : Screen() {
                         value = value,
                         onValueChange = onValueChange,
                         maxLines = 1,
+                        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
                         keyboardActions = KeyboardActions(onDone = { onOk() }),
                     )
                 }

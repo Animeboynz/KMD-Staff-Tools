@@ -60,6 +60,8 @@
     <string name="pref_general_store_name_description">Enter store name here e.g. Newmarket</string>
     <string name="pref_general_store_number">Store Number</string>
     <string name="pref_general_store_number_description">Enter store number here e.g. 183</string>
+    <string name="pref_general_order_number_pad">Order Number Padding</string>
+    <string name="pref_general_order_number_pad_description">e.g. When set to 4, order number 23 will become 0023</string>
 
     //Employees Preference
     <string name="pref_employees_add">Add New Employee</string>

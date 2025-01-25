@@ -71,7 +71,7 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(text = "KMD-${preferences.storeNumber.get()}-${order.orderId}")
+                        Text(text = "KMD-${preferences.storeNumber.get()}-${String.format("%0${preferences.orderNumberPadding.get()}d", order.orderId)}")
                     },
                     navigationIcon = {
                         IconButton(onClick = { navigator.pop() }) {

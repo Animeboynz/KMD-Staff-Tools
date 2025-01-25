@@ -127,6 +127,7 @@ object OrdersTab : Tab {
                         items(sortedOrders) { order ->
                             OrderRow(order,
                                 preferences.storeNumber.get(),
+                                preferences.orderNumberPadding.get().toString(),
                                 { navigator.push(CustomerOrderScreen(order.orderId)) }
                             )
                         }
