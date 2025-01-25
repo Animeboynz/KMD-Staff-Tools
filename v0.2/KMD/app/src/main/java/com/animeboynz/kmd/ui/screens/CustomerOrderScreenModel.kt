@@ -72,4 +72,9 @@ class CustomerOrderScreenModel(
         }
     }
 
+    fun updateOrderNotes(orderId: Long, newNotes: String) {
+        screenModelScope.launch(Dispatchers.IO) {
+            customerOrderRepository.updateNotes(orderId, newNotes)
+        }
+    }
 }

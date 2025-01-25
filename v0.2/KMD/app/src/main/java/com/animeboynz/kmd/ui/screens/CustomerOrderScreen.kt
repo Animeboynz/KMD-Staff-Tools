@@ -38,9 +38,16 @@ import com.animeboynz.kmd.ui.theme.spacing
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import com.animeboynz.kmd.domain.ProductsRepository
 import com.animeboynz.kmd.preferences.GeneralPreferences
 import com.animeboynz.kmd.presentation.components.OrderItemCard
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 class CustomerOrderScreen(val orderId: Long) : Screen() {
 
@@ -56,6 +63,9 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
         val screenModel = rememberScreenModel { CustomerOrderScreenModel(customerOrderRepository, orderItemRepository, productsRepository, orderId) }
         val order by screenModel.order.collectAsState()
         val orderItems by screenModel.orderedItems.collectAsState()
+
+        var isNotesDialogVisible by remember { mutableStateOf(false) }
+        var editedNote by remember { mutableStateOf(order.notes) }
 
         Scaffold(
             topBar = {
@@ -97,11 +107,18 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
             ) {
                 CustomerOrderCard(order)
 
-                if (order.notes.isNotEmpty())
+                if (true)
                 {
+                    editedNote.ifEmpty {
+                        editedNote = order.notes
+                    }
+
                     NotesItem(
-                        note = order.notes,
-                        onClick = { },
+                        note = editedNote,
+                        onClick = {
+                            editedNote = order.notes // Prefill with the current note
+                            isNotesDialogVisible = true
+                        },
                     )
                 }
 
@@ -112,6 +129,44 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
 
                 //Spacer(modifier = Modifier.weight(1f))
                 //Spacer(modifier = Modifier.width(MaterialTheme.spacing.extraSmall))
+
+                if (isNotesDialogVisible) {
+                    AlertDialog(
+                        onDismissRequest = {
+                            isNotesDialogVisible = false
+                            editedNote = order.notes
+                        },
+                        title = { Text(text = "Edit Notes") },
+                        text = {
+                            TextField(
+                                value = editedNote,
+                                onValueChange = { editedNote = it },
+                                modifier = Modifier.fillMaxWidth(),
+                                label = { Text("Notes") },
+                                maxLines = 5,
+                            )
+                        },
+                        confirmButton = {
+                            Button(onClick = {
+                                screenModel.updateOrderNotes(order.orderId, editedNote)
+                                isNotesDialogVisible = false
+                                screenModel.getOrder(orderId)
+                            }) {
+                                Text("Save")
+                            }
+                        },
+                        dismissButton = {
+                            Button(
+                                onClick = { isNotesDialogVisible = false
+                                            editedNote = order.notes
+                                }
+                            ) {
+                                Text("Cancel")
+                            }
+                        },
+                    )
+                }
+
             }
         }
     }
