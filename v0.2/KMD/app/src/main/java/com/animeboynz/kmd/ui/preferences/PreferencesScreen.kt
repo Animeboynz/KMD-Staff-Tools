@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Image
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Icon
@@ -25,6 +26,7 @@ import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preference
 import com.animeboynz.kmd.R
 import com.animeboynz.kmd.presentation.Screen
+import com.animeboynz.kmd.ui.preferences.options.AboutPreferencesScreen
 import com.animeboynz.kmd.ui.preferences.options.AppearancePreferencesScreen
 import com.animeboynz.kmd.ui.preferences.options.DataPreferencesScreen
 import com.animeboynz.kmd.ui.preferences.options.EmployeePreferencesScreen
@@ -82,6 +84,13 @@ object PreferencesScreen : Screen() {
                         summary = { Text(text = stringResource(R.string.pref_data_summary)) },
                         icon = { Icon(ImageVector.vectorResource(R.drawable.database_24px), null) },
                         onClick = { navigator.push(DataPreferencesScreen) },
+                    )
+                    preference(
+                        key = "about",
+                        title = { Text(text = stringResource(R.string.pref_about_title)) },
+                        summary = { Text(text = "${AboutPreferencesScreen.getVersionName(false)}") },
+                        icon = { Icon(Icons.Outlined.Info, null) },
+                        onClick = { navigator.push(AboutPreferencesScreen) },
                     )
                 }
             }

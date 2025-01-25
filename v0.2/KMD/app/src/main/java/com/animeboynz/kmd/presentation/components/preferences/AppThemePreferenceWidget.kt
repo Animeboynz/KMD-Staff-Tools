@@ -48,6 +48,7 @@ import com.animeboynz.kmd.ui.theme.AppTheme
 import com.animeboynz.kmd.ui.theme.spacing
 import com.animeboynz.kmd.utils.DeviceUtil
 import com.animeboynz.kmd.utils.isDynamicColorAvailable
+import com.animeboynz.kmd.utils.secondaryItemAlpha
 import org.koin.compose.koinInject
 
 @Composable
@@ -109,8 +110,8 @@ private fun AppThemesList(
                 Text(
                     text = stringResource(appTheme.titleRes),
                     modifier = Modifier
-                        .fillMaxWidth(),
-                        //.secondaryItemAlpha(),
+                        .fillMaxWidth()
+                        .secondaryItemAlpha(),
                     textAlign = TextAlign.Center,
                     maxLines = 2,
                     minLines = 2,

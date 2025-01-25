@@ -4,7 +4,6 @@ import android.app.Application
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import com.animeboynz.kmd.di.DatabaseModule
-import com.animeboynz.kmd.di.FileManagerModule
 import com.animeboynz.kmd.di.NetworkModule
 import com.animeboynz.kmd.di.PreferencesModule
 import com.animeboynz.kmd.di.RepositoryModule
@@ -32,7 +31,6 @@ class App : Application() {
             androidContext(this@App)
 
             modules(
-                FileManagerModule,
                 NetworkModule,
                 PreferencesModule,
                 RepositoryModule,

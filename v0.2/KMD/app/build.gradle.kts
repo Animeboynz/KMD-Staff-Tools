@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.room)
     alias(libs.plugins.spotless.gradle)
     id("kotlin-parcelize")
+    alias(libs.plugins.aboutLibraries)
 }
 
 android {
@@ -20,6 +21,10 @@ android {
         applicationId = "com.animeboynz.kmd"
         minSdk = 26
         targetSdk = 34
+
+//        buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
+//        buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
+//        buildConfigField("String", "BUILD_TIME", "\"${getBuildTime()}\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         versionCode = 1
@@ -89,11 +94,12 @@ dependencies {
 
     implementation(libs.compose.prefs)
     implementation(libs.bundles.koin)
-    implementation(libs.fsaf)
 
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
     implementation(libs.room.ktx)
+
+    implementation(libs.aboutLibraries.compose)
 }
 
 spotless {
