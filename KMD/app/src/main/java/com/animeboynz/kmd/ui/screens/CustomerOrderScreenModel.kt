@@ -26,8 +26,6 @@ class CustomerOrderScreenModel(
     private val _order = MutableStateFlow<CustomerOrderEntity>(CustomerOrderEntity(0, "", "", "", "", "", "", "")) // Use nullable type
     val order: StateFlow<CustomerOrderEntity> = _order.asStateFlow() // Expose as StateFlow
 
-    //var productName = MutableStateFlow<ProductsEntity?>(null)
-
     private val _productNames = MutableStateFlow<Map<String, String>>(emptyMap())
     val productNames: StateFlow<Map<String, String>> = _productNames.asStateFlow()
 
@@ -75,6 +73,7 @@ class CustomerOrderScreenModel(
     fun updateOrderNotes(orderId: Long, newNotes: String) {
         screenModelScope.launch(Dispatchers.IO) {
             customerOrderRepository.updateNotes(orderId, newNotes)
+            getOrder(orderId)
         }
     }
 }

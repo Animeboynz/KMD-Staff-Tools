@@ -107,13 +107,10 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
             ) {
                 CustomerOrderCard(order)
 
-                editedNote.ifEmpty {
-                    editedNote = order.notes
-                }
-
                 NotesItem(
-                    note = editedNote,
+                    note = order.notes,
                     onClick = {
+                        editedNote = order.notes
                         isNotesDialogVisible = true
                     },
                 )
@@ -129,39 +126,37 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
                 if (isNotesDialogVisible) {
                     AlertDialog(
                         onDismissRequest = {
-                            //isNotesDialogVisible = false
+                            isNotesDialogVisible = false
                         },
-                        title = { Text(text = "Edit Notes") },
+                        title = { Text(text = "Edit Order Notes") },
                         text = {
                             TextField(
                                 value = editedNote,
                                 onValueChange = { editedNote = it },
                                 modifier = Modifier.fillMaxWidth(),
                                 label = { Text("Notes") },
-                                maxLines = 5,
+                                maxLines = 10,
                             )
                         },
                         confirmButton = {
                             Button(onClick = {
                                 screenModel.updateOrderNotes(order.orderId, editedNote)
                                 isNotesDialogVisible = false
-                                //screenModel.getOrder(orderId)
                             }) {
                                 Text("Save")
                             }
                         },
-//                        dismissButton = {
-//                            Button(
-//                                onClick = {
-//                                    isNotesDialogVisible = false
-//                                }
-//                            ) {
-//                                Text("Cancel")
-//                            }
-//                        },
+                        dismissButton = {
+                            Button(
+                                onClick = {
+                                    isNotesDialogVisible = false
+                                }
+                            ) {
+                                Text("Cancel")
+                            }
+                        },
                     )
                 }
-
             }
         }
     }
