@@ -1,6 +1,6 @@
 package com.animeboynz.kmd.ui.screens.tools
 
-object AppData {
+object CashCountData {
     val currencyList = listOf(
         "$100", "$50", "$20", "$10", "$5", "$2", "$1", "50c", "20c", "10c"
     )
