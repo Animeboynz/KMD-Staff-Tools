@@ -35,15 +35,12 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.animeboynz.kmd.presentation.Screen
+import com.animeboynz.kmd.ui.screens.tools.CashCountData.currencyList
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.text.toIntOrNull
 
 class Takings : Screen() {
-
-    val currencyList2 = listOf(
-        "$100", "$50", "$20", "$10", "$5", "$2", "$1", "50c", "20c", "10c"
-    )
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -51,8 +48,8 @@ class Takings : Screen() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
 
-        var inputValues by rememberSaveable { mutableStateOf(currencyList2.associateWith { "" }) }
-        var errorMessages by remember { mutableStateOf(currencyList2.associateWith { "" }) }
+        var inputValues by rememberSaveable { mutableStateOf(currencyList.associateWith { "" }) }
+        var errorMessages by remember { mutableStateOf(currencyList.associateWith { "" }) }
 
         val totalTakings = inputValues.entries.sumByDouble { (currency, quantity) ->
             val denominationValue = when {
@@ -66,7 +63,7 @@ class Takings : Screen() {
             topBar = {
                 CenterAlignedTopAppBar(
                     title = {
-                        Text("Left to take: $${"%.2f".format(AppData.bankingValue - totalTakings)}", fontSize = 24.sp)
+                        Text("Left to take: $${"%.2f".format(CashCountData.bankingValue - totalTakings)}", fontSize = 24.sp)
                     },
                     actions = {
                     },
@@ -93,7 +90,7 @@ class Takings : Screen() {
                     columns = GridCells.Fixed(1),
                     modifier = Modifier.weight(1f)
                 ) {
-                    items(currencyList2) { currency ->
+                    items(currencyList) { currency ->
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
@@ -114,7 +111,7 @@ class Takings : Screen() {
                                 onValueChange = { newValue ->
                                     if (newValue.all { char -> char.isDigit() }) {
                                         val newQuantity = newValue.toIntOrNull() ?: 0
-                                        val maxQuantity = AppData.cashRowQuantities[currency] ?: 0
+                                        val maxQuantity = CashCountData.cashRowQuantities[currency] ?: 0
 
                                         if (newQuantity <= maxQuantity) {
                                             inputValues = inputValues.toMutableMap().apply { put(currency, newValue) }
@@ -155,7 +152,7 @@ class Takings : Screen() {
 
                 // Display expected and current takings
                 Text(
-                    text = "Expected Takings: $${"%.2f".format(AppData.bankingValue)}",
+                    text = "Expected Takings: $${"%.2f".format(CashCountData.bankingValue)}",
                     fontSize = 20.sp
                 )
 
@@ -180,7 +177,7 @@ class Takings : Screen() {
                 // Button to navigate to RemainingFloat
                 Button(
                     onClick = {
-                        AppData.takingsQuantities = inputValues.mapValues { it.value.toIntOrNull() ?: 0 }
+                        CashCountData.takingsQuantities = inputValues.mapValues { it.value.toIntOrNull() ?: 0 }
                         navigator.push(RemainingFloat())
                     },
                     shape = RoundedCornerShape(8.dp),

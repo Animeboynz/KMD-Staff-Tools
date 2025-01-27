@@ -20,7 +20,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,15 +29,11 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.animeboynz.kmd.presentation.Screen
-import com.animeboynz.kmd.ui.screens.tools.AppData.currencyList
+import com.animeboynz.kmd.ui.screens.tools.CashCountData.currencyList
 import kotlin.collections.component1
 import kotlin.collections.component2
 
 class RemainingFloat : Screen() {
-
-    val currencyList2 = listOf(
-        "$100", "$50", "$20", "$10", "$5", "$2", "$1", "50c", "20c", "10c"
-    )
 
     @Composable
     override fun Content() {
@@ -62,8 +57,8 @@ class RemainingFloat : Screen() {
         ) { paddingValues ->
             val paddingModifier = Modifier.padding(paddingValues)
 
-            val remainingQuantities = AppData.cashRowQuantities.mapValues {
-                it.value - (AppData.takingsQuantities[it.key] ?: 0)
+            val remainingQuantities = CashCountData.cashRowQuantities.mapValues {
+                it.value - (CashCountData.takingsQuantities[it.key] ?: 0)
             }
 
             val totalSum = remainingQuantities.entries.sumByDouble { (currency, quantity) ->
@@ -136,10 +131,10 @@ class RemainingFloat : Screen() {
                 }
                 Button(
                     onClick = { navigator.pop(); navigator.pop();
-                        AppData.takingsQuantities = currencyList2.associateWith { 0 }.toMutableMap(); // Reset quantities
-                        AppData.takingsQuantities = currencyList2.associateWith { 0 }.toMutableMap();
-                        AppData.totalValue = 0.0;
-                        AppData.bankingValue = 0.0;
+                        CashCountData.takingsQuantities = currencyList.associateWith { 0 }.toMutableMap(); // Reset quantities
+                        CashCountData.takingsQuantities = currencyList.associateWith { 0 }.toMutableMap();
+                        CashCountData.totalValue = 0.0;
+                        CashCountData.bankingValue = 0.0;
                     },
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier
