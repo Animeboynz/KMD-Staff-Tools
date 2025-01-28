@@ -1,5 +1,6 @@
 package com.animeboynz.kmd.presentation.components
 
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,11 +13,17 @@ import androidx.compose.ui.unit.dp
 import com.animeboynz.kmd.database.entities.ProductsEntity
 
 @Composable
-fun ProductRow(product: ProductsEntity) {
+fun ProductRow(
+    product: ProductsEntity,
+    onClick: () -> Unit,
+) {
     Card(
         modifier = Modifier
             .padding(vertical = 2.dp, horizontal = 8.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .combinedClickable(
+                onClick = onClick,
+            ),
         shape = MaterialTheme.shapes.medium
     ) {
         Row(
