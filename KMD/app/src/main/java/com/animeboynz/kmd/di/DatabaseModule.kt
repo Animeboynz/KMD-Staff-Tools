@@ -6,13 +6,16 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.animeboynz.kmd.database.ALMDatabase
 import com.animeboynz.kmd.database.Migrations
 import com.animeboynz.kmd.database.entities.BarcodesEntity
+import com.animeboynz.kmd.database.entities.ColorsEntity
 import com.animeboynz.kmd.database.entities.ProductsEntity
 import com.animeboynz.kmd.database.repository.BarcodesRepositoryImpl
+import com.animeboynz.kmd.database.repository.ColorsRepositoryImpl
 import com.animeboynz.kmd.database.repository.CustomerOrderRepositoryImpl
 import com.animeboynz.kmd.database.repository.EmployeeRepositoryImpl
 import com.animeboynz.kmd.database.repository.OrderItemRepositoryImpl
 import com.animeboynz.kmd.database.repository.ProductsRepositoryImpl
 import com.animeboynz.kmd.domain.BarcodesRepository
+import com.animeboynz.kmd.domain.ColorsRepository
 import com.animeboynz.kmd.domain.CustomerOrderRepository
 import com.animeboynz.kmd.domain.EmployeeRepository
 import com.animeboynz.kmd.domain.OrderItemRepository
@@ -79,6 +82,23 @@ val DatabaseModule = module {
 
                         // Use the repository to insert the barcodes
                         get<BarcodesRepository>().insertAll(barcodes)
+
+                        val inputStreamColors = context.assets.open("colors.csv")
+                        val readerColors = BufferedReader(InputStreamReader(inputStreamColors))
+                        val colors = mutableListOf<ColorsEntity>()
+
+                        readerColors.useLines { lines ->
+                            lines.drop(1).forEach { line -> // Skip the header row
+                                val columns = line.split(",")
+                                if (columns.size >= 2) {
+                                    val code = columns[0].trim()
+                                    val color = columns[1].trim()
+                                    colors.add(ColorsEntity(colorCode = code, colorName = color))
+                                }
+                            }
+                        }
+
+                        get<ColorsRepository>().insertAll(colors)
                     }
                 }
             })
@@ -90,4 +110,5 @@ val DatabaseModule = module {
     singleOf(::CustomerOrderRepositoryImpl).bind(CustomerOrderRepository::class)
     singleOf(::OrderItemRepositoryImpl).bind(OrderItemRepository::class)
     singleOf(::BarcodesRepositoryImpl).bind(BarcodesRepository::class)
+    singleOf(::ColorsRepositoryImpl).bind(ColorsRepository::class)
 }

@@ -40,10 +40,12 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.animeboynz.kmd.R
 import com.animeboynz.kmd.database.entities.BarcodesEntity
+import com.animeboynz.kmd.database.entities.ColorsEntity
 import com.animeboynz.kmd.database.entities.CustomerOrderEntity
 import com.animeboynz.kmd.database.entities.EmployeeEntity
 import com.animeboynz.kmd.database.entities.OrderItemEntity
 import com.animeboynz.kmd.domain.BarcodesRepository
+import com.animeboynz.kmd.domain.ColorsRepository
 import com.animeboynz.kmd.domain.CustomerOrderRepository
 import com.animeboynz.kmd.domain.EmployeeRepository
 import com.animeboynz.kmd.domain.OrderItemRepository
@@ -69,17 +71,17 @@ class ProductScreen(val sku: String) : Screen() {
         val navigator = LocalNavigator.currentOrThrow
 
         val barcodesRepository = koinInject<BarcodesRepository>()
+        val colorsRepository = koinInject<ColorsRepository>()
 
         val screenModel = rememberScreenModel(tag = "manga") {
-            ProductScreenModel(barcodesRepository, sku)
+            ProductScreenModel(barcodesRepository, colorsRepository, sku)
         }
 
         val items by screenModel.product.collectAsState()
+        val colors by screenModel.colors.collectAsState()
 
         var hasColorError by remember { mutableStateOf(false) }
         var hasSizeError by remember { mutableStateOf(false) }
-
-        val barCodeGenerate = remember { mutableStateOf("") }
 
         var selectedItems by remember { mutableStateOf<List<BarcodesEntity>>(emptyList()) }
 
@@ -115,7 +117,7 @@ class ProductScreen(val sku: String) : Screen() {
                 val filteredBySize: List<BarcodesEntity> = items.distinctBy { it.size }
 
                 var selectedColor by remember { mutableStateOf<ColorDropdownItem?>(null) }
-                val dropdownColorItems = filteredByColor.map { ColorDropdownItem(it) }
+                val dropdownColorItems = filteredByColor.map { ColorDropdownItem(it, colors) }
 
                 var selectedSize by remember { mutableStateOf<SizeDropdownItem?>(null) }
                 val dropdownSizeItems = filteredBySize.map { SizeDropdownItem(it) }
@@ -269,13 +271,15 @@ class ProductScreen(val sku: String) : Screen() {
     }
 
     data class ColorDropdownItem(
-        val item: BarcodesEntity
+        val item: BarcodesEntity,
+        val colors: List<ColorsEntity>
     ) : DropdownItem {
         override val displayName: String
             get() = item.color
         override val id: Int
             get() = item.color.hashCode() // Or any unique integer ID
         override val extraData: Int? = null
+        override val extraString: String? = colors.find { it.colorCode == item.color }?.colorName
     }
 
     data class SizeDropdownItem(
@@ -286,6 +290,7 @@ class ProductScreen(val sku: String) : Screen() {
         override val id: Int
             get() = item.size.hashCode() // Or any unique integer ID
         override val extraData: Int? = null
+        override val extraString: String? = null
     }
 
 }
