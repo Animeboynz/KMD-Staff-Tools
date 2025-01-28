@@ -43,7 +43,7 @@ class AddEmployeeScreen : Screen() {
         val navigator = LocalNavigator.currentOrThrow
         val employeeRepository = koinInject<EmployeeRepository>()
 
-        val screenModel = rememberScreenModel(tag = "manga") {
+        val screenModel = rememberScreenModel {
             AddEmployeeScreenModel(employeeRepository)
         }
 

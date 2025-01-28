@@ -73,7 +73,7 @@ class ProductScreen(val sku: String) : Screen() {
         val barcodesRepository = koinInject<BarcodesRepository>()
         val colorsRepository = koinInject<ColorsRepository>()
 
-        val screenModel = rememberScreenModel(tag = "manga") {
+        val screenModel = rememberScreenModel {
             ProductScreenModel(barcodesRepository, colorsRepository, sku)
         }
 
