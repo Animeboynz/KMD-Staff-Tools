@@ -65,7 +65,7 @@ object EmployeePreferencesScreen : Screen() {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(text = stringResource(R.string.pref_general_title)) },
+                    title = { Text(text = stringResource(R.string.pref_employees_title)) },
                     navigationIcon = {
                         IconButton(onClick = { navigator.pop() }) {
                             Icon(Icons.AutoMirrored.Outlined.ArrowBack, null)
