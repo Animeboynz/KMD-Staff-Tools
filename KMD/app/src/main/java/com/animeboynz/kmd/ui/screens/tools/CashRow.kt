@@ -24,11 +24,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.animeboynz.kmd.R
 import com.animeboynz.kmd.preferences.GeneralPreferences
 import com.animeboynz.kmd.presentation.Screen
 import com.animeboynz.kmd.ui.home.tabs.ToolsTab.rememberImeState
@@ -63,7 +65,7 @@ class CashRow : Screen() {
             topBar = {
                 CenterAlignedTopAppBar(
                     title = {
-                        Text("Cash counter")
+                        Text(stringResource(R.string.tools_cash_count))
                     },
                     actions = {
                     },
@@ -115,7 +117,7 @@ class CashRow : Screen() {
                                         inputValues = inputValues.toMutableMap().apply { put(currency, newValue) }
                                     }
                                 },
-                                label = { Text("Qty") },
+                                label = { Text(stringResource(R.string.tools_cash_count_quantity)) },
                                 keyboardOptions = KeyboardOptions(
                                     keyboardType = KeyboardType.Number,
                                 ),
@@ -159,7 +161,7 @@ class CashRow : Screen() {
 
                 // Display banking value
                 Text(
-                    text = "Banking: ${CashCountData.wholeSymbol}${"%.2f".format(CashCountData.bankingValue)}",
+                    text = "${stringResource(R.string.tools_cash_count_banking)}: ${CashCountData.wholeSymbol}${"%.2f".format(CashCountData.bankingValue)}",
                     fontSize = 20.sp
                 )
 
@@ -175,7 +177,7 @@ class CashRow : Screen() {
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 4.dp)
                 ) {
-                    Text(text = "Proceed to Takings")
+                    Text(text = stringResource(R.string.tools_cash_count_next_takings))
                 }
 
             }

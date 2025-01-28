@@ -102,7 +102,7 @@ class AddEmployeeScreen : Screen() {
                         val emp = EmployeeEntity(
                             employeeId = employeeId.text,
                             employeeName = employeeName.text,
-                            employeeStatus = "Active"
+                            employeeStatus = context.getString(R.string.employee_active)
                         )
                         screenModel.addEmployees(emp)
                         navigator.pop()

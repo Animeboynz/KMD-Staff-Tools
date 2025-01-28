@@ -95,7 +95,7 @@ class AddItemScreen(val orderId: Long) : Screen() {
                         }
                     },
                     title = {
-                        Text("Add New Item to Order")
+                        Text(stringResource(R.string.orders_item))
                     },
                     actions = {},
                 )
@@ -115,7 +115,7 @@ class AddItemScreen(val orderId: Long) : Screen() {
                 OutlinedTextField(
                     value = sku,
                     onValueChange = { sku = it },
-                    label = { Text(if (hasSkuError) "SKU is Required" else "SKU") },
+                    label = { Text(if (hasSkuError) stringResource(R.string.orders_errors_sku) else stringResource(R.string.sku)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     isError = hasSkuError
@@ -124,7 +124,7 @@ class AddItemScreen(val orderId: Long) : Screen() {
                 OutlinedTextField(
                     value = color,
                     onValueChange = { color = it },
-                    label = { Text(if (hasColorError) "Color is Required" else "Color") },
+                    label = { Text(if (hasColorError) stringResource(R.string.orders_errors_color) else stringResource(R.string.color)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     isError = hasColorError
@@ -133,7 +133,7 @@ class AddItemScreen(val orderId: Long) : Screen() {
                 OutlinedTextField(
                     value = size,
                     onValueChange = { size = it },
-                    label = { Text(if (hasSizeError) "Size is Required" else "Size") },
+                    label = { Text(if (hasSizeError) stringResource(R.string.orders_errors_size) else stringResource(R.string.size)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     isError = hasSizeError
@@ -142,7 +142,7 @@ class AddItemScreen(val orderId: Long) : Screen() {
                 OutlinedTextField(
                     value = price,
                     onValueChange = { price = it },
-                    label = { Text(if (hasPriceError) "Price is Required" else "Price") },
+                    label = { Text(if (hasPriceError) stringResource(R.string.orders_errors_price) else stringResource(R.string.price)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     isError = hasPriceError
@@ -151,7 +151,7 @@ class AddItemScreen(val orderId: Long) : Screen() {
                 OutlinedTextField(
                     value = quantity,
                     onValueChange = { quantity = it },
-                    label = { Text(if (hasQuantityError) "Quantity is Required" else "Quantity") },
+                    label = { Text(if (hasQuantityError) stringResource(R.string.orders_errors_quantity) else stringResource(R.string.quantity)) },
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
@@ -161,7 +161,7 @@ class AddItemScreen(val orderId: Long) : Screen() {
                 OutlinedTextField(
                     value = store,
                     onValueChange = { store = it },
-                    label = { Text("Store") },
+                    label = { Text(stringResource(R.string.store)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                 )
@@ -202,7 +202,7 @@ class AddItemScreen(val orderId: Long) : Screen() {
                             hasQuantityError = true
                         }
                         if (hasSkuError || hasColorError || hasSizeError || hasPriceError || hasQuantityError) {
-                            Toast.makeText(context, "Complete all required fields", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, R.string.input_errors_warning, Toast.LENGTH_SHORT).show()
                             return@Button
                         }
 
@@ -223,11 +223,11 @@ class AddItemScreen(val orderId: Long) : Screen() {
 
                         screenModel.addOrderItem(orderItem)
                         navigator.pop()
-                        Toast.makeText(context, "Item inserted successfully!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, R.string.item_insert_success, Toast.LENGTH_SHORT).show()
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Add Item to Order")
+                    Text(stringResource(R.string.items_add))
                 }
             }
 

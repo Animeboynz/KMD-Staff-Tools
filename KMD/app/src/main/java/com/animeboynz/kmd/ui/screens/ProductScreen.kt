@@ -97,7 +97,7 @@ class ProductScreen(val sku: String) : Screen() {
                         }
                     },
                     title = {
-                        Text("Product Details")
+                        Text(stringResource(R.string.product_details))
                     },
                     actions = {},
                 )
@@ -123,7 +123,7 @@ class ProductScreen(val sku: String) : Screen() {
                 val dropdownSizeItems = filteredBySize.map { SizeDropdownItem(it) }
 
                 SimpleDropdown(
-                    label = "Colour",
+                    label = stringResource(R.string.color),
                     selectedItem = selectedColor,
                     items = dropdownColorItems,
                     modifier = maxWidth,
@@ -133,7 +133,7 @@ class ProductScreen(val sku: String) : Screen() {
                 )
 
                 SimpleDropdown(
-                    label = "Size",
+                    label = stringResource(R.string.size),
                     selectedItem = selectedSize,
                     items = dropdownSizeItems,
                     modifier = maxWidth,
@@ -161,7 +161,7 @@ class ProductScreen(val sku: String) : Screen() {
                         }
 
                         if (hasColorError || hasSizeError) {
-                            Toast.makeText(context, "Select both Colour & Size", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, R.string.product_input_errors_warning, Toast.LENGTH_SHORT).show()
                             return@Button
                         }
 
@@ -171,16 +171,16 @@ class ProductScreen(val sku: String) : Screen() {
                         }
 
                         if (selectedItem.isNotEmpty()) {
-                            Toast.makeText(context, "Selected Item Found", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, R.string.product_found, Toast.LENGTH_SHORT).show()
                             selectedItems = selectedItem
 
                         } else {
-                            Toast.makeText(context, "No items match the selected criteria", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, R.string.product_not_found, Toast.LENGTH_SHORT).show()
                         }
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Get Barcode")
+                    Text(stringResource(R.string.action_get_barcode))
                 }
 
             }

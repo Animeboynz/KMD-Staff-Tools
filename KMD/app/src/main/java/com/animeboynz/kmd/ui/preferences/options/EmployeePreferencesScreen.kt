@@ -130,12 +130,12 @@ object EmployeePreferencesScreen : Screen() {
                 onDismissRequest = { showDialog = false },
                 onConfirm = {
                     val newStatus: String = when (selectedEmployeeStatus) {
-                        "Active" -> "Disabled"
-                        "Disabled" -> "Active"
+                        context.getString(R.string.employee_active) -> context.getString(R.string.employee_disabled)
+                        context.getString(R.string.employee_disabled) -> context.getString(R.string.employee_active)
                         else -> selectedEmployeeStatus
                     }
                     screenModel.changeEmployeeStatus(selectedEmployeeId, newStatus)
-                    Toast.makeText(context, "Changed status for $selectedEmployeeName (ID: $selectedEmployeeId)", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.employee_update_success, selectedEmployeeName, selectedEmployeeId), Toast.LENGTH_SHORT).show()
                 },
                 empName = selectedEmployeeName,
                 empId = selectedEmployeeId
@@ -158,23 +158,19 @@ object EmployeePreferencesScreen : Screen() {
                     onConfirm()
                     onDismissRequest()
                 }) {
-                    //Text(text = stringResource(MR.strings.action_ok))
-                    Text(text = "OK")
+                    Text(text = stringResource(R.string.generic_confirm))
                 }
             },
             dismissButton = {
                 TextButton(onClick = onDismissRequest) {
-                    Text(text = "Cancel")
-                    //Text(text = stringResource(MR.strings.action_ok))
+                    Text(text = stringResource(R.string.generic_cancel))
                 }
             },
             title = {
-                Text(text = "Employee Modify")
-                //Text(text = stringResource(MR.strings.action_delete_repo))
+                Text(text = stringResource(R.string.pref_employees_modify))
             },
             text = {
-                Text(text = "Do you want to change the status of $empName?")
-                //Text(text = stringResource(MR.strings.delete_repo_confirmation, repo))
+                Text(text = stringResource(R.string.employee_update_prompt, empName))
             },
         )
     }

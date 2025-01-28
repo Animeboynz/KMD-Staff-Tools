@@ -88,7 +88,7 @@ object PreferencesScreen : Screen() {
                     preference(
                         key = "about",
                         title = { Text(text = stringResource(R.string.pref_about_title)) },
-                        summary = { Text(text = "${AboutPreferencesScreen.getVersionName(false)}") },
+                        summary = { Text(text = AboutPreferencesScreen.getVersionName(false)) },
                         icon = { Icon(Icons.Outlined.Info, null) },
                         onClick = { navigator.push(AboutPreferencesScreen) },
                     )

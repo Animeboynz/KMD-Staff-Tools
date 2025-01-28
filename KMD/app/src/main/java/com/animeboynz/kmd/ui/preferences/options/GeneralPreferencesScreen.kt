@@ -114,8 +114,8 @@ object GeneralPreferencesScreen : Screen() {
                     ReplacingTextFieldPreference(
                         value = countryCode,
                         onValueChange = { countryCode = it },
-                        title = "Country",
-                        description = "Select Region:\nNZ: New Zealand\nAU: Australia\nUS: United States\nGB: United Kingdom\nCA: Canada\nFR: France\nDE: Germany",
+                        title = stringResource(R.string.pref_general_country_code),
+                        description = stringResource(R.string.pref_general_country_code_description),
                         textToValue = {
                             if (countryCodes.contains(it))
                             {

@@ -1,5 +1,6 @@
 package com.animeboynz.kmd.ui.preferences.options
 
+import android.provider.Settings.Global.getString
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -93,7 +94,9 @@ object AboutPreferencesScreen : Screen() {
                 TextPreferenceWidget(
                     title = stringResource(R.string.check_for_updates),
                     widget = {},
-                    onPreferenceClick = { context.toast("Not yet implemented!", Toast.LENGTH_SHORT) },
+                    onPreferenceClick = {
+                        Toast.makeText(context, R.string.check_for_updates_not_implemented, Toast.LENGTH_SHORT).show()
+                    },
                 )
 
                 TextPreferenceWidget(

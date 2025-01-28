@@ -34,12 +34,12 @@ fun OrderRow(
     var color = Color.DarkGray
 
     when (order.status) {
-        "Not Ordered" -> color = Color.Red
-        "Ordered" -> color = Color.Green
-        "Arrived - Not Notified" -> color = Color.Red
-        "Waiting for Pickup" -> color = Color.Yellow
-        "Cancelled" -> color = Color.Gray
-        "Completed" -> color = Color.DarkGray
+        stringResource(R.string.orders_state_not_ordered) -> color = Color.Red
+        stringResource(R.string.orders_state_ordered) -> color = Color.Green
+        stringResource(R.string.orders_state_not_notified) -> color = Color.Red
+        stringResource(R.string.orders_state_waiting_pickup) -> color = Color.Yellow
+        stringResource(R.string.orders_state_cancelled) -> color = Color.Gray
+        stringResource(R.string.orders_state_completed) -> color = Color.DarkGray
     }
 
     Box(

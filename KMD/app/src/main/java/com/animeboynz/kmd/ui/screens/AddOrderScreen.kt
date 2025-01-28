@@ -69,7 +69,7 @@ class AddOrderScreen(val editMode: Boolean = false, val orderId: Long? = null) :
         var customerMics by remember { mutableStateOf(TextFieldValue("")) }
         var notes by remember { mutableStateOf(TextFieldValue("")) }
         var status by remember { mutableStateOf(Status.NOT_ORDERED) }
-        
+
         if (editMode) {
             val order by screenModel.order.collectAsState()
             if (selectedEmployee?.displayName.isNullOrEmpty())
@@ -164,7 +164,7 @@ class AddOrderScreen(val editMode: Boolean = false, val orderId: Long? = null) :
                 OutlinedTextField(
                     value = orderDate,
                     onValueChange = { /* No-op */ },
-                    label = { Text(if (hasDateError) "Date is Required" else stringResource(R.string.orders_field_date)) },
+                    label = { Text(if (hasDateError) stringResource(R.string.orders_errors_date) else stringResource(R.string.orders_field_date)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable { showDatePicker = true },
@@ -175,7 +175,7 @@ class AddOrderScreen(val editMode: Boolean = false, val orderId: Long? = null) :
                 OutlinedTextField(
                     value = customerName,
                     onValueChange = { customerName = it },
-                    label = { Text(if (hasNameError) "Name is Required" else stringResource(R.string.orders_field_name)) },
+                    label = { Text(if (hasNameError) stringResource(R.string.orders_errors_name) else stringResource(R.string.orders_field_name)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     isError = hasNameError
@@ -184,7 +184,7 @@ class AddOrderScreen(val editMode: Boolean = false, val orderId: Long? = null) :
                 OutlinedTextField(
                     value = customerPhone,
                     onValueChange = { customerPhone = it },
-                    label = { Text(if (hasPhoneError) "Phone is Required" else stringResource(R.string.orders_field_phone)) },
+                    label = { Text(if (hasPhoneError) stringResource(R.string.orders_errors_phone) else stringResource(R.string.orders_field_phone)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     isError = hasPhoneError
@@ -238,7 +238,7 @@ class AddOrderScreen(val editMode: Boolean = false, val orderId: Long? = null) :
                             hasEmployeeError = true
                         }
                         if (hasNameError || hasPhoneError || hasDateError || hasEmployeeError) {
-                            Toast.makeText(context, "Complete all required fields", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, R.string.input_errors_warning, Toast.LENGTH_SHORT).show()
                             return@Button
                         }
 

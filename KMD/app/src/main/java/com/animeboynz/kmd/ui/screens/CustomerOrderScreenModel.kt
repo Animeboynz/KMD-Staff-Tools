@@ -65,6 +65,7 @@ class CustomerOrderScreenModel(
         screenModelScope.launch(Dispatchers.IO) {
             if (!_productNames.value.containsKey(sku)) {
                 val productName = productsRepository.getProductName(sku)?.name ?: "Name Not Found"
+                //R.string.item_name_unknown
                 _productNames.value = _productNames.value + (sku to productName)
             }
         }

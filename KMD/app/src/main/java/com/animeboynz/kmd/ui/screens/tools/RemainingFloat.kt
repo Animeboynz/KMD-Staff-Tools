@@ -24,10 +24,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.animeboynz.kmd.R
 import com.animeboynz.kmd.preferences.GeneralPreferences
 import com.animeboynz.kmd.presentation.Screen
 import org.koin.compose.koinInject
@@ -60,7 +62,7 @@ class RemainingFloat : Screen() {
             topBar = {
                 CenterAlignedTopAppBar(
                     title = {
-                        Text("Remaining Float")
+                        Text(stringResource(R.string.tools_cash_count_remaining_float))
                     },
                     actions = {
                     },
@@ -132,7 +134,7 @@ class RemainingFloat : Screen() {
 
                 // Display total sum at the bottom
                 Text(
-                    text = "Total: ${CashCountData.wholeSymbol}${"%.2f".format(totalSum)}",
+                    text = "${stringResource(R.string.tools_cash_count_total)}: ${CashCountData.wholeSymbol}${"%.2f".format(totalSum)}",
                     fontSize = 20.sp
                 )
 
@@ -144,7 +146,7 @@ class RemainingFloat : Screen() {
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 0.dp)
                 ) {
-                    Text(text = "Back to Takings")
+                    Text(text = stringResource(R.string.tools_cash_count_prev_takings))
                 }
                 Button(
                     onClick = { navigator.pop(); navigator.pop();
@@ -158,7 +160,7 @@ class RemainingFloat : Screen() {
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 4.dp)
                 ) {
-                    Text(text = "Reset")
+                    Text(text = stringResource(R.string.tools_cash_count_reset))
                 }
 
             }
