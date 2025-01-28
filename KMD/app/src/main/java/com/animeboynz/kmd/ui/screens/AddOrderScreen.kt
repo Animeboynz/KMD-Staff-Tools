@@ -52,7 +52,7 @@ class AddOrderScreen(val editMode: Boolean = false, val orderId: Long? = null) :
         val employeeRepository = koinInject<EmployeeRepository>()
 
 
-        val screenModel = rememberScreenModel(tag = "manga") {
+        val screenModel = rememberScreenModel {
             AddOrderScreenModel(
                 customerOrderRepository, employeeRepository, orderId
             )

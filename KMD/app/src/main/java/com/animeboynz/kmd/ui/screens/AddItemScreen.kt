@@ -57,7 +57,7 @@ class AddItemScreen(val orderId: Long) : Screen() {
         val orderItemRepository = koinInject<OrderItemRepository>()
         val productsRepository = koinInject<ProductsRepository>()
 
-        val screenModel = rememberScreenModel(tag = "manga") {
+        val screenModel = rememberScreenModel {
             AddItemScreenModel(orderItemRepository, productsRepository)
         }
 
