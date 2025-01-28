@@ -152,7 +152,7 @@ class CashRow : Screen() {
 
                 // Display total sum at the bottom
                 Text(
-                    text = "Total: ${CashCountData.wholeSymbol}${"%.2f".format(totalSum)}",
+                    text = "${stringResource(R.string.tools_cash_count_total)}: ${CashCountData.wholeSymbol}${"%.2f".format(totalSum)}",
                     fontSize = 20.sp
                 )
 
