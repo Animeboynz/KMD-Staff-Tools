@@ -28,8 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.animeboynz.kmd.preferences.GeneralPreferences
 import com.animeboynz.kmd.presentation.Screen
-import com.animeboynz.kmd.ui.screens.tools.CashCountData.currencyList
+import org.koin.compose.koinInject
 import kotlin.collections.component1
 import kotlin.collections.component2
 
@@ -39,6 +40,22 @@ class RemainingFloat : Screen() {
     override fun Content() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
+        val preferences = koinInject<GeneralPreferences>()
+        val countryCode = preferences.countryCode.get()
+
+        val CashCountData: CashCountData = if (countryCode == "AU") {
+            CashCountDataAU
+        } else if (countryCode == "US" || countryCode == "CA") {
+            CashCountDataUS
+        } else if (countryCode == "DE" || countryCode == "FR") {
+            CashCountDataDE
+        } else if (countryCode == "GB") {
+            CashCountDataGB
+        } else {
+            CashCountDataNZ
+        }
+
+
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
@@ -63,8 +80,8 @@ class RemainingFloat : Screen() {
 
             val totalSum = remainingQuantities.entries.sumByDouble { (currency, quantity) ->
                 val denominationValue = when {
-                    currency.endsWith("c") -> currency.replace("c", "").toDouble() / 100
-                    else -> currency.replace("$", "").toDouble()
+                    currency.endsWith(CashCountData.decimalSymbol) -> currency.replace(CashCountData.decimalSymbol, "").toDouble() / 100
+                    else -> currency.replace(CashCountData.wholeSymbol, "").toDouble()
                 }
                 quantity * denominationValue
             }
@@ -77,7 +94,7 @@ class RemainingFloat : Screen() {
                     columns = GridCells.Fixed(1),
                     modifier = Modifier.weight(1f)
                 ) {
-                    items(currencyList) { currency ->
+                    items(CashCountData.currencyList) { currency ->
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
@@ -99,12 +116,12 @@ class RemainingFloat : Screen() {
                             Spacer(modifier = Modifier.width(8.dp))
 
                             val denominationValue = when {
-                                currency.endsWith("c") -> currency.replace("c", "").toDouble() / 100
-                                else -> currency.replace("$", "").toDouble()
+                                currency.endsWith(CashCountData.decimalSymbol) -> currency.replace(CashCountData.decimalSymbol, "").toDouble() / 100
+                                else -> currency.replace(CashCountData.wholeSymbol, "").toDouble()
                             }
                             val total = remainingQuantities[currency]!! * denominationValue
                             Text(
-                                text = "= $${"%.2f".format(total)}",
+                                text = "= ${CashCountData.wholeSymbol}${"%.2f".format(total)}",
                                 modifier = Modifier.weight(1f)
                             )
                         }
@@ -115,7 +132,7 @@ class RemainingFloat : Screen() {
 
                 // Display total sum at the bottom
                 Text(
-                    text = "Total: $${"%.2f".format(totalSum)}",
+                    text = "Total: ${CashCountData.wholeSymbol}${"%.2f".format(totalSum)}",
                     fontSize = 20.sp
                 )
 
@@ -131,8 +148,8 @@ class RemainingFloat : Screen() {
                 }
                 Button(
                     onClick = { navigator.pop(); navigator.pop();
-                        CashCountData.takingsQuantities = currencyList.associateWith { 0 }.toMutableMap(); // Reset quantities
-                        CashCountData.takingsQuantities = currencyList.associateWith { 0 }.toMutableMap();
+                        CashCountData.takingsQuantities = CashCountData.currencyList.associateWith { 0 }.toMutableMap(); // Reset quantities
+                        CashCountData.takingsQuantities = CashCountData.currencyList.associateWith { 0 }.toMutableMap();
                         CashCountData.totalValue = 0.0;
                         CashCountData.bankingValue = 0.0;
                     },
