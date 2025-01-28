@@ -11,4 +11,5 @@ data class EmployeeDropdownItem(
         get() = employee.employeeId.hashCode() // Or any unique integer ID
     override val extraData: Int?
         get() = employee.employeeId.toInt() // Or any additional data you want to show
+    override val extraString: String? = null
 }

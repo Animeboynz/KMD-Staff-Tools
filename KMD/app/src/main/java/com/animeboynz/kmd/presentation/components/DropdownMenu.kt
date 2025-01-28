@@ -23,6 +23,7 @@ interface DropdownItem {
     val displayName: String
     val id: Int
     val extraData: Int?
+    val extraString: String?
 }
 
 @Composable
@@ -53,6 +54,12 @@ fun <T : DropdownItem> SimpleDropdown(
                         modifier = Modifier.alpha(DISABLED_ALPHA),
                     )
                 }
+                if (selectedItem?.extraString != null) {
+                    Text(
+                        text = "(${selectedItem.extraString!!})",
+                        modifier = Modifier.alpha(DISABLED_ALPHA),
+                    )
+                }
             },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
         )
@@ -71,6 +78,12 @@ fun <T : DropdownItem> SimpleDropdown(
                             if (item.extraData != null) {
                                 Text(
                                     text = "(${item.extraData!!})",
+                                    modifier = Modifier.alpha(DISABLED_ALPHA),
+                                )
+                            }
+                            if (item.extraString != null) {
+                                Text(
+                                    text = "(${item.extraString!!})",
                                     modifier = Modifier.alpha(DISABLED_ALPHA),
                                 )
                             }

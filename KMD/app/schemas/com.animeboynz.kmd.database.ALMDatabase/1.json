@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "5184aeff8d2dd9ab0c5fd6fc25c03bf4",
+    "identityHash": "10044a6ce37392e9250eaa25732b3bb1",
     "entities": [
       {
         "tableName": "EmployeeEntity",
@@ -259,12 +259,38 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "ColorsEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`colorCode` TEXT NOT NULL, `colorName` TEXT NOT NULL, PRIMARY KEY(`colorCode`))",
+        "fields": [
+          {
+            "fieldPath": "colorCode",
+            "columnName": "colorCode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "colorName",
+            "columnName": "colorName",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "colorCode"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5184aeff8d2dd9ab0c5fd6fc25c03bf4')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '10044a6ce37392e9250eaa25732b3bb1')"
     ]
   }
 }
