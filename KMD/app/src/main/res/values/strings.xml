@@ -5,23 +5,38 @@
     // Generic
     <string name="generic_cancel">Cancel</string>
     <string name="generic_confirm">Confirm</string>
+    <string name="generic_save">Save</string>
     <string name="selected">Selected</string>
+    <string name="sku">SKU</string>
+    <string name="color">Colour</string>
+    <string name="size">Size</string>
+    <string name="price">Price</string>
+    <string name="quantity">Quantity</string>
+    <string name="store">Store</string>
 
     //Orders Tab
     <string name="orders_tab">Orders</string>
     <string name="orders_title">Customer Orders</string>
     <string name="orders_none">No Customer Orders</string>
     <string name="orders_add">Add Order</string>
+    <string name="items_add">Add Item to Order</string>
+    <string name="orders_item">Add New Item to Order</string>
     <string name="orders_new">Create New Order</string>
     <string name="orders_edit">Edit Order</string>
+    <string name="orders_edit_notes">Edit Order Notes</string>
     <string name="orders_details">Order Details</string>
+    <string name="orders_items">Order Items</string>
     <string name="orders_status">Status: </string>
     <string name="orders_customer_phone">Phone No:</string>
     <string name="orders_delete_success">Order Deleted!</string>
     <string name="orders_insert_success">Order added successfully!</string>
     <string name="orders_update_success">Order updated successfully!</string>
+    <string name="item_insert_success">Item added successfully!</string>
+    <string name="item_update_success">Item updated successfully!</string>
+    <string name="item_name_unknown">Name Not Found</string>
     <string name="entry_item_present">Present</string>
     <string name="entry_item_missing">Missing</string>
+    <string name="orders_loading">Loading...</string>
 
     <string name="orders_field_date">Date</string>
     <string name="orders_field_empid">Employee ID</string>
@@ -29,6 +44,7 @@
     <string name="orders_field_phone">Phone</string>
     <string name="orders_field_misc">Misc</string>
     <string name="orders_field_notes">Notes</string>
+    <string name="orders_field_notes_add">Add Notes</string>
 
     <string name="orders_state_not_ordered">Not Ordered</string>
     <string name="orders_state_ordered">Ordered</string>
@@ -37,12 +53,41 @@
     <string name="orders_state_cancelled">Cancelled</string>
     <string name="orders_state_completed">Completed</string>
 
+    <string name="orders_errors_sku">SKU is Required</string>
+    <string name="orders_errors_color">Colour is Required</string>
+    <string name="orders_errors_size">Size is Required</string>
+    <string name="orders_errors_price">Price is Required</string>
+    <string name="orders_errors_quantity">Quantity is Required</string>
+    <string name="orders_errors_date">Date is Required</string>
+    <string name="orders_errors_name">Name is Required</string>
+    <string name="orders_errors_phone">Phone is Required</string>
+    <string name="input_errors_warning">Complete all required fields</string>
+
     //SKU Search Tab
     <string name="sku_tab">SKU Search</string>
     <string name="sku_search_bar">Search products...</string>
+    <string name="product_details">Product Details</string>
+    <string name="product_found">Selected Item Found</string>
+    <string name="product_not_found">No items match the selected criteria</string>
+    <string name="product_input_errors_warning">Select both Colour and Size</string>
+    <string name="action_get_barcode">Get Barcode</string>
 
     //Tools Tab
     <string name="tools_tab">Tools</string>
+    <string name="tools_cash_count">Cash Count</string>
+    <string name="tools_cash_count_quantity">Qty</string>
+    <string name="tools_cash_count_banking">Banking</string>
+    <string name="tools_cash_count_next_takings">Proceed to Takings</string>
+    <string name="tools_cash_count_remaining_takings">Left to take</string>
+    <string name="tools_cash_count_max_takings">Cannot take more than %d</string>
+    <string name="tools_cash_count_expected_takings">Expected Takings</string>
+    <string name="tools_cash_count_current_takings">Current Takings</string>
+    <string name="tools_cash_count_prev_count">Back to Cash Counter</string>
+    <string name="tools_cash_count_calc_float">Calculate Remaining Float</string>
+    <string name="tools_cash_count_remaining_float">Remaining Float</string>
+    <string name="tools_cash_count_total">Total</string>
+    <string name="tools_cash_count_prev_takings">Back to Takings</string>
+    <string name="tools_cash_count_reset">Reset</string>
 
     //Preferences Screen
     <string name="pref_settings_title">Settings</string>
@@ -62,15 +107,21 @@
     <string name="pref_general_store_name_description">Enter store name here e.g. Newmarket</string>
     <string name="pref_general_store_number">Store Number</string>
     <string name="pref_general_store_number_description">Enter store number here e.g. 183</string>
+    <string name="pref_general_country_code">Country Code</string>
+    <string name="pref_general_country_code_description">Select Region:\nNZ: New Zealand\nAU: Australia\nUS: United States\nGB: United Kingdom\nCA: Canada\nFR: France\nDE: Germany</string>
     <string name="pref_general_order_number_pad">Order Number Padding</string>
     <string name="pref_general_order_number_pad_description">e.g. When set to 4, order number 23 will become 0023</string>
 
     //Employees Preference
+    <string name="employee_active">Active</string>
+    <string name="employee_disabled">Disabled</string>
     <string name="pref_employees_add">Add New Employee</string>
+    <string name="pref_employees_modify">Employee Modify</string>
     <string name="pref_employees_current">Current Employees</string>
     <string name="pref_employees_deactivated">Deactivated Employees</string>
+    <string name="employee_update_prompt">Do you want to change the status of %s?</string>
     <string name="employee_insert_success">Employee added successfully!</string>
-
+    <string name="employee_update_success">Changed status for %s (ID: %s)</string>
 
     //Appearance Preferences
     <string name="pref_appearance_category_theme">Theme</string>
@@ -97,6 +148,14 @@
     <string name="pref_data_delete_all_employees">Delete all employees</string>
     <string name="pref_data_employees_cleared">All employees deleted!</string>
 
+    //About screen
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="clipboard_copy_error">Failed to copy to clipboard</string>
+    <string name="check_for_updates">Check for updates</string>
+    <string name="check_for_updates_not_implemented">Updater not yet implemented!</string>
+    <string name="licenses">Open source licenses</string>
+    <string name="version">Version</string>
+
     //Crash screen
     <string name="crash_screen_title">Oops</string>
     <string name="crash_screen_subtitle">Looks like %s experienced an unexpected error.</string>
@@ -110,10 +169,4 @@
     <string name="pref_appearance_darkmode_dark">Dark</string>
 
     /////////////////////////////
-
-    <string name="copied_to_clipboard">Copied to clipboard</string>
-    <string name="clipboard_copy_error">Failed to copy to clipboard</string>
-    <string name="check_for_updates">Check for updates</string>
-    <string name="licenses">Open source licenses</string>
-    <string name="version">Version</string>
 </resources>

@@ -29,11 +29,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.animeboynz.kmd.R
 import com.animeboynz.kmd.preferences.GeneralPreferences
 import com.animeboynz.kmd.presentation.Screen
 import org.koin.compose.koinInject
@@ -78,7 +80,7 @@ class Takings : Screen() {
             topBar = {
                 CenterAlignedTopAppBar(
                     title = {
-                        Text("Left to take: ${CashCountData.wholeSymbol}${"%.2f".format(CashCountData.bankingValue - totalTakings)}", fontSize = 24.sp)
+                        Text("${stringResource(R.string.tools_cash_count_remaining_takings)}: ${CashCountData.wholeSymbol}${"%.2f".format(CashCountData.bankingValue - totalTakings)}", fontSize = 24.sp)
                     },
                     actions = {
                     },
@@ -132,11 +134,11 @@ class Takings : Screen() {
                                             inputValues = inputValues.toMutableMap().apply { put(currency, newValue) }
                                             errorMessages = errorMessages.toMutableMap().apply { put(currency, "") }
                                         } else {
-                                            errorMessages = errorMessages.toMutableMap().apply { put(currency, "Cannot take more than $maxQuantity") }
+                                            errorMessages = errorMessages.toMutableMap().apply { put(currency, context.getString(R.string.tools_cash_count_max_takings, maxQuantity)) }
                                         }
                                     }
                                 },
-                                label = { Text(if (hasError) errorMessages[currency] ?: "" else "Qty") },
+                                label = { Text(if (hasError) errorMessages[currency] ?: "" else stringResource(R.string.tools_cash_count_quantity)) },
                                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                                 isError = hasError,
                                 colors = TextFieldDefaults.colors(
@@ -167,12 +169,12 @@ class Takings : Screen() {
 
                 // Display expected and current takings
                 Text(
-                    text = "Expected Takings: ${CashCountData.wholeSymbol}${"%.2f".format(CashCountData.bankingValue)}",
+                    text = "${stringResource(R.string.tools_cash_count_expected_takings)}: ${CashCountData.wholeSymbol}${"%.2f".format(CashCountData.bankingValue)}",
                     fontSize = 20.sp
                 )
 
                 Text(
-                    text = "Current Takings: ${CashCountData.wholeSymbol}${"%.2f".format(totalTakings)}",
+                    text = "${stringResource(R.string.tools_cash_count_current_takings)}: ${CashCountData.wholeSymbol}${"%.2f".format(totalTakings)}",
                     fontSize = 20.sp
                 )
 
@@ -186,7 +188,7 @@ class Takings : Screen() {
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 0.dp)
                 ) {
-                    Text(text = "Back to Cash Counter")
+                    Text(text = stringResource(R.string.tools_cash_count_prev_count))
                 }
 
                 // Button to navigate to RemainingFloat
@@ -200,7 +202,7 @@ class Takings : Screen() {
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 4.dp)
                 ) {
-                    Text(text = "Calculate Remaining Float")
+                    Text(text = stringResource(R.string.tools_cash_count_calc_float))
                 }
             }
 

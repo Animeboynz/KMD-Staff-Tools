@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -129,13 +130,13 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
                         onDismissRequest = {
                             isNotesDialogVisible = false
                         },
-                        title = { Text(text = "Edit Order Notes") },
+                        title = { Text(text = stringResource(R.string.orders_edit_notes)) },
                         text = {
                             TextField(
                                 value = editedNote,
                                 onValueChange = { editedNote = it },
                                 modifier = Modifier.fillMaxWidth(),
-                                label = { Text("Notes") },
+                                label = { Text(stringResource(R.string.orders_field_notes)) },
                                 maxLines = 10,
                             )
                         },
@@ -144,7 +145,7 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
                                 screenModel.updateOrderNotes(order.orderId, editedNote)
                                 isNotesDialogVisible = false
                             }) {
-                                Text("Save")
+                                Text(stringResource(R.string.generic_save))
                             }
                         },
                         dismissButton = {
@@ -153,7 +154,7 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
                                     isNotesDialogVisible = false
                                 }
                             ) {
-                                Text("Cancel")
+                                Text(stringResource(R.string.generic_cancel))
                             }
                         },
                     )
@@ -172,14 +173,14 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
             horizontalArrangement = Arrangement.SpaceBetween // Space between title and button
         ) {
             Text(
-                text = "Order Items",
+                text = stringResource(R.string.orders_items),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
                     .padding(end = MaterialTheme.spacing.large)
                     .weight(1f) // Allows the title to take remaining space
             )
             IconButton(onClick = onAddItemClick) {
-                Icon(Icons.Default.Add, contentDescription = "Add Item")
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.items_add))
             }
         }
     }
@@ -193,7 +194,7 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
             if (!productNames.containsKey(item.sku)) {
                 screenModel.fetchProductName(item.sku)
             }
-            val name = productNames[item.sku] ?: "Loading..."
+            val name = productNames[item.sku] ?: stringResource(R.string.orders_loading)
             OrderItemCard(item, name)
         }
     }

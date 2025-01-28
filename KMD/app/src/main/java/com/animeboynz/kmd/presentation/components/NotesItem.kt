@@ -18,7 +18,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.animeboynz.kmd.R
 import com.animeboynz.kmd.ui.theme.spacing
 
 @Composable
@@ -40,7 +42,7 @@ fun NotesItem(
         Column {
             if (note.isNotEmpty()) {
                 Text(
-                    text = "Notes",
+                    text = stringResource(R.string.orders_field_notes),
                     style = MaterialTheme.typography.titleMedium,
                 )
                 Row(
@@ -61,7 +63,7 @@ fun NotesItem(
                 }
             } else {
                 Text(
-                    text = "Add Notes",
+                    text = stringResource(R.string.orders_field_notes_add),
                     style = MaterialTheme.typography.titleMedium,
                 )
             }

@@ -14,8 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.animeboynz.kmd.R
 import com.animeboynz.kmd.database.entities.OrderItemEntity
 import com.animeboynz.kmd.ui.theme.spacing
 
@@ -43,29 +45,29 @@ fun OrderItemCard(item: OrderItemEntity, name: String) {
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
             ) {
                 Text(
-                    text = "${name}",
+                    text = name,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = "SKU: ${item.sku}/${item.color}/${item.size}",
+                    text = "${stringResource(R.string.sku)}: ${item.sku}/${item.color}/${item.size}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 Text(
-                    text = "Price: ${item.price}",
+                    text = "${stringResource(R.string.price)}: ${item.price}",
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = "Quantity: ${item.quantity}",
+                    text = "${stringResource(R.string.quantity)}: ${item.quantity}",
                     style = MaterialTheme.typography.bodyMedium
                 )
 
                 if(item.store.isNotEmpty())
                 {
                     Text(
-                        text = "Store: ${item.store}",
+                        text = "${stringResource(R.string.store)}: ${item.store}",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

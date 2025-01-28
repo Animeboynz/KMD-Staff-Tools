@@ -76,7 +76,7 @@ object ToolsTab : Tab {
             val paddingModifier = Modifier.padding(paddingValues)
 
             Column(modifier = paddingModifier) {
-                ToolRow("Cash Count", {
+                ToolRow(stringResource(R.string.tools_cash_count), {
                     navigator.push(CashRow())
                 })
             }
