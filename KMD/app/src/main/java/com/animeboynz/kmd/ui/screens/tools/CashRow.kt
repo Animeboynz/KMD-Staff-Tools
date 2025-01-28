@@ -29,9 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.animeboynz.kmd.preferences.GeneralPreferences
 import com.animeboynz.kmd.presentation.Screen
 import com.animeboynz.kmd.ui.home.tabs.ToolsTab.rememberImeState
-import com.animeboynz.kmd.ui.screens.tools.CashCountData.currencyList
+import org.koin.compose.koinInject
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.text.toIntOrNull
@@ -43,6 +44,21 @@ class CashRow : Screen() {
     override fun Content() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
+        val preferences = koinInject<GeneralPreferences>()
+        val countryCode = preferences.countryCode.get()
+
+        val CashCountData: CashCountData = if (countryCode == "AU") {
+            CashCountDataAU
+        } else if (countryCode == "US" || countryCode == "CA") {
+            CashCountDataUS
+        } else if (countryCode == "DE" || countryCode == "FR") {
+            CashCountDataDE
+        } else if (countryCode == "GB") {
+            CashCountDataGB
+        } else {
+            CashCountDataNZ
+        }
+
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
@@ -63,7 +79,7 @@ class CashRow : Screen() {
 
             val imeState = rememberImeState()
             val scrollState = rememberScrollState()
-            var inputValues by rememberSaveable { mutableStateOf(currencyList.associateWith { "" }) }
+            var inputValues by rememberSaveable { mutableStateOf(CashCountData.currencyList.associateWith { "" }) }
 
             Column(
                 modifier = paddingModifier
@@ -78,7 +94,7 @@ class CashRow : Screen() {
                     columns = GridCells.Fixed(1),
                     modifier = Modifier.weight(1f)
                 ) {
-                    items(currencyList) { currency ->
+                    items(CashCountData.currencyList) { currency ->
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
@@ -109,12 +125,12 @@ class CashRow : Screen() {
                             Spacer(modifier = Modifier.width(8.dp))
 
                             val denominationValue = when {
-                                currency.endsWith("c") -> currency.replace("c", "").toDouble() / 100
-                                else -> currency.replace("$", "").toDouble()
+                                currency.endsWith(CashCountData.decimalSymbol) -> currency.replace(CashCountData.decimalSymbol, "").toDouble() / 100
+                                else -> currency.replace(CashCountData.wholeSymbol, "").toDouble()
                             }
                             val total = (inputValues[currency]?.toIntOrNull() ?: 0) * denominationValue
                             Text(
-                                text = "= $${"%.2f".format(total)}",
+                                text = "= ${CashCountData.wholeSymbol}${"%.2f".format(total)}",
                                 modifier = Modifier.weight(1f)
                             )
                         }
@@ -126,15 +142,15 @@ class CashRow : Screen() {
                 // Calculate total sum of all entered values
                 val totalSum = inputValues.entries.sumByDouble { (currency, quantity) ->
                     val denominationValue = when {
-                        currency.endsWith("c") -> currency.replace("c", "").toDouble() / 100
-                        else -> currency.replace("$", "").toDouble()
+                        currency.endsWith(CashCountData.decimalSymbol) -> currency.replace(CashCountData.decimalSymbol, "").toDouble() / 100
+                        else -> currency.replace(CashCountData.wholeSymbol, "").toDouble()
                     }
                     (quantity.toIntOrNull() ?: 0) * denominationValue
                 }
 
                 // Display total sum at the bottom
                 Text(
-                    text = "Total: $${"%.2f".format(totalSum)}",
+                    text = "Total: ${CashCountData.wholeSymbol}${"%.2f".format(totalSum)}",
                     fontSize = 20.sp
                 )
 
@@ -143,7 +159,7 @@ class CashRow : Screen() {
 
                 // Display banking value
                 Text(
-                    text = "Banking: $${"%.2f".format(CashCountData.bankingValue)}",
+                    text = "Banking: ${CashCountData.wholeSymbol}${"%.2f".format(CashCountData.bankingValue)}",
                     fontSize = 20.sp
                 )
 

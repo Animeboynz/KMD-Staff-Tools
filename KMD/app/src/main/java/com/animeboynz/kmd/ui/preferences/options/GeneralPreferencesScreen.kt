@@ -106,6 +106,28 @@ object GeneralPreferencesScreen : Screen() {
                         },
                     )
 
+                    var countryCode by remember {
+                        mutableStateOf(preferences.countryCode.get())
+                    }
+
+                    val countryCodes = persistentListOf("NZ", "AU", "US", "GB", "CA", "FR", "DE")
+                    ReplacingTextFieldPreference(
+                        value = countryCode,
+                        onValueChange = { countryCode = it },
+                        title = "Country",
+                        description = "Select Region:\nNZ: New Zealand\nAU: Australia\nUS: United States\nGB: United Kingdom\nCA: Canada\nFR: France\nDE: Germany",
+                        textToValue = {
+                            if (countryCodes.contains(it))
+                            {
+                                preferences.countryCode.set(it)
+                                it
+                            } else {
+                                preferences.countryCode.set("NZ")
+                                "NZ"
+                            }
+                        },
+                    )
+
                     var orderNumberPadding by remember {
                         mutableStateOf(preferences.orderNumberPadding.get())
                     }
@@ -115,11 +137,17 @@ object GeneralPreferencesScreen : Screen() {
                         title = stringResource(R.string.pref_general_order_number_pad),
                         description = stringResource(R.string.pref_general_order_number_pad_description),
                         textToValue = {
-                            preferences.orderNumberPadding.set(
-                                if (it.toInt() < 1) 1
-                                else if (it.toInt() > 8) 8
-                                else it.toInt())
-                            it
+                            if (it.toInt() < 1)
+                            {
+                                preferences.orderNumberPadding.set(1)
+                                1
+                            } else if (it.toInt() > 8) {
+                                preferences.orderNumberPadding.set(8)
+                                8
+                            } else {
+                                preferences.orderNumberPadding.set(it.toInt())
+                                it.toInt()
+                            }
                         },
                         keyboardType = KeyboardType.Number,
                     )
