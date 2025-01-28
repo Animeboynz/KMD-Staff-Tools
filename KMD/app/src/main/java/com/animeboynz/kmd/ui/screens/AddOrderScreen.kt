@@ -69,16 +69,33 @@ class AddOrderScreen(val editMode: Boolean = false, val orderId: Long? = null) :
         var customerMics by remember { mutableStateOf(TextFieldValue("")) }
         var notes by remember { mutableStateOf(TextFieldValue("")) }
         var status by remember { mutableStateOf(Status.NOT_ORDERED) }
-
+        
         if (editMode) {
             val order by screenModel.order.collectAsState()
-            selectedEmployee = dropdownItems.find { it.employee.employeeId == order.employeeId }
-            orderDate = order.orderDate
-            customerName = TextFieldValue(order.customerName)
-            customerPhone = TextFieldValue(order.customerPhone)
-            customerMics = TextFieldValue(order.customerMics)
-            notes = TextFieldValue(order.notes)
+            if (selectedEmployee?.displayName.isNullOrEmpty())
+            {
+                selectedEmployee = dropdownItems.find { it.employee.employeeId == order.employeeId }
+            }
+            if (orderDate.isEmpty()) {
+                orderDate = order.orderDate
+            }
+            if (customerName.text.isEmpty()) {
+                customerName = TextFieldValue(order.customerName)
+            }
+            if (customerPhone.text.isEmpty())
+            {
+                customerPhone = TextFieldValue(order.customerPhone)
+            }
+            if (customerMics.text.isEmpty())
+            {
+                customerMics = TextFieldValue(order.customerMics)
+            }
+            if (notes.text.isEmpty())
+            {
+                notes = TextFieldValue(order.notes)
+            }
         }
+
         // Collect the status from the screen model if needed
         val collectedStatus by screenModel.status.collectAsState()
         var showDatePicker by remember { mutableStateOf(false) }
