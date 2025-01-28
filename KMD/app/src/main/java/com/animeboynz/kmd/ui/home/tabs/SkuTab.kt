@@ -36,6 +36,7 @@ import com.animeboynz.kmd.domain.ProductsRepository
 import com.animeboynz.kmd.presentation.components.ProductRow
 import com.animeboynz.kmd.presentation.util.Tab
 import com.animeboynz.kmd.ui.preferences.PreferencesScreen
+import com.animeboynz.kmd.ui.screens.ProductScreen
 import org.koin.compose.koinInject
 
 
@@ -103,7 +104,9 @@ object SkuTab : Tab {
 
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(filteredProducts) { product ->
-                        ProductRow(product)
+                        ProductRow(product, {
+                            navigator.push(ProductScreen(product.sku))
+                        })
                     }
                 }
             }

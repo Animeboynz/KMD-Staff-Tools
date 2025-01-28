@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "fb4654d74ec29485a25fee3231dee060",
+    "identityHash": "5184aeff8d2dd9ab0c5fd6fc25c03bf4",
     "entities": [
       {
         "tableName": "EmployeeEntity",
@@ -203,12 +203,68 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "BarcodesEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uniqueId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `sku` TEXT NOT NULL, `color` TEXT NOT NULL, `size` TEXT NOT NULL, `name` TEXT NOT NULL, `pieceBarcode` TEXT, `gtin` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "uniqueId",
+            "columnName": "uniqueId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sku",
+            "columnName": "sku",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "color",
+            "columnName": "color",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "size",
+            "columnName": "size",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pieceBarcode",
+            "columnName": "pieceBarcode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "gtin",
+            "columnName": "gtin",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "uniqueId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fb4654d74ec29485a25fee3231dee060')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5184aeff8d2dd9ab0c5fd6fc25c03bf4')"
     ]
   }
 }

@@ -62,7 +62,6 @@ dependencies {
 
 //    implementation(libs.androidx.appcompat)
     implementation(libs.material)
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -78,28 +77,22 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
     implementation(libs.kotlinx.immutable.collections)
-
     implementation(libs.compose.materialmotion)
     implementation(libs.androidx.material3.icons.extended)
     implementation(libs.androidx.preference.ktx)
-
     implementation(libs.bundles.serialization)
     implementation(libs.bundles.voyager)
-
     implementation(libs.bundles.coil)
     implementation(libs.okhttp.core)
     implementation(libs.jsoup)
-
     implementation(libs.compose.prefs)
     implementation(libs.bundles.koin)
-
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
     implementation(libs.room.ktx)
-
     implementation(libs.aboutLibraries.compose)
+    implementation(libs.zxing)
 }
 
 spotless {
