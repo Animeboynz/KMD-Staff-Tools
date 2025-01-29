@@ -17,5 +17,9 @@ enum class Status(
 
     companion object {
         val entries: List<Status> = values().toList()
+
+        fun fromDisplayName(displayName: String): Status? {
+            return values().find { it.displayName == displayName }
+        }
     }
 }
