@@ -72,32 +72,18 @@ class AddOrderScreen(val editMode: Boolean = false, val orderId: Long? = null) :
 
         if (editMode) {
             val order by screenModel.order.collectAsState()
-            if (selectedEmployee?.displayName.isNullOrEmpty())
-            {
+
+            LaunchedEffect(order) {
                 selectedEmployee = dropdownItems.find { it.employee.employeeId == order.employeeId }
-            }
-            if (orderDate.isEmpty()) {
                 orderDate = order.orderDate
-            }
-            if (customerName.text.isEmpty()) {
                 customerName = TextFieldValue(order.customerName)
-            }
-            if (customerPhone.text.isEmpty())
-            {
                 customerPhone = TextFieldValue(order.customerPhone)
-            }
-            if (customerMics.text.isEmpty())
-            {
                 customerMics = TextFieldValue(order.customerMics)
-            }
-            if (notes.text.isEmpty())
-            {
                 notes = TextFieldValue(order.notes)
+                status = Status.fromDisplayName(order.status) ?: Status.NOT_ORDERED
             }
         }
 
-        // Collect the status from the screen model if needed
-        val collectedStatus by screenModel.status.collectAsState()
         var showDatePicker by remember { mutableStateOf(false) }
 
         // Error states
@@ -105,10 +91,6 @@ class AddOrderScreen(val editMode: Boolean = false, val orderId: Long? = null) :
         var hasPhoneError by remember { mutableStateOf(false) }
         var hasDateError by remember { mutableStateOf(false) }
         var hasEmployeeError by remember { mutableStateOf(false) }
-
-        LaunchedEffect(collectedStatus) {
-            status = collectedStatus ?: Status.NOT_ORDERED
-        }
 
         if (showDatePicker) {
             DatePickerModal(

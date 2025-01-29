@@ -25,7 +25,7 @@ class AddOrderScreenModel(
         data object Finished : State()
     }
 
-    var status = MutableStateFlow<Status?>(null)
+    //var status = MutableStateFlow<Status?>(null)
 
     var employees = MutableStateFlow<List<EmployeeEntity>>(emptyList())
 
