@@ -47,7 +47,10 @@ import java.util.*
 import org.koin.compose.koinInject
 
 
-class AddItemScreen(val orderId: Long) : Screen() {
+class AddItemScreen(
+    val orderId: Long,
+    val editMode: Boolean = false,
+    val itemId: Long? = null) : Screen() {
 
     @Composable
     override fun Content() {
@@ -58,7 +61,7 @@ class AddItemScreen(val orderId: Long) : Screen() {
         val productsRepository = koinInject<ProductsRepository>()
 
         val screenModel = rememberScreenModel {
-            AddItemScreenModel(orderItemRepository, productsRepository)
+            AddItemScreenModel(orderItemRepository, productsRepository, itemId)
         }
 
         var sku by remember { mutableStateOf(TextFieldValue("")) }
@@ -69,8 +72,20 @@ class AddItemScreen(val orderId: Long) : Screen() {
         var quantity by remember { mutableStateOf(TextFieldValue("")) }
         var status by remember { mutableStateOf(Status.NOT_ORDERED) }
 
-        // Collect the status from the screen model if needed
-        val collectedStatus by screenModel.status.collectAsState()
+        if (editMode) {
+            val order by screenModel.orderItem.collectAsState()
+
+            LaunchedEffect(order) {
+                sku = TextFieldValue(order.sku)
+                color = TextFieldValue(order.color)
+                size = TextFieldValue(order.size)
+                price = TextFieldValue(order.price)
+                quantity = TextFieldValue(order.quantity.toString())
+                store = TextFieldValue(order.store)
+                status = Status.fromDisplayName(order.status) ?: Status.NOT_ORDERED
+
+            }
+        }
 
         // Error states
         var hasSkuError by remember { mutableStateOf(false) }
@@ -78,10 +93,6 @@ class AddItemScreen(val orderId: Long) : Screen() {
         var hasSizeError by remember { mutableStateOf(false) }
         var hasPriceError by remember { mutableStateOf(false) }
         var hasQuantityError by remember { mutableStateOf(false) }
-
-        LaunchedEffect(collectedStatus) {
-            status = collectedStatus ?: Status.NOT_ORDERED
-        }
 
         Scaffold(
             topBar = {
@@ -95,7 +106,7 @@ class AddItemScreen(val orderId: Long) : Screen() {
                         }
                     },
                     title = {
-                        Text(stringResource(R.string.orders_item))
+                        Text(stringResource(if (editMode) R.string.orders_item_edit else R.string.orders_item))
                     },
                     actions = {},
                 )
@@ -206,28 +217,50 @@ class AddItemScreen(val orderId: Long) : Screen() {
                             return@Button
                         }
 
+                        val orderItem: OrderItemEntity
                         // Create the order entity
-                        val orderItem = OrderItemEntity(
-                            orderId = orderId,
-                            productName = "",
-                            productColor = "",
-                            sku = sku.text,
-                            color = color.text,
-                            size = size.text,
-                            price = price.text,
-                            quantity = quantity.text.toInt(),
-                            store = store.text,
-                            status = status.displayName
+                        if (editMode) {
+                            orderItem = OrderItemEntity(
+                                orderItemId = itemId!!,
+                                orderId = orderId,
+                                productName = "",
+                                productColor = "",
+                                sku = sku.text,
+                                color = color.text,
+                                size = size.text,
+                                price = price.text,
+                                quantity = quantity.text.toInt(),
+                                store = store.text,
+                                status = status.displayName
 
-                        )
+                            )
+                            screenModel.updateOrderItem(orderItem)
+                            navigator.pop()
+                            Toast.makeText(context, R.string.item_update_success, Toast.LENGTH_SHORT).show()
 
-                        screenModel.addOrderItem(orderItem)
-                        navigator.pop()
-                        Toast.makeText(context, R.string.item_insert_success, Toast.LENGTH_SHORT).show()
+                        } else {
+                            orderItem = OrderItemEntity(
+                                orderId = orderId,
+                                productName = "",
+                                productColor = "",
+                                sku = sku.text,
+                                color = color.text,
+                                size = size.text,
+                                price = price.text,
+                                quantity = quantity.text.toInt(),
+                                store = store.text,
+                                status = status.displayName
+
+                            )
+
+                            screenModel.addOrderItem(orderItem)
+                            navigator.pop()
+                            Toast.makeText(context, R.string.item_insert_success, Toast.LENGTH_SHORT).show()
+                        }
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(stringResource(R.string.items_add))
+                    Text(stringResource(if (editMode) R.string.orders_item_edit else R.string.orders_add))
                 }
             }
 

@@ -36,6 +36,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.animeboynz.kmd.R
 import com.animeboynz.kmd.database.entities.OrderItemEntity
@@ -119,7 +120,7 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
 
                 OrderItemsHeader({navigator.push(AddItemScreen(orderId))})
 
-                OrderItemsList(orderItems, screenModel)
+                OrderItemsList(orderItems, screenModel, navigator)
 
 
                 //Spacer(modifier = Modifier.weight(1f))
@@ -186,7 +187,7 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
     }
 
     @Composable
-    fun OrderItemsList(orderItems: List<OrderItemEntity>, screenModel: CustomerOrderScreenModel) {
+    fun OrderItemsList(orderItems: List<OrderItemEntity>, screenModel: CustomerOrderScreenModel, navigator: Navigator) {
 
         val productNames by screenModel.productNames.collectAsState()
 
@@ -195,7 +196,9 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
                 screenModel.fetchProductName(item.sku)
             }
             val name = productNames[item.sku] ?: stringResource(R.string.orders_loading)
-            OrderItemCard(item, name)
+            OrderItemCard(item, name, {
+                navigator.push(AddItemScreen(orderId, true, item.orderItemId))
+            })
         }
     }
 }

@@ -23,6 +23,7 @@
     <string name="orders_item">Add New Item to Order</string>
     <string name="orders_new">Create New Order</string>
     <string name="orders_edit">Edit Order</string>
+    <string name="orders_item_edit">Edit Order Item</string>
     <string name="orders_edit_notes">Edit Order Notes</string>
     <string name="orders_details">Order Details</string>
     <string name="orders_items">Order Items</string>
