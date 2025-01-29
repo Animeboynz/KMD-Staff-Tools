@@ -7,4 +7,8 @@ interface OrderItemRepository {
     fun insertOrderItem(orderItem: OrderItemEntity)
 
     fun getOrderItemsForOrder(orderId: Long): Flow<List<OrderItemEntity>>
+
+    fun getOrderItems(itemId: Long): OrderItemEntity
+
+    fun updateOrderItem(orderItem: OrderItemEntity)
 }

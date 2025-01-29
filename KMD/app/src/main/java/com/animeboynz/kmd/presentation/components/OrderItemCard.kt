@@ -1,6 +1,7 @@
 package com.animeboynz.kmd.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,11 +23,14 @@ import com.animeboynz.kmd.database.entities.OrderItemEntity
 import com.animeboynz.kmd.ui.theme.spacing
 
 @Composable
-fun OrderItemCard(item: OrderItemEntity, name: String) {
+fun OrderItemCard(item: OrderItemEntity, name: String, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = MaterialTheme.spacing.medium, vertical = MaterialTheme.spacing.extraSmall),
+            .padding(horizontal = MaterialTheme.spacing.medium, vertical = MaterialTheme.spacing.extraSmall)
+            .combinedClickable(
+                onClick = onClick,
+            ),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainer

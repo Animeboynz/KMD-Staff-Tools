@@ -15,4 +15,12 @@ class OrderItemRepositoryImpl(
     override fun getOrderItemsForOrder(orderId: Long): Flow<List<OrderItemEntity>> {
         return database.orderItemDao().getOrderItemsForOrder(orderId)
     }
+
+    override fun getOrderItems(itemId: Long): OrderItemEntity {
+        return database.orderItemDao().getOrderItems(itemId)
+    }
+
+    override fun updateOrderItem(orderItem: OrderItemEntity) {
+        database.orderItemDao().updateOrderItem(orderItem)
+    }
 }
