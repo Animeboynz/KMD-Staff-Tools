@@ -1,9 +1,12 @@
 package com.animeboynz.kmd.ui.preferences.options
 
 import android.os.Build
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -16,6 +19,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderColors
+import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.SliderState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -23,10 +30,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.animeboynz.kmd.R
@@ -46,6 +58,8 @@ import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.SwitchPreference
 import me.zhanghai.compose.preference.TextFieldPreference
 import org.koin.compose.koinInject
+
+import androidx.annotation.IntRange
 
 object GeneralPreferencesScreen : Screen() {
     private fun readResolve(): Any = GeneralPreferencesScreen
@@ -132,6 +146,18 @@ object GeneralPreferencesScreen : Screen() {
                     var orderNumberPadding by remember {
                         mutableStateOf(preferences.orderNumberPadding.get())
                     }
+//                    val orderNumberPaddings by preferences.orderNumberPadding.collectAsState()
+//                    SliderItem(
+//                        value = orderNumberPaddings,
+//                        label = "skui",
+//                        valueText = orderNumberPaddings.toString(),
+//                        min = 1,
+//                        max = 8,
+//                        onChange = {
+//                            preferences.orderNumberPadding.set(it)
+//                            true
+//                        },
+//                    )
 
                     ReplacingTextFieldPreference(
                         value = orderNumberPadding,
@@ -157,4 +183,70 @@ object GeneralPreferencesScreen : Screen() {
             }
         }
     }
+
+//    @Composable
+//    fun SliderItem(
+//        label: String,
+//        value: Int,
+//        valueText: String,
+//        onChange: (Int) -> Unit,
+//        max: Int,
+//        min: Int = 0,
+//    ) {
+//        val haptic = LocalHapticFeedback.current
+//
+//        Row(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(horizontal = 24.dp, vertical = 10.dp), // Match padding with other preference items
+//            verticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.spacedBy(24.dp),
+//        ) {
+//            Column(modifier = Modifier.weight(0.5f)) {
+//                Text(
+//                    text = label,
+//                    style = MaterialTheme.typography.bodyMedium, // Match font size with other preference items
+//                )
+//                Text(
+//                    text = valueText,
+//                    style = MaterialTheme.typography.bodySmall // Match font size with other preference items
+//                )
+//            }
+//
+//            Sliders(
+//                modifier = Modifier.weight(1.5f),
+//                value = value,
+//                onValueChange = f@{
+//                    if (it == value) return@f
+//                    onChange(it)
+//                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+//                },
+//                valueRange = min..max,
+//            )
+//        }
+//    }
+//
+//    @Composable
+//    fun Sliders(
+//        value: Int,
+//        onValueChange: (Int) -> Unit,
+//        modifier: Modifier = Modifier,
+//        enabled: Boolean = true,
+//        valueRange: ClosedRange<Int> = 0..1,
+//        @IntRange(from = 0) steps: Int = with(valueRange) { (endInclusive - start) - 1 },
+//        onValueChangeFinished: (() -> Unit)? = null,
+//        colors: SliderColors = SliderDefaults.colors(),
+//        interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+//    ) {
+//        Slider(
+//            value = value.toFloat(),
+//            onValueChange = { onValueChange(it.toInt()) },
+//            modifier = modifier,
+//            enabled = enabled,
+//            valueRange = with(valueRange) { start.toFloat()..endInclusive.toFloat() },
+//            steps = steps,
+//            onValueChangeFinished = onValueChangeFinished,
+//            colors = colors,
+//        )
+//    }
 }
