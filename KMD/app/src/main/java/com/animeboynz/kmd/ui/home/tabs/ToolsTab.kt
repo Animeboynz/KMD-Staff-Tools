@@ -35,6 +35,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.animeboynz.kmd.R
+import com.animeboynz.kmd.presentation.components.tools.ToolRow
 import com.animeboynz.kmd.presentation.util.Tab
 import com.animeboynz.kmd.ui.preferences.PreferencesScreen
 import com.animeboynz.kmd.ui.screens.tools.CashRow
@@ -80,38 +81,6 @@ object ToolsTab : Tab {
                     navigator.push(CashRow())
                 })
             }
-        }
-    }
-
-    @Composable
-    fun ToolRow(
-        name: String,
-        onClick: () -> Unit,
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 2.dp, horizontal = 8.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surfaceContainerLow)
-                .combinedClickable(
-                    onClick = onClick,
-                )
-                .padding(MaterialTheme.spacing.medium),
-        ) {
-            Column {
-                Text(
-                    text = name,
-                    style = MaterialTheme.typography.titleMedium,
-                )
-            }
-
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = null,
-                modifier = Modifier.align(Alignment.CenterEnd),
-                tint = MaterialTheme.colorScheme.outline,
-            )
         }
     }
 

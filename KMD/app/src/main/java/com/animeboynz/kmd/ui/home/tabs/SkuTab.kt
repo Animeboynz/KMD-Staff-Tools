@@ -33,7 +33,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.animeboynz.kmd.R
 import com.animeboynz.kmd.domain.ProductsRepository
-import com.animeboynz.kmd.presentation.components.ProductRow
+import com.animeboynz.kmd.presentation.components.order.ProductRow
 import com.animeboynz.kmd.presentation.util.Tab
 import com.animeboynz.kmd.ui.preferences.PreferencesScreen
 import com.animeboynz.kmd.ui.screens.ProductScreen

@@ -57,6 +57,8 @@ import com.animeboynz.kmd.presentation.Screen
 import com.animeboynz.kmd.presentation.components.DropdownItem
 import com.animeboynz.kmd.presentation.components.EmployeeDropdownItem
 import com.animeboynz.kmd.presentation.components.SimpleDropdown
+import com.animeboynz.kmd.presentation.components.product.PrintBarcodes
+import com.animeboynz.kmd.utils.generateBarCode
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
@@ -201,87 +203,7 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
         }
     }
 
-    @Composable
-    fun PrintBarcodes(items: List<BarcodesEntity>) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items.forEach { item ->
-                if (!item.pieceBarcode.isNullOrEmpty()) {
-                    val bitmap = remember { mutableStateOf<Bitmap?>(null) }
-                    bitmap.value = generateBarCode(item.pieceBarcode)
 
-                    Card(
-                        modifier = Modifier.padding(8.dp),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text("Piece Barcode: ${item.pieceBarcode}", style = MaterialTheme.typography.bodyMedium)
-                            bitmap.value?.asImageBitmap()?.let { bitmapImage ->
-                                Image(
-                                    bitmap = bitmapImage,
-                                    contentDescription = "Generate Barcode Image for ${item.pieceBarcode}",
-                                    modifier = Modifier.size(250.dp, 100.dp)
-                                )
-                            }
-                        }
-                    }
-                }
-                if (!item.gtin.isNullOrEmpty()) {
-                    val bitmapGtin = remember { mutableStateOf<Bitmap?>(null) }
-                    bitmapGtin.value = generateBarCode(item.gtin)
-
-                    Card(
-                        modifier = Modifier.padding(8.dp),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text("GTIN Barcode: ${item.gtin}", style = MaterialTheme.typography.bodyMedium)
-                            bitmapGtin.value?.asImageBitmap()?.let { bitmapImage ->
-                                Image(
-                                    bitmap = bitmapImage,
-                                    contentDescription = "Generate Barcode Image for ${item.gtin}",
-                                    modifier = Modifier.size(250.dp, 100.dp)
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    fun generateBarCode(text: String): Bitmap {
-        val width = 500
-        val height = 150
-        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        val codeWriter = MultiFormatWriter()
-        try {
-            val bitMatrix = codeWriter.encode(
-                text,
-                BarcodeFormat.CODE_128,
-                width,
-                height
-            )
-            for (x in 0 until width) {
-                for (y in 0 until height) {
-                    val color = if (bitMatrix[x, y]) Color.BLACK else Color.WHITE
-                    bitmap.setPixel(x, y, color)
-                }
-            }
-        } catch (e: WriterException) {
-            Log.d("TAG", "generateBarCode: ${e.message}")
-        }
-        return bitmap
-    }
 
     data class ColorDropdownItem(
         val item: BarcodesEntity,

@@ -35,6 +35,7 @@ import com.animeboynz.kmd.preferences.GeneralPreferences
 import com.animeboynz.kmd.preferences.preference.collectAsState
 import com.animeboynz.kmd.presentation.Screen
 import com.animeboynz.kmd.presentation.components.preferences.MultiChoiceSegmentedButton
+import com.animeboynz.kmd.presentation.components.preferences.ReplacingTextFieldPreference
 import com.animeboynz.kmd.ui.theme.DarkMode
 import com.animeboynz.kmd.ui.theme.spacing
 import com.animeboynz.kmd.utils.Constants
@@ -131,6 +132,7 @@ object GeneralPreferencesScreen : Screen() {
                     var orderNumberPadding by remember {
                         mutableStateOf(preferences.orderNumberPadding.get())
                     }
+
                     ReplacingTextFieldPreference(
                         value = orderNumberPadding,
                         onValueChange = { orderNumberPadding = it.toString().toInt() },
@@ -154,38 +156,5 @@ object GeneralPreferencesScreen : Screen() {
                 }
             }
         }
-    }
-
-    @Composable
-    fun <T> ReplacingTextFieldPreference(
-        value: T,
-        onValueChange: (T) -> Unit,
-        title: String,
-        description: String?,
-        textToValue: (String) -> T?,
-        keyboardType: KeyboardType = KeyboardType.Unspecified,
-    ) {
-        TextFieldPreference(
-            value = value,
-            onValueChange = onValueChange,
-            title = { Text(text = title) },
-            summary = { Text(text = value.toString()) },
-            textField = { value, onValueChange, onOk ->
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
-                ) {
-                    Text(text = description ?: "")
-
-                    OutlinedTextField(
-                        value = value,
-                        onValueChange = onValueChange,
-                        maxLines = 1,
-                        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-                        keyboardActions = KeyboardActions(onDone = { onOk() }),
-                    )
-                }
-            },
-            textToValue = textToValue,
-        )
     }
 }

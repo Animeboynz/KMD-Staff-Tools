@@ -26,7 +26,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -45,9 +44,11 @@ import com.animeboynz.kmd.domain.OrderItemRepository
 import com.animeboynz.kmd.domain.ProductsRepository
 import com.animeboynz.kmd.preferences.GeneralPreferences
 import com.animeboynz.kmd.presentation.Screen
-import com.animeboynz.kmd.presentation.components.CustomerOrderCard
-import com.animeboynz.kmd.presentation.components.NotesItem
-import com.animeboynz.kmd.presentation.components.OrderItemCard
+import com.animeboynz.kmd.presentation.components.order.CustomerOrderCard
+import com.animeboynz.kmd.presentation.components.order.NotesItem
+import com.animeboynz.kmd.presentation.components.order.OrderItemCard
+import com.animeboynz.kmd.presentation.components.order.OrderItemsHeader
+import com.animeboynz.kmd.presentation.components.order.OrderItemsList
 import com.animeboynz.kmd.ui.theme.spacing
 import org.koin.compose.koinInject
 
@@ -120,7 +121,7 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
 
                 OrderItemsHeader({navigator.push(AddItemScreen(orderId))})
 
-                OrderItemsList(orderItems, screenModel, navigator)
+                OrderItemsList(orderId, orderItems, screenModel, navigator)
 
 
                 //Spacer(modifier = Modifier.weight(1f))
@@ -161,44 +162,6 @@ class CustomerOrderScreen(val orderId: Long) : Screen() {
                     )
                 }
             }
-        }
-    }
-
-    @Composable
-    fun OrderItemsHeader(onAddItemClick: () -> Unit) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = MaterialTheme.spacing.large),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween // Space between title and button
-        ) {
-            Text(
-                text = stringResource(R.string.orders_items),
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier
-                    .padding(end = MaterialTheme.spacing.large)
-                    .weight(1f) // Allows the title to take remaining space
-            )
-            IconButton(onClick = onAddItemClick) {
-                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.items_add))
-            }
-        }
-    }
-
-    @Composable
-    fun OrderItemsList(orderItems: List<OrderItemEntity>, screenModel: CustomerOrderScreenModel, navigator: Navigator) {
-
-        val productNames by screenModel.productNames.collectAsState()
-
-        orderItems.forEach { item ->
-            if (!productNames.containsKey(item.sku)) {
-                screenModel.fetchProductName(item.sku)
-            }
-            val name = productNames[item.sku] ?: stringResource(R.string.orders_loading)
-            OrderItemCard(item, name, {
-                navigator.push(AddItemScreen(orderId, true, item.orderItemId))
-            })
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.animeboynz.kmd.presentation
+package com.animeboynz.kmd.presentation.themes
 
 import android.annotation.SuppressLint
 import android.app.UiModeManager

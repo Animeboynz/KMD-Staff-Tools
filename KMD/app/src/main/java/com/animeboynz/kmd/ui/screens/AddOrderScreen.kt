@@ -35,6 +35,7 @@ import com.animeboynz.kmd.domain.CustomerOrderRepository
 import com.animeboynz.kmd.domain.EmployeeRepository
 import com.animeboynz.kmd.domain.Status
 import com.animeboynz.kmd.presentation.Screen
+import com.animeboynz.kmd.presentation.components.DatePickerModal
 import com.animeboynz.kmd.presentation.components.EmployeeDropdownItem
 import com.animeboynz.kmd.presentation.components.SimpleDropdown
 import java.text.SimpleDateFormat
@@ -263,34 +264,6 @@ class AddOrderScreen(val editMode: Boolean = false, val orderId: Long? = null) :
                 }
             }
 
-        }
-    }
-
-    @Composable
-    fun DatePickerModal(
-        onDateSelected: (Long?) -> Unit,
-        onDismiss: () -> Unit
-    ) {
-        val datePickerState = rememberDatePickerState()
-        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-
-        DatePickerDialog(
-            onDismissRequest = onDismiss,
-            confirmButton = {
-                TextButton(onClick = {
-                    onDateSelected(datePickerState.selectedDateMillis)
-                    onDismiss()
-                }) {
-                    Text(stringResource(R.string.generic_confirm))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = onDismiss) {
-                    Text(stringResource(R.string.generic_cancel))
-                }
-            }
-        ) {
-            DatePicker(state = datePickerState)
         }
     }
 }

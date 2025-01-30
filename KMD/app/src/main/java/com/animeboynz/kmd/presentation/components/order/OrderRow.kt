@@ -1,4 +1,4 @@
-package com.animeboynz.kmd.presentation.components
+package com.animeboynz.kmd.presentation.components.order
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable

@@ -1,4 +1,4 @@
-package com.animeboynz.kmd.presentation
+package com.animeboynz.kmd.presentation.themes
 
 import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
