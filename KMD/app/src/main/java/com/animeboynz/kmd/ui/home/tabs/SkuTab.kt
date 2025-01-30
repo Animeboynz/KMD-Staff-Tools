@@ -105,7 +105,7 @@ object SkuTab : Tab {
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(filteredProducts) { product ->
                         ProductRow(product, {
-                            navigator.push(ProductScreen(product.sku))
+                            navigator.push(ProductScreen(product.sku, product.name))
                         })
                     }
                 }

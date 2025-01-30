@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -63,7 +65,7 @@ import java.util.*
 import org.koin.compose.koinInject
 
 
-class ProductScreen(val sku: String) : Screen() {
+class ProductScreen(val sku: String, val name: String) : Screen() {
 
     @Composable
     override fun Content() {
@@ -121,6 +123,17 @@ class ProductScreen(val sku: String) : Screen() {
 
                 var selectedSize by remember { mutableStateOf<SizeDropdownItem?>(null) }
                 val dropdownSizeItems = filteredBySize.map { SizeDropdownItem(it) }
+
+                Text(
+                    text = name,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.1f)) // Optional: Add a background
+                )
 
                 SimpleDropdown(
                     label = stringResource(R.string.color),
