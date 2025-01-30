@@ -20,3 +20,11 @@
 | Cash Count | Takings | Remaining Float |
 |---|---|---|
 | <img src="https://github.com/user-attachments/assets/3d563f39-e7e4-4582-b6e9-b696acf3f0a2" width="300"> | <img src="https://github.com/user-attachments/assets/c3dee497-b99a-4cab-9b5a-9d0c9d107674" width="300"> | <img src="https://github.com/user-attachments/assets/4fa8fea9-c7cb-4ff7-a573-582986072fa9" width="300"> |
+
+## Disclaimer
+
+This app is an independent third-party program created by a Kathmandu employee for Kathmandu employees. It is important to note that we are not affiliated with Kathmandu Group Limited or any subsidiary of KMD Brands. The use of the Kathmandu logo on this app is solely for illustrative purposes and does not imply any endorsement, sponsorship, or association with Kathmandu Group Limited or its subsidiaries.
+
+It is recommended that users verify any information or seek professional advice when necessary. For official information, updates, or inquiries regarding Kathmandu Group Limited or its subsidiaries, please visit their official website or contact their authorized representatives directly.
+
+By accessing and using this app, you acknowledge and agree to the above disclosure and understand that this app is an independent entity and not affiliated with Kathmandu Group Limited or any subsidiary of KMD Brands.
