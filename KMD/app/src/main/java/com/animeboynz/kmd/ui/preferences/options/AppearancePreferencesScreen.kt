@@ -1,6 +1,5 @@
 package com.animeboynz.kmd.ui.preferences.options
 
-import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -23,17 +22,12 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.animeboynz.kmd.R
 import com.animeboynz.kmd.preferences.AppearancePreferences
 import com.animeboynz.kmd.preferences.preference.collectAsState
-import com.animeboynz.kmd.presentation.AppThemeModePreferenceWidget
+import com.animeboynz.kmd.presentation.themes.AppThemeModePreferenceWidget
 import com.animeboynz.kmd.presentation.Screen
 import com.animeboynz.kmd.presentation.components.preferences.AppThemePreferenceWidget
-import com.animeboynz.kmd.presentation.components.preferences.MultiChoiceSegmentedButton
-import com.animeboynz.kmd.ui.theme.DarkMode
 import com.animeboynz.kmd.ui.theme.setAppCompatDelegateThemeMode
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import me.zhanghai.compose.preference.PreferenceCategory
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
-import me.zhanghai.compose.preference.SwitchPreference
 import org.koin.compose.koinInject
 
 object AppearancePreferencesScreen : Screen() {

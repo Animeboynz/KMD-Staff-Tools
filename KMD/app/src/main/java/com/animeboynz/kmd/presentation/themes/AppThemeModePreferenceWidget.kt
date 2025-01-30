@@ -1,4 +1,4 @@
-package com.animeboynz.kmd.presentation
+package com.animeboynz.kmd.presentation.themes
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

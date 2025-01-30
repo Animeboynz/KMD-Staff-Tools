@@ -35,7 +35,7 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.animeboynz.kmd.R
 import com.animeboynz.kmd.domain.CustomerOrderRepository
 import com.animeboynz.kmd.preferences.GeneralPreferences
-import com.animeboynz.kmd.presentation.components.OrderRow
+import com.animeboynz.kmd.presentation.components.order.OrderRow
 import com.animeboynz.kmd.presentation.util.Tab
 import com.animeboynz.kmd.ui.preferences.PreferencesScreen
 import com.animeboynz.kmd.ui.screens.AddOrderScreen

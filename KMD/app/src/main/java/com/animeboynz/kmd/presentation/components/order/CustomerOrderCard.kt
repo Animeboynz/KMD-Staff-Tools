@@ -1,4 +1,4 @@
-package com.animeboynz.kmd.presentation.components
+package com.animeboynz.kmd.presentation.components.order
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
