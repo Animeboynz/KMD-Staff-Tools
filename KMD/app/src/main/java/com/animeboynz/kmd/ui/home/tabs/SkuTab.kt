@@ -22,12 +22,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.TabOptions
@@ -59,8 +61,9 @@ object SkuTab : Tab {
         val navigator = LocalNavigator.currentOrThrow
 
         val productsRepository = koinInject<ProductsRepository>()
-        val allProductsFlow = productsRepository.getAllProducts() // This should return a Flow<List<ProductsEntity>>
-        val allProducts by allProductsFlow.collectAsState(initial = emptyList()) // Collect it as state
+        val screenModel = rememberScreenModel { SkuTabScreenModel(productsRepository) }
+
+        val allProducts by screenModel.allProducts.collectAsState()
 
         var searchQuery by remember { mutableStateOf("") }
 
