@@ -84,10 +84,6 @@ object AppearancePreferencesScreen : Screen() {
                         amoled = amoled,
                         onItemClick = { appThemePref.set(it) },
                     )
-
-                    PreferenceCategory(
-                        title = { Text(text = stringResource(id = R.string.pref_appearance_category_display)) },
-                    )
                 }
             }
         }
