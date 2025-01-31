@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "73792630688",
+    "project_id": "kmd-staff-tools",
+    "storage_bucket": "kmd-staff-tools.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:73792630688:android:d69b0f45fb3c477b8fbec5",
+        "android_client_info": {
+          "package_name": "com.animeboynz.kmd"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB91nKp5h_AiwhI5gCggv5TyIPeXIy0ZgA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

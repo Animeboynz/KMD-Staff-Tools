@@ -11,6 +11,15 @@ plugins {
     alias(libs.plugins.spotless.gradle)
     id("kotlin-parcelize")
     alias(libs.plugins.aboutLibraries)
+    //id("com.google.gms.google-services")
+    //id("com.google.firebase.crashlytics")
+    //apply(libs.plugins.google.services.get().pluginId)
+    //apply(libs.plugins.firebase.crashlytics.get().pluginId)
+}
+
+pluginManager.apply {
+    apply(libs.plugins.google.services.get().pluginId)
+    apply(libs.plugins.firebase.crashlytics.get().pluginId)
 }
 
 android {
@@ -93,6 +102,9 @@ dependencies {
     implementation(libs.room.ktx)
     implementation(libs.aboutLibraries.compose)
     implementation(libs.zxing)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
 }
 
 spotless {

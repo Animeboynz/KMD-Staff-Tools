@@ -15,9 +15,8 @@ import com.animeboynz.kmd.preferences.AppearancePreferences
 import com.animeboynz.kmd.preferences.preference.collectAsState
 import com.animeboynz.kmd.presentation.components.preferences.TachiyomiTheme
 import com.animeboynz.kmd.ui.home.HomeScreen
-import com.animeboynz.kmd.ui.theme.DarkMode
-import com.animeboynz.kmd.ui.theme.KMDTheme
 import com.animeboynz.kmd.ui.theme.ThemeMode
+import com.animeboynz.kmd.utils.FirebaseConfig
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
@@ -25,6 +24,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        FirebaseConfig.init(applicationContext)
+        FirebaseConfig.setAnalyticsEnabled(true)
+        FirebaseConfig.setCrashlyticsEnabled(true)
+
         setContent {
             val dark by appearancePreferences.themeMode.collectAsState()
             val isSystemInDarkTheme = isSystemInDarkTheme()
