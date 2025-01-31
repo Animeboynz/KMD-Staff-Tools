@@ -11,6 +11,7 @@ import com.animeboynz.kmd.preferences.AppearancePreferences
 import com.animeboynz.kmd.presentation.crash.CrashActivity
 import com.animeboynz.kmd.presentation.crash.GlobalExceptionHandler
 import com.animeboynz.kmd.ui.theme.setAppCompatDelegateThemeMode
+import com.animeboynz.kmd.utils.FirebaseConfig
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.android.inject
@@ -39,5 +40,10 @@ class App : Application() {
             )
         }
         setAppCompatDelegateThemeMode(appearancePreferences.themeMode.get())
+
+//        FirebaseConfig.init(applicationContext)
+//        FirebaseConfig.setAnalyticsEnabled(true)
+//        FirebaseConfig.setCrashlyticsEnabled(true)
+
     }
 }
