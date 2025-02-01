@@ -84,7 +84,7 @@ object AboutPreferencesScreen : Screen() {
 
                 TextPreferenceWidget(
                     title = stringResource(R.string.version),
-                    subtitle = getVersionName(false),
+                    subtitle = getVersionName(true),
                     onPreferenceClick = {
                         val deviceInfo = CrashLogUtil(context).getDebugInfo()
                         context.copyToClipboard("Debug information", deviceInfo)
@@ -122,20 +122,45 @@ object AboutPreferencesScreen : Screen() {
     }
 
     fun getVersionName(withBuildDate: Boolean): String {
-        return "KMD Staff Tools ${BuildConfig.BUILD_TYPE.replaceFirstChar { it.uppercase() }} ${BuildConfig.VERSION_NAME}"
-
+        return when {
+            BuildConfig.DEBUG -> {
+                "KMD Staff Tools Debug r${BuildConfig.COMMIT_COUNT}".let {
+                    if (withBuildDate) {
+                        "$it (${BuildConfig.BUILD_TIME})"
+                    } else {
+                        it
+                    }
+                }
+            }
+//            BuildConfig.DEBUG -> {
+//                "Debug ${BuildConfig.COMMIT_SHA}".let {
+//                    if (withBuildDate) {
+//                        "$it (${BuildConfig.BUILD_TIME})"
+//                    } else {
+//                        it
+//                    }
+//                }
+//            }
+//            BuildConfig.PREVIEW -> {
+//                "Beta r${BuildConfig.COMMIT_COUNT}".let {
+//                    if (withBuildDate) {
+//                        "$it (${BuildConfig.COMMIT_SHA}, ${getFormattedBuildTime()})"
+//                    } else {
+//                        "$it (${BuildConfig.COMMIT_SHA})"
+//                    }
+//                }
+//            }
+            else -> {
+                "KMD Staff Tools Stable ${BuildConfig.VERSION_NAME}".let {
+                    if (withBuildDate) {
+                        "$it (${BuildConfig.BUILD_TIME})"
+                    } else {
+                        it
+                    }
+                }
+            }
+        }
     }
-
-//    internal fun getFormattedBuildTime(): String {
-//        return try {
-//            LocalDateTime.ofInstant(
-//                Instant.parse(BuildConfig.BUILD_TIME),
-//                ZoneId.systemDefault(),
-//            )
-//        } catch (e: Exception) {
-//            BuildConfig.BUILD_TIME
-//        }.toString()
-//    }
 
     @Composable
     fun LinkIcon(
