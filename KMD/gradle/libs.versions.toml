@@ -12,14 +12,14 @@ material = "1.12.0"
 aboutlib_version = "11.4.0"
 googleservices_version = "4.4.2"
 crashlytics_version = "3.0.2"
-lifecycleRuntimeKtx = "2.8.6"
-activityCompose = "1.9.2"
-composeBom = "2024.09.03"
+lifecycleRuntimeKtx = "2.8.7"
+activityCompose = "1.10.0"
+composeBom = "2025.01.01"
 voyager = "1.0.0"
 koin = "4.0.0-RC2"
 preferenceKtx = "1.2.1"
 serialization_version = "1.7.3"
-xml_serialization_version = "0.90.1"
+xml_serialization_version = "0.90.3"
 okhttp_version = "5.0.0-alpha.14"
 coil = "3.0.0-alpha10"
 room = "2.6.1"
@@ -71,7 +71,7 @@ coil-core = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-compose-core = { module = "io.coil-kt.coil3:coil-compose-core", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
-jsoup = "org.jsoup:jsoup:1.18.1"
+jsoup = "org.jsoup:jsoup:1.18.3"
 ktlint-core = { module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlint-core" }
 aboutLibraries-compose = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutlib_version" }
 
