@@ -152,7 +152,7 @@
     //About screen
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="clipboard_copy_error">Failed to copy to clipboard</string>
-    <string name="check_for_updates">Check for updates</string>
+    <string name="check_for_updates">Open Releases on GitHub</string>
     <string name="check_for_updates_not_implemented">Updater not yet implemented!</string>
     <string name="licenses">Open source licenses</string>
     <string name="version">Version</string>

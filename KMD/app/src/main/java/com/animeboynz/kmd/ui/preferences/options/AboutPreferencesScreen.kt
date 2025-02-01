@@ -43,6 +43,7 @@ import com.animeboynz.kmd.presentation.components.preferences.TextPreferenceWidg
 import com.animeboynz.kmd.ui.preferences.options.OpenSourceLicensesScreen
 import com.animeboynz.kmd.utils.CrashLogUtil
 import com.animeboynz.kmd.utils.copyToClipboard
+import com.animeboynz.kmd.utils.openInBrowser
 import com.animeboynz.kmd.utils.toast
 import java.time.Instant
 import java.time.LocalDateTime
@@ -95,7 +96,7 @@ object AboutPreferencesScreen : Screen() {
                     title = stringResource(R.string.check_for_updates),
                     widget = {},
                     onPreferenceClick = {
-                        Toast.makeText(context, R.string.check_for_updates_not_implemented, Toast.LENGTH_SHORT).show()
+                        context.openInBrowser("https://github.com/Animeboynz/KMD-Staff-Tools/releases/latest")
                     },
                 )
 
@@ -151,7 +152,7 @@ object AboutPreferencesScreen : Screen() {
 //                }
 //            }
             else -> {
-                "KMD Staff Tools Stable ${BuildConfig.VERSION_NAME}".let {
+                "KMD Staff Tools Stable v${BuildConfig.VERSION_NAME}".let {
                     if (withBuildDate) {
                         "$it (${BuildConfig.BUILD_TIME})"
                     } else {
