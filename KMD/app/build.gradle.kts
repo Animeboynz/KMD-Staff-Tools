@@ -1,5 +1,10 @@
+@file:Suppress("ChromeOsAbiSupport")
+
 import org.gradle.kotlin.dsl.invoke
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 plugins {
     alias(libs.plugins.ksp)
@@ -22,6 +27,29 @@ pluginManager.apply {
     apply(libs.plugins.firebase.crashlytics.get().pluginId)
 }
 
+val supportedAbis = setOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+
+fun getCommitCount(): Int {
+    val process = ProcessBuilder("git", "rev-list", "--count", "HEAD")
+        .redirectErrorStream(true)
+        .start()
+    return process.inputStream.bufferedReader().use { it.readText().trim().toInt() }
+}
+
+fun getFormattedBuildTime(): String {
+    val now = Instant.now()
+    val formatter = DateTimeFormatter.ofPattern("dd-MM-yy HH:mm:ss")
+        .withZone(ZoneId.systemDefault())
+    return formatter.format(now)
+}
+
+fun getGitSha(): String {
+    val process = ProcessBuilder("git", "rev-parse", "--short", "HEAD")
+        .redirectErrorStream(true)
+        .start()
+    return process.inputStream.bufferedReader().use { it.readText().trim() }
+}
+
 android {
     namespace = "com.animeboynz.kmd"
     compileSdk = 35
@@ -31,13 +59,34 @@ android {
         minSdk = 26
         targetSdk = 34
 
-//        buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
-//        buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
-//        buildConfigField("String", "BUILD_TIME", "\"${getBuildTime()}\"")
+        buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
+        buildConfigField("String", "BUILD_TIME", "\"${getFormattedBuildTime()}\"")
+        buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
+
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         versionCode = 1
         versionName = "0.1.0"
+
+        ndk {
+            abiFilters += supportedAbis
+        }
+
+        buildFeatures {
+            viewBinding = true
+            buildConfig = true
+            shaders = false
+        }
+
+    }
+
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include(*supportedAbis.toTypedArray())
+            isUniversalApk = true
+        }
     }
 
     buildTypes {
@@ -48,6 +97,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        getByName("debug") {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-${getCommitCount()}"
         }
     }
     compileOptions {
