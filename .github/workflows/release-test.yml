@@ -1,0 +1,160 @@
+name: Build job
+
+on:
+  workflow_dispatch:
+    inputs:
+        version:
+          description: Version
+          required: true
+
+jobs:
+  build-app:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Repository (Latest)
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          repository: 'Animeboynz/KMD-Staff-Tools'
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@7a6d8a8234af8eb26422e24e3006232cccaa061b # v4.6.0
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Setup Android SDK
+        run: |
+          ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager "build-tools;29.0.3"
+
+      - name: Get previous release
+        id: last_release
+        uses: InsonusK/get-latest-release@7a9ff16c8c6b7ead5d71c0f1cc61f2703170eade # v1.1.0
+        with:
+          myToken: ${{ github.token }}
+          exclude_types: "draft|prerelease"
+          view_top: 1
+
+      - name: Prepare build
+        run: |
+          set -e
+
+          commit_count=$(git rev-list --count HEAD)
+          echo "COMMIT_COUNT=$commit_count" >> $GITHUB_ENV
+
+          current_sha=$(git rev-parse --short HEAD)
+          echo "CURRENT_SHA=$current_sha" >> $GITHUB_ENV
+
+          prev_commit_count=$(echo "" | sed -e "s/^r//")
+          prev_commit_count=${prev_commit_count:-0}
+
+          # Validate that prev_commit_count is a number
+          if ! [[ "$prev_commit_count" =~ ^[0-9]+$ ]]; then
+            prev_commit_count=0
+          fi
+
+          commit_count_diff=$(expr $commit_count - $prev_commit_count)
+
+          if [[ $commit_count_diff -lt 0 ]]; then
+            commit_count_diff=0
+          elif [[ $commit_count_diff -ge $commit_count ]]; then
+            commit_count_diff=$(expr $commit_count - 1)  # Prevent out-of-bounds reference
+          fi
+
+          if [[ $commit_count_diff -gt 0 ]]; then
+            prev_release_sha=$(git rev-parse --short HEAD~$commit_count_diff)
+          else
+            prev_release_sha=$current_sha  # Use current SHA if no previous commit exists
+          fi
+
+          prev_release_sha=$(git rev-parse --short HEAD~$commit_count_diff)
+          echo "PREV_RELEASE_SHA=$prev_release_sha" >> $GITHUB_ENV
+
+          echo "COMMIT_LOGS<<{delimiter}
+          $(curl -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/Animeboynz/KMD-Staff-Tools/compare/$prev_release_sha...$current_sha" \
+            | jq '[.commits[]|{message:(.commit.message | split("\n")), username:.author.login}]' \
+            | jq -r '.[]|"- \(.message | first) (@\(.username))"')
+          {delimiter}" >> $GITHUB_ENV
+
+      - name: Set up gradle
+        uses: gradle/actions/setup-gradle@0bdd871935719febd78681f197cd39af5b6e16a6 # v4.2.2
+
+      - name: Make gradlew executable
+        run: |
+          cd KMD
+          chmod +x ./gradlew
+
+      - name: Build APK
+        run: |
+          cd KMD
+          ./gradlew assembleRelease
+
+      - name: Sign APK
+        uses: r0adkll/sign-android-release@349ebdef58775b1e0d8099458af0816dc79b6407 # v1
+        with:
+          releaseDirectory: KMD/app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Clean up build artifacts
+        run: |
+          set -e
+
+          cp KMD/app/build/outputs/apk/release/app-universal-release-unsigned-signed.apk KMD-Staff-Tools-v${{ github.event.inputs.version }}.apk
+          sha=`sha256sum KMD-Staff-Tools-v${{ github.event.inputs.version }}.apk | awk '{ print $1 }'`
+          echo "APK_UNIVERSAL_SHA=$sha" >> $GITHUB_ENV
+
+          cp KMD/app/build/outputs/apk/release/app-arm64-v8a-release-unsigned-signed.apk KMD-Staff-Tools-arm64-v8a-v${{ github.event.inputs.version }}.apk
+          sha=`sha256sum KMD-Staff-Tools-arm64-v8a-v${{ github.event.inputs.version }}.apk | awk '{ print $1 }'`
+          echo "APK_ARM64_V8A_SHA=$sha" >> $GITHUB_ENV
+
+          cp KMD/app/build/outputs/apk/release/app-armeabi-v7a-release-unsigned-signed.apk KMD-Staff-Tools-armeabi-v7a-v${{ github.event.inputs.version }}.apk
+          sha=`sha256sum KMD-Staff-Tools-armeabi-v7a-v${{ github.event.inputs.version }}.apk | awk '{ print $1 }'`
+          echo "APK_ARMEABI_V7A_SHA=$sha" >> $GITHUB_ENV
+
+          cp KMD/app/build/outputs/apk/release/app-x86-release-unsigned-signed.apk KMD-Staff-Tools-x86-v${{ github.event.inputs.version }}.apk
+          sha=`sha256sum KMD-Staff-Tools-x86-v${{ github.event.inputs.version }}.apk | awk '{ print $1 }'`
+          echo "APK_X86_SHA=$sha" >> $GITHUB_ENV
+
+          cp KMD/app/build/outputs/apk/release/app-x86_64-release-unsigned-signed.apk KMD-Staff-Tools-x86_64-v${{ github.event.inputs.version }}.apk
+          sha=`sha256sum KMD-Staff-Tools-x86_64-v${{ github.event.inputs.version }}.apk | awk '{ print $1 }'`
+          echo "APK_X86_64_SHA=$sha" >> $GITHUB_ENV
+
+      - name: Create release
+        uses: softprops/action-gh-release@c95fe1489396fe8a9eb87c0abf8aa5b2ef267fda # v2.2.1
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          name: KMD Staff Tools v${{ github.event.inputs.version }}
+          body: |
+            ### Commits
+
+            https://github.com/Animeboynz/KMD-Staff-Tools/compare/${{ env.PREV_RELEASE_SHA }}...${{ env.CURRENT_SHA }}
+
+            ${{ env.COMMIT_LOGS }}
+
+            ---
+
+            ### Checksums
+
+            | Variant | SHA-256 |
+            | ------- | ------- |
+            | Universal | ${{ env.APK_UNIVERSAL_SHA }}
+            | arm64-v8a | ${{ env.APK_ARM64_V8A_SHA }}
+            | armeabi-v7a | ${{ env.APK_ARMEABI_V7A_SHA }}
+            | x86 | ${{ env.APK_X86_SHA }} |
+            | x86_64 | ${{ env.APK_X86_64_SHA }} |
+            
+            ## If you are unsure which apk to download then go with KMD-Staff-Tools-v${{ github.event.inputs.version }}.apk
+          files: |
+            KMD-Staff-Tools-v${{ github.event.inputs.version }}.apk
+            KMD-Staff-Tools-arm64-v8a-v${{ github.event.inputs.version }}.apk
+            KMD-Staff-Tools-armeabi-v7a-v${{ github.event.inputs.version }}.apk
+            KMD-Staff-Tools-x86-v${{ github.event.inputs.version }}.apk
+            KMD-Staff-Tools-x86_64-v${{ github.event.inputs.version }}.apk
+          draft: ${{ github.event.inputs.dry-run != '' }}
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
