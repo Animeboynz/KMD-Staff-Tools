@@ -24,4 +24,8 @@ class BarcodesRepositoryImpl(
     override suspend fun insertAll(products: List<BarcodesEntity>) {
         database.barcodesDao().insertAll(products)
     }
+
+    override fun deleteAllLines() {
+        database.barcodesDao().deleteAllLines()
+    }
 }

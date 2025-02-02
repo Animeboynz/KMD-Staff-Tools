@@ -13,5 +13,7 @@ interface ProductsRepository {
     fun getProductName(sku: String): ProductsEntity
 
     suspend fun insertAll(products: List<ProductsEntity>)
+
+    fun deleteAllProducts()
 }
 
