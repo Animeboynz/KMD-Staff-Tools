@@ -12,4 +12,6 @@ interface BarcodesRepository {
 
     suspend fun insertAll(products: List<BarcodesEntity>)
 
+    fun deleteAllLines()
+
 }

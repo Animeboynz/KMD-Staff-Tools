@@ -22,4 +22,7 @@ interface BarcodesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(products: List<BarcodesEntity>)
+
+    @Query("DELETE FROM BarcodesEntity")
+    fun deleteAllLines()
 }

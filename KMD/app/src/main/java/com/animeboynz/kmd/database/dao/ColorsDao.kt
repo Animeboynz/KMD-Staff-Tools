@@ -17,4 +17,7 @@ interface ColorsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(products: List<ColorsEntity>)
+
+    @Query("DELETE FROM ColorsEntity")
+    fun deleteAllColors()
 }

@@ -9,4 +9,6 @@ interface ColorsRepository {
     fun getColorName(code: String): ColorsEntity
 
     fun insertAll(products: List<ColorsEntity>)
+
+    fun deleteAllColors()
 }

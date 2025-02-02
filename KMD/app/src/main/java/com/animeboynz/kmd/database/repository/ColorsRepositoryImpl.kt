@@ -20,4 +20,8 @@ class ColorsRepositoryImpl(
         database.colorsDao().insertAll(products)
     }
 
+    override fun deleteAllColors() {
+        database.colorsDao().deleteAllColors()
+    }
+
 }
