@@ -35,6 +35,7 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.animeboynz.kmd.R
 import com.animeboynz.kmd.domain.CustomerOrderRepository
 import com.animeboynz.kmd.preferences.GeneralPreferences
+import com.animeboynz.kmd.presentation.components.EmptyScreen
 import com.animeboynz.kmd.presentation.components.order.OrderRow
 import com.animeboynz.kmd.presentation.util.Tab
 import com.animeboynz.kmd.ui.preferences.PreferencesScreen
@@ -85,9 +86,9 @@ object OrdersTab : Tab {
                         Text(stringResource(R.string.orders_title))
                     },
                     actions = {
-                        IconButton(onClick = { navigator.push(PreferencesScreen) }) {
-                            Icon(Icons.Default.FilterList, null)
-                        }
+//                        IconButton(onClick = { navigator.push(PreferencesScreen) }) {
+//                            Icon(Icons.Default.FilterList, null)
+//                        }
                         IconButton(onClick = { navigator.push(PreferencesScreen) }) {
                             Icon(Icons.Default.Settings, null)
                         }
@@ -105,23 +106,9 @@ object OrdersTab : Tab {
             val paddingModifier = Modifier.padding(paddingValues)
             Column(modifier = paddingModifier) {
                 if (allOrders.isEmpty()) {
-                    Surface {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
-                        ) {
-                            Text(
-                                text = stringResource(R.string.orders_none),
-                                style = MaterialTheme.typography.headlineSmall,
-                            )
-                            Button(
-                                onClick = { navigator.push(AddOrderScreen()) },
-                            ) {
-                                Text(text = stringResource(R.string.orders_new))
-                            }
-                        }
-                    }
+                    EmptyScreen(
+                        R.string.orders_none,
+                    )
                 } else {
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
                         items(sortedOrders) { order ->
