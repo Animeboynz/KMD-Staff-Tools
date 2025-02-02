@@ -42,27 +42,11 @@ val DatabaseModule = module {
                     // Prepopulate database with products from CSV
                     CoroutineScope(Dispatchers.IO).launch {
                         val context = androidContext()
-                        val inputStreamProducts = context.assets.open("products.csv")
-                        val readerProducts = BufferedReader(InputStreamReader(inputStreamProducts))
-                        val products = mutableListOf<ProductsEntity>()
-
-                        readerProducts.useLines { lines ->
-                            lines.drop(1).forEach { line -> // Skip the header row
-                                val columns = line.split(",")
-                                if (columns.size >= 2) {
-                                    val sku = columns[0].trim()
-                                    val name = columns[1].trim()
-                                    products.add(ProductsEntity(sku = sku, name = name))
-                                }
-                            }
-                        }
-
-                        // Use the repository to insert the products
-                        get<ProductsRepository>().insertAll(products)
 
                         // Load barcodes from barcodes.csv
                         val inputStreamBarcodes = context.assets.open("barcodes.csv")
                         val readerBarcodes = BufferedReader(InputStreamReader(inputStreamBarcodes))
+                        val products = mutableListOf<ProductsEntity>()
                         val barcodes = mutableListOf<BarcodesEntity>()
 
                         readerBarcodes.useLines { lines ->
@@ -75,12 +59,14 @@ val DatabaseModule = module {
                                     val name = columns[3].trim()
                                     val pieceBarcode = columns[4].trim()
                                     val gtin = columns[5].trim()
+                                    products.add(ProductsEntity(sku = sku, name = name))
                                     barcodes.add(BarcodesEntity(sku = sku, color = color, size = size, name = name, pieceBarcode = pieceBarcode, gtin = gtin))
                                 }
                             }
                         }
 
                         // Use the repository to insert the barcodes
+                        get<ProductsRepository>().insertAll(products)
                         get<BarcodesRepository>().insertAll(barcodes)
 
                         val inputStreamColors = context.assets.open("colors.csv")
