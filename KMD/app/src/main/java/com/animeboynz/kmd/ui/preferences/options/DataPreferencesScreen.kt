@@ -47,6 +47,7 @@ import android.net.Uri
 import com.animeboynz.kmd.domain.BarcodesRepository
 import com.animeboynz.kmd.domain.ColorsRepository
 import com.animeboynz.kmd.domain.ProductsRepository
+import com.animeboynz.kmd.domain.importProtobufData
 import com.animeboynz.kmd.presentation.components.preferences.InfoWidget
 
 object DataPreferencesScreen : Screen() {
@@ -70,6 +71,17 @@ object DataPreferencesScreen : Screen() {
                 productsRepository,
                 colorsRepository
             )
+        }
+
+        val importFileLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.GetContent()
+        ) { uri: Uri? ->
+            uri?.let {
+                var importedData = importProtobufData(context, uri)
+                if (importedData != null) {
+                    screenModel.importProducts(importedData)
+                }
+            }
         }
 
         Scaffold(
@@ -99,14 +111,7 @@ object DataPreferencesScreen : Screen() {
                     TextPreferenceWidget(
                         title = "Import products file",
                         onPreferenceClick = {
-
-                        },
-                    )
-
-                    TextPreferenceWidget(
-                        title = "Import barcodes file",
-                        onPreferenceClick = {
-
+                            importFileLauncher.launch("*/*")
                         },
                     )
 
