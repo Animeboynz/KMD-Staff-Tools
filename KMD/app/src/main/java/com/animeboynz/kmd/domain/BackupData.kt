@@ -29,13 +29,16 @@ data class BackupData(
 )
 
 fun BackupBarcode.toEntity(): BarcodesEntity {
+    val pieceBarcode = this.pieceBarcode.takeIf { !it.isNullOrEmpty() }
+    val gtin = this.gtin.takeIf { !it.isNullOrEmpty() }
+
     return BarcodesEntity(
         sku = this.sku,
         color = this.color,
         size = this.size,
         name = this.name,
-        pieceBarcode = this.pieceBarcode,
-        gtin = this.gtin,
+        pieceBarcode = pieceBarcode,
+        gtin = gtin,
     )
 }
 

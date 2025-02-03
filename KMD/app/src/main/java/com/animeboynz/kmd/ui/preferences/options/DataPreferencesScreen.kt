@@ -111,7 +111,7 @@ object DataPreferencesScreen : Screen() {
                     TextPreferenceWidget(
                         title = "Import products file",
                         onPreferenceClick = {
-                            importFileLauncher.launch("*/*")
+                            importFileLauncher.launch("application/gzip")
                         },
                     )
 
