@@ -54,6 +54,7 @@ import com.animeboynz.kmd.domain.EmployeeRepository
 import com.animeboynz.kmd.domain.OrderItemRepository
 import com.animeboynz.kmd.domain.ProductsRepository
 import com.animeboynz.kmd.domain.Status
+import com.animeboynz.kmd.preferences.GeneralPreferences
 import com.animeboynz.kmd.presentation.Screen
 import com.animeboynz.kmd.presentation.components.DropdownItem
 import com.animeboynz.kmd.presentation.components.EmployeeDropdownItem
@@ -83,6 +84,9 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
             ProductScreenModel(barcodesRepository, colorsRepository, sku)
         }
 
+        val preferences = koinInject<GeneralPreferences>()
+        val countryCode = preferences.countryCode.get()
+
         val items by screenModel.product.collectAsState()
         val colors by screenModel.colors.collectAsState()
 
@@ -106,7 +110,25 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
                         Text(stringResource(R.string.product_details))
                     },
                     actions = {
-                        IconButton(onClick = { context.openInBrowser("https://www.kathmandu.co.nz/shop?q=$sku") }) {
+                        IconButton(onClick = {
+                            val domainMap = mapOf(
+                                "NZ" to Pair(R.string.search_url_a, "co.nz"),
+                                "AU" to Pair(R.string.search_url_a, "com.au"),
+                                "GB" to Pair(R.string.search_url_a, "co.uk"),
+                                "FR" to Pair(R.string.search_url_b, "fr"),
+                                "DE" to Pair(R.string.search_url_b, "de"),
+                                "US" to Pair(R.string.search_url_b, "com")
+                            )
+
+                            val url = when (countryCode) {
+                                "CA" -> context.getString(R.string.search_url_c, sku) // Canada has a unique format
+                                else -> domainMap[countryCode]?.let { (urlRes, domain) ->
+                                    context.getString(urlRes, domain, sku)
+                                }
+                            }
+
+                            url?.let { context.openInBrowser(it) }
+                        }) {
                             Icon(
                                 imageVector = Icons.Outlined.TravelExplore,
                                 contentDescription = "Localized description"
