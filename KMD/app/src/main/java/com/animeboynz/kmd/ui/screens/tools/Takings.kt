@@ -53,16 +53,12 @@ class Takings : Screen() {
         val preferences = koinInject<GeneralPreferences>()
         val countryCode = preferences.countryCode.get()
 
-        val CashCountData: CashCountData = if (countryCode == "AU") {
-            CashCountDataAU
-        } else if (countryCode == "US" || countryCode == "CA") {
-            CashCountDataUS
-        } else if (countryCode == "DE" || countryCode == "FR") {
-            CashCountDataDE
-        } else if (countryCode == "GB") {
-            CashCountDataGB
-        } else {
-            CashCountDataNZ
+        val CashCountData: CashCountData = when (countryCode) {
+            "AU" -> CashCountDataAU
+            "US", "CA" -> CashCountDataUS
+            "DE", "FR" -> CashCountDataDE
+            "GB" -> CashCountDataGB
+            else -> CashCountDataNZ
         }
 
         var inputValues by rememberSaveable { mutableStateOf(CashCountData.currencyList.associateWith { "" }) }

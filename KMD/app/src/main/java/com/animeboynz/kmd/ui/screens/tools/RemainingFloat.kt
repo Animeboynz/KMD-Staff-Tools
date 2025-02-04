@@ -6,15 +6,20 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,8 +28,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -45,18 +52,13 @@ class RemainingFloat : Screen() {
         val preferences = koinInject<GeneralPreferences>()
         val countryCode = preferences.countryCode.get()
 
-        val CashCountData: CashCountData = if (countryCode == "AU") {
-            CashCountDataAU
-        } else if (countryCode == "US" || countryCode == "CA") {
-            CashCountDataUS
-        } else if (countryCode == "DE" || countryCode == "FR") {
-            CashCountDataDE
-        } else if (countryCode == "GB") {
-            CashCountDataGB
-        } else {
-            CashCountDataNZ
+        val CashCountData: CashCountData = when (countryCode) {
+            "AU" -> CashCountDataAU
+            "US", "CA" -> CashCountDataUS
+            "DE", "FR" -> CashCountDataDE
+            "GB" -> CashCountDataGB
+            else -> CashCountDataNZ
         }
-
 
         Scaffold(
             topBar = {
@@ -88,55 +90,43 @@ class RemainingFloat : Screen() {
                 quantity * denominationValue
             }
 
+            val scrollState = rememberScrollState()
+
             Column(
-                modifier = paddingModifier.fillMaxSize(),
+                modifier = paddingModifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    .imePadding(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(1),
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(8.dp),
                 ) {
-                    items(CashCountData.currencyList) { currency ->
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp)
-                        ) {
-                            Text(
-                                text = currency,
-                                modifier = Modifier.weight(1f)
-                            )
-
-                            Spacer(modifier = Modifier.width(8.dp))
-
-                            Text(
-                                text = remainingQuantities[currency].toString(),
-                                modifier = Modifier.weight(2f)
-                            )
-
-                            Spacer(modifier = Modifier.width(8.dp))
-
-                            val denominationValue = when {
-                                currency.endsWith(CashCountData.decimalSymbol) -> currency.replace(CashCountData.decimalSymbol, "").toDouble() / 100
-                                else -> currency.replace(CashCountData.wholeSymbol, "").toDouble()
-                            }
-                            val total = remainingQuantities[currency]!! * denominationValue
-                            Text(
-                                text = "= ${CashCountData.wholeSymbol}${"%.2f".format(total)}",
-                                modifier = Modifier.weight(1f)
-                            )
+                    items(remainingQuantities.entries.toList()) { (currency, quantity) ->
+                        val denominationValue = if (currency.endsWith(CashCountData.decimalSymbol)) {
+                            currency.replace(CashCountData.decimalSymbol, "").toDouble() / 100
+                        } else {
+                            currency.replace(CashCountData.wholeSymbol, "").toDouble()
                         }
+                        val total = quantity * denominationValue
+
+                        RemainingFloatCard(currency, quantity, total, CashCountData.wholeSymbol)
                     }
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+
+                Spacer(modifier = Modifier.height(10.dp))
 
                 // Display total sum at the bottom
                 Text(
                     text = "${stringResource(R.string.tools_cash_count_total)}: ${CashCountData.wholeSymbol}${"%.2f".format(totalSum)}",
                     fontSize = 20.sp
                 )
+
+                Spacer(modifier = Modifier.height(10.dp))
 
                 // Button to navigate back
                 Button(
@@ -148,6 +138,7 @@ class RemainingFloat : Screen() {
                 ) {
                     Text(text = stringResource(R.string.tools_cash_count_prev_takings))
                 }
+
                 Button(
                     onClick = { navigator.pop(); navigator.pop();
                         CashCountData.takingsQuantities = CashCountData.currencyList.associateWith { 0 }.toMutableMap(); // Reset quantities
@@ -163,6 +154,45 @@ class RemainingFloat : Screen() {
                     Text(text = stringResource(R.string.tools_cash_count_reset))
                 }
 
+            }
+        }
+    }
+
+    @Composable
+    fun RemainingFloatCard(
+        currency: String,
+        quantity: Int,
+        total: Double,
+        wholeSymbol: String
+    ) {
+        Card(
+            shape = RoundedCornerShape(8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp)
+        ) {
+            Row(
+                modifier = Modifier.padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = currency,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
+                )
+                Text(
+                    text = "Qty: $quantity",
+                    fontSize = 16.sp,
+                    modifier = Modifier.weight(1f)
+                )
+                Text(
+                    text = "= ${wholeSymbol}${"%.2f".format(total)}",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
+                )
             }
         }
     }
