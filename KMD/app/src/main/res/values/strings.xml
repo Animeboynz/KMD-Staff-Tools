@@ -72,6 +72,9 @@
     <string name="product_not_found">No items match the selected criteria</string>
     <string name="product_input_errors_warning">Select both Colour and Size</string>
     <string name="action_get_barcode">Get Barcode</string>
+    <string name="search_url_a">https://www.kathmandu.%s/shop?q=%s</string>
+    <string name="search_url_b">https://www.kathmanduoutdoor.%s/shop?q=%s</string>
+    <string name="search_url_c">https://www.kathmanduoutdoor.ca/catalogsearch/result/?q=%s</string>
 
     //Tools Tab
     <string name="tools_tab">Tools</string>
