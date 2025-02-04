@@ -17,6 +17,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.TravelExplore
 import androidx.compose.material3.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
@@ -59,6 +60,7 @@ import com.animeboynz.kmd.presentation.components.EmployeeDropdownItem
 import com.animeboynz.kmd.presentation.components.SimpleDropdown
 import com.animeboynz.kmd.presentation.components.product.PrintBarcodes
 import com.animeboynz.kmd.utils.generateBarCode
+import com.animeboynz.kmd.utils.openInBrowser
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
@@ -103,7 +105,14 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
                     title = {
                         Text(stringResource(R.string.product_details))
                     },
-                    actions = {},
+                    actions = {
+                        IconButton(onClick = { context.openInBrowser("https://www.kathmandu.co.nz/shop?q=$sku") }) {
+                            Icon(
+                                imageVector = Icons.Outlined.TravelExplore,
+                                contentDescription = "Localized description"
+                            )
+                        }
+                    },
                 )
             }
         ) { paddingValues ->
