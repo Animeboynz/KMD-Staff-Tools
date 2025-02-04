@@ -46,6 +46,11 @@ def excel_to_protobuf(barcodes_excel: str, colors_excel: str, output_file: str):
     filtered_barcodes_df = filtered_barcodes_df.drop_duplicates(
         subset=['sku', 'color', 'size', 'name', 'piece_barcode', 'gtin'])
 
+    # Ask user if they want to filter SKUs that don’t start with A, B, or a number
+    user_input = input("Would you like to remove all products that don't start with A, B, or a Number? (yes/no): ").strip().lower()
+    if user_input in ['yes', 'y']:
+        filtered_barcodes_df = filtered_barcodes_df[filtered_barcodes_df['sku'].str.match(r'^[AB0-9]', na=False)]
+
     # Use tqdm to show progress for adding data to Protobuf
     for index, row in tqdm(filtered_barcodes_df.iterrows(), total=filtered_barcodes_df.shape[0],
                            desc="Adding Products to Protobuf"):
