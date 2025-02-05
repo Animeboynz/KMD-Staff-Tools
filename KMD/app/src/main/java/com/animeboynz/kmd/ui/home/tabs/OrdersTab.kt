@@ -21,6 +21,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -81,7 +82,11 @@ object OrdersTab : Tab {
             stringResource(R.string.orders_state_completed)
         )
 
-        val pagerState = rememberPagerState { statusOrder.size }
+        var currentPage = preferences.lastUsedOrderCategory.get()
+        val coercedCurrentPage = remember { currentPage.coerceAtMost(statusOrder.lastIndex) }
+        val pagerState = rememberPagerState(coercedCurrentPage) { statusOrder.size }
+
+        //val pagerState = rememberPagerState { statusOrder.size }
         val scope = rememberCoroutineScope()
 
         Scaffold(
@@ -114,6 +119,7 @@ object OrdersTab : Tab {
                     onTabItemClick = { index ->
                         scope.launch {
                             pagerState.animateScrollToPage(index)
+                            preferences.lastUsedOrderCategory.set(index)
                         }
                     }
                 )
