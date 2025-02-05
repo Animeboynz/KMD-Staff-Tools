@@ -190,7 +190,7 @@ class AddOrderScreen(val editMode: Boolean = false, val orderId: Long? = null) :
                 )
 
                 SimpleDropdown(
-                    label = stringResource(R.string.orders_status),
+                    label = stringResource(R.string.orders_field_status),
                     selectedItem = status,
                     items = Status.entries,
                     modifier = maxWidth,

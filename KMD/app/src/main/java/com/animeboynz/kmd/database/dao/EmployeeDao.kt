@@ -17,11 +17,14 @@ interface EmployeeDao {
     @Query("SELECT * FROM EmployeeEntity WHERE employeeId = :employeeId LIMIT 1")
     fun getEmployee(employeeId: String): EmployeeEntity?
 
+    @Query("SELECT * FROM EmployeeEntity")
+    fun getAllEmployees(): Flow<List<EmployeeEntity?>>
+
     @Query("SELECT * FROM EmployeeEntity WHERE employeeStatus = 'Active'")
-    fun getActiveEmployee(): Flow<List<EmployeeEntity?>>
+    fun getActiveEmployees(): Flow<List<EmployeeEntity?>>
 
     @Query("SELECT * FROM EmployeeEntity WHERE employeeStatus = 'Disabled'")
-    fun getDisabledEmployee(): Flow<List<EmployeeEntity?>>
+    fun getDisabledEmployees(): Flow<List<EmployeeEntity?>>
 
     @Query("UPDATE EmployeeEntity SET employeeId = :id WHERE employeeName = :name")
     suspend fun updateEmployeeId(name: String, id: String)

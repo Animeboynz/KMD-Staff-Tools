@@ -178,7 +178,7 @@ class AddItemScreen(
                 )
 
                 SimpleDropdown(
-                    label = stringResource(R.string.orders_status),
+                    label = stringResource(R.string.orders_field_status),
                     selectedItem = status,
                     items = Status.entries,
                     modifier = maxWidth,

@@ -27,26 +27,16 @@ import com.animeboynz.kmd.ui.theme.spacing
 @Composable
 fun OrderRow(
     order: CustomerOrderEntity,
+    empName: String,
     storeNumber: String,
     orderNumberDigits: String,
     onClick: () -> Unit,
 ) {
-    var color = Color.DarkGray
-
-    when (order.status) {
-        stringResource(R.string.orders_state_not_ordered) -> color = Color.Red
-        stringResource(R.string.orders_state_ordered) -> color = Color.Green
-        stringResource(R.string.orders_state_not_notified) -> color = Color.Red
-        stringResource(R.string.orders_state_waiting_pickup) -> color = Color.Yellow
-        stringResource(R.string.orders_state_cancelled) -> color = Color.Gray
-        stringResource(R.string.orders_state_completed) -> color = Color.DarkGray
-    }
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 2.dp, horizontal = 8.dp)
-            //.padding(horizontal = MaterialTheme.spacing.small)
             .clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.surfaceContainerLow)
             .combinedClickable(
@@ -61,32 +51,14 @@ fun OrderRow(
             )
             Row {
                 Text(
-                    text = stringResource(R.string.orders_customer_phone),
+                    text = stringResource(R.string.orders_customer_phone, order.customerPhone),
                     style = MaterialTheme.typography.bodySmall,
-                )
-                Text(
-                    text = " ",
-                    style = MaterialTheme.typography.bodySmall,
-                )
-                Text(
-                    text = order.customerPhone,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = color,
                 )
             }
             Row {
                 Text(
-                    text = stringResource(R.string.orders_status),
+                    text = stringResource(R.string.orders_emp, empName),
                     style = MaterialTheme.typography.bodySmall,
-                )
-                Text(
-                    text = " ",
-                    style = MaterialTheme.typography.bodySmall,
-                )
-                Text(
-                    text = order.status,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = color,
                 )
             }
         }

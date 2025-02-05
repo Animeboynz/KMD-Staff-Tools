@@ -12,9 +12,11 @@ interface EmployeeRepository {
 
     fun getEmployee(employeeId: String): EmployeeEntity?
 
-    fun getActiveEmployee(): Flow<List<EmployeeEntity?>>
+    fun getAllEmployees(): Flow<List<EmployeeEntity?>>
 
-    fun getDisabledEmployee(): Flow<List<EmployeeEntity?>>
+    fun getActiveEmployees(): Flow<List<EmployeeEntity?>>
+
+    fun getDisabledEmployees(): Flow<List<EmployeeEntity?>>
 
     suspend fun updateEmployeeId(name: String, id: String, status: String)
 
