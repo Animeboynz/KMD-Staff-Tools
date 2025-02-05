@@ -20,12 +20,16 @@ class EmployeeRepositoryImpl(
         return database.employeeDao().getEmployee(employeeId)
     }
 
-    override fun getActiveEmployee(): Flow<List<EmployeeEntity?>> {
-        return database.employeeDao().getActiveEmployee()
+    override fun getAllEmployees(): Flow<List<EmployeeEntity?>> {
+        return database.employeeDao().getAllEmployees()
     }
 
-    override fun getDisabledEmployee(): Flow<List<EmployeeEntity?>> {
-        return database.employeeDao().getDisabledEmployee()
+    override fun getActiveEmployees(): Flow<List<EmployeeEntity?>> {
+        return database.employeeDao().getActiveEmployees()
+    }
+
+    override fun getDisabledEmployees(): Flow<List<EmployeeEntity?>> {
+        return database.employeeDao().getDisabledEmployees()
     }
 
     override suspend fun updateEmployeeId(name: String, id: String, status: String) {

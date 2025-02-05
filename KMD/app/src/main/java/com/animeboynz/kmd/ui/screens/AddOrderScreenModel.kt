@@ -39,7 +39,7 @@ class AddOrderScreenModel(
 
     fun getActiveEmployees() {
         screenModelScope.launch(Dispatchers.IO) {
-            employeeRepository.getActiveEmployee().collect { employeeList ->
+            employeeRepository.getActiveEmployees().collect { employeeList ->
                 employees.value = employeeList.filterNotNull() // Filter out nulls if any
             }
         }

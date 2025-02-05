@@ -27,7 +27,7 @@ class EmployeePreferencesScreenModel(
 
     fun getActiveEmployees() {
         screenModelScope.launch(Dispatchers.IO) {
-            employeeRepository.getActiveEmployee().collect { employeeList ->
+            employeeRepository.getActiveEmployees().collect { employeeList ->
                 employeesActive.value = employeeList.filterNotNull() // Filter out nulls if any
             }
         }
@@ -35,7 +35,7 @@ class EmployeePreferencesScreenModel(
 
     fun getDisabledEmployee() {
         screenModelScope.launch(Dispatchers.IO) {
-            employeeRepository.getDisabledEmployee().collect { employeeList ->
+            employeeRepository.getDisabledEmployees().collect { employeeList ->
                 employeesDisabled.value = employeeList.filterNotNull() // Filter out nulls if any
             }
         }
