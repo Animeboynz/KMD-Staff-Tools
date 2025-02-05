@@ -133,7 +133,17 @@ object OrdersTab : Tab {
                     val filteredOrders = allOrders.filter { it.status == statusOrder[page] }
 
                     if (filteredOrders.isEmpty()) {
-                        EmptyScreen(R.string.orders_none)
+                        val (emptyMessage, happyFace) = when (page) {
+                            0 -> Pair("Everything has been ordered", true)
+                            1 -> Pair("All customers have been notified", true)
+                            2 -> Pair("No orders waiting for pickup", false)
+                            3 -> Pair("No orders here, check another tab", false)
+                            4 -> Pair("No cancelled orders", true)
+                            5 -> Pair("No completed orders", false)
+                            else -> Pair(R.string.orders_none, false)
+                        }
+
+                        EmptyScreen(message = emptyMessage.toString(), happyFace = happyFace)
                     } else {
                         LazyColumn(
                             modifier = Modifier
