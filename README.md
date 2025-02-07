@@ -1,10 +1,66 @@
-# KMD-Staff-Tools
-### An Android app designed for Kathmandu NZ and AUS employees to easen their workflow.
+<div align="center">
+
+<a href="https://mihon.app">
+    <img src="./KMD/app/src/main/res/mipmap-xxxhdpi/logo_foreground.webp" alt="Mihon logo" title="Mihon logo" width="80"/>
+</a>
+
+# KMD Staff Tools
+
+### Everything a Kathmandu Store needs
+Manage customer orders, product management, EOD cash counts and more – easier than ever on your Android device.
+
+[![GitHub downloads](https://img.shields.io/github/downloads/Animeboynz/KMD-Staff-Tools/total?label=downloads&labelColor=27303D&color=0D1117&logo=github&logoColor=FFFFFF&style=flat)](https://github.com/mihonapp/mihon/releases)
+
+## Download
+
+[![KMD-Staff-Tools](https://img.shields.io/github/release/Animeboynz/KMD-Staff-Tools.svg?maxAge=3600&label=Stable&labelColor=06599d&color=043b69)](https://github.com/Animeboynz/KMD-Staff-Tools/releases)
+
+*Requires Android 8.0 or higher.*
+
+## Features
+
+<div align="left">
+
+* Create manage and edit customer orders
+* Search with SKU or Name
+* Multiple themes with both light and dark variants.
+* Custom designed cash counter which adapts to the currency of your region 
+* Plus much more...
+
+</div>
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+## Repositories
+
+[![Animeboynz/Kathmandu-Quick-Search - GitHub](https://github-readme-stats.vercel.app/api/pin/?username=Animeboynz&repo=Kathmandu-Quick-Search&bg_color=161B22&text_color=c9d1d9&title_color=0877d2&icon_color=0877d2&border_radius=8&hide_border=true&description_lines_count=2)](https://github.com/Animeboynz/Kathmandu-Quick-Search/)
+[![Animeboynz/Kathmandu-Login-Barcode-Generator - GitHub](https://github-readme-stats.vercel.app/api/pin/?username=Animeboynz&repo=Kathmandu-Login-Barcode-Generator&bg_color=161B22&text_color=c9d1d9&title_color=0877d2&icon_color=0877d2&border_radius=8&hide_border=true&description_lines_count=2)](https://github.com/Animeboynz/Kathmandu-Login-Barcode-Generator/)
+
+### Credits
+
+<a href="https://github.com/Animeboynz/KMD-Staff-Tools/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=Animeboynz/KMD-Staff-Tools" alt="KMD Staff Tools contributors" title="KMD Staff Tools contributors"/>
+</a>
+
+### Disclaimer
+
+This app is an independent third-party program created by a Kathmandu employee for Kathmandu employees. It is important to note that we are not affiliated with Kathmandu Group Limited or any subsidiary of KMD Brands. The use of the Kathmandu logo on this app is solely for illustrative purposes and does not imply any endorsement, sponsorship, or association with Kathmandu Group Limited or its subsidiaries.
+
+It is recommended that users verify any information or seek professional advice when necessary. For official information, updates, or inquiries regarding Kathmandu Group Limited or its subsidiaries, please visit their official website or contact their authorized representatives directly.
+
+By accessing and using this app, you acknowledge and agree to the above disclosure and understand that this app is an independent entity and not affiliated with Kathmandu Group Limited or any subsidiary of KMD Brands.
+
+</div>
+
+<details>
+<summary>Screenshots</summary>
 
 ## Main Screen
 | Orders Screen | SKU Search | Tools Screen |
 |---|---|---|
-| <img src="https://github.com/user-attachments/assets/7873516b-1074-4058-9397-cf77607a5258" width="300"> | <img src="https://github.com/user-attachments/assets/3173f739-cd99-44c0-8c51-e645153e6539" width="300"> | <img src="https://github.com/user-attachments/assets/0f4bf121-78e1-4729-9099-6757115445c6" width="300"> |
+| <img src="https://github.com/user-attachments/assets/d0bf1b93-5901-41c8-8fbf-760e8a3ec79b" width="300"> | <img src="https://github.com/user-attachments/assets/3173f739-cd99-44c0-8c51-e645153e6539" width="300"> | <img src="https://github.com/user-attachments/assets/0f4bf121-78e1-4729-9099-6757115445c6" width="300"> |
 
 ## Customer Orders
 | Adding Order | Order Screen | Adding Item to Order |
@@ -19,12 +75,6 @@
 ## EOD Cash Count
 | Cash Count | Takings | Remaining Float |
 |---|---|---|
-| <img src="https://github.com/user-attachments/assets/3d563f39-e7e4-4582-b6e9-b696acf3f0a2" width="300"> | <img src="https://github.com/user-attachments/assets/c3dee497-b99a-4cab-9b5a-9d0c9d107674" width="300"> | <img src="https://github.com/user-attachments/assets/4fa8fea9-c7cb-4ff7-a573-582986072fa9" width="300"> |
+| <img src="https://github.com/user-attachments/assets/b3a89b79-720e-417e-ba84-714a505f63a6" width="300"> | <img src="https://github.com/user-attachments/assets/6723734a-2f55-49a0-a347-8b505b7b3376" width="300"> | <img src="https://github.com/user-attachments/assets/8592ff41-c01d-4805-aad2-d3817701c6bc" width="300"> |
 
-## Disclaimer
-
-This app is an independent third-party program created by a Kathmandu employee for Kathmandu employees. It is important to note that we are not affiliated with Kathmandu Group Limited or any subsidiary of KMD Brands. The use of the Kathmandu logo on this app is solely for illustrative purposes and does not imply any endorsement, sponsorship, or association with Kathmandu Group Limited or its subsidiaries.
-
-It is recommended that users verify any information or seek professional advice when necessary. For official information, updates, or inquiries regarding Kathmandu Group Limited or its subsidiaries, please visit their official website or contact their authorized representatives directly.
-
-By accessing and using this app, you acknowledge and agree to the above disclosure and understand that this app is an independent entity and not affiliated with Kathmandu Group Limited or any subsidiary of KMD Brands.
+</details>
