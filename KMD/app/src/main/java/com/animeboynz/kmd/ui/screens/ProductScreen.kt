@@ -1,26 +1,19 @@
 package com.animeboynz.kmd.ui.screens
 
-import android.graphics.Bitmap
-import android.graphics.Color
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.TravelExplore
 import androidx.compose.material3.*
 import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.Composable
@@ -29,46 +22,33 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.animeboynz.kmd.R
 import com.animeboynz.kmd.database.entities.BarcodesEntity
-import com.animeboynz.kmd.database.entities.ColorsEntity
-import com.animeboynz.kmd.database.entities.CustomerOrderEntity
-import com.animeboynz.kmd.database.entities.EmployeeEntity
-import com.animeboynz.kmd.database.entities.OrderItemEntity
 import com.animeboynz.kmd.domain.BarcodesRepository
+import com.animeboynz.kmd.domain.ColorDropdownItem
 import com.animeboynz.kmd.domain.ColorsRepository
-import com.animeboynz.kmd.domain.CustomerOrderRepository
-import com.animeboynz.kmd.domain.EmployeeRepository
-import com.animeboynz.kmd.domain.OrderItemRepository
-import com.animeboynz.kmd.domain.ProductsRepository
-import com.animeboynz.kmd.domain.Status
+import com.animeboynz.kmd.domain.SizeDropdownItem
+import com.animeboynz.kmd.domain.StockAvailability
 import com.animeboynz.kmd.preferences.GeneralPreferences
 import com.animeboynz.kmd.presentation.Screen
-import com.animeboynz.kmd.presentation.components.DropdownItem
-import com.animeboynz.kmd.presentation.components.EmployeeDropdownItem
 import com.animeboynz.kmd.presentation.components.SimpleDropdown
 import com.animeboynz.kmd.presentation.components.product.PrintBarcodes
-import com.animeboynz.kmd.utils.generateBarCode
+import com.animeboynz.kmd.presentation.components.product.StockLevelCard
 import com.animeboynz.kmd.utils.openInBrowser
-import com.google.zxing.BarcodeFormat
-import com.google.zxing.MultiFormatWriter
-import com.google.zxing.WriterException
-import java.text.SimpleDateFormat
-import java.util.*
+import java.net.URL
+import javax.net.ssl.HttpsURLConnection
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import org.koin.compose.koinInject
-
 
 class ProductScreen(val sku: String, val name: String) : Screen() {
 
@@ -94,6 +74,10 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
         var hasSizeError by remember { mutableStateOf(false) }
 
         var selectedItems by remember { mutableStateOf<List<BarcodesEntity>>(emptyList()) }
+
+        var stockData by remember { mutableStateOf<List<StockAvailability>>(emptyList()) }
+        var isLoading by remember { mutableStateOf(false) }
+        var fetchStockDataTrigger by remember { mutableStateOf(false) }
 
         Scaffold(
             topBar = {
@@ -156,6 +140,9 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
 
                 var selectedSize by remember { mutableStateOf<SizeDropdownItem?>(null) }
                 val dropdownSizeItems = filteredBySize.map { SizeDropdownItem(it) }
+
+                var postcode = "1010"
+                var stockCheckURL = "https://app.kathmandu.co.nz/graphql?query=query+getStoreInventory%28%24childSku%3AString%21%24region%3AString%24locationId%3AInt%29%7BStockAvailabilities%28childSku%3A%24childSku+region%3A%24region+locationId%3A%24locationId%29%7Binventory%7Bquantity+sku+__typename%7DisPossible+isPossibleMessage+magentoRetailerId+orderMethods%7BclickAndCollect%7BcollectionTime+deliveryScope+isPossible+name+__typename%7DpickupInStore%7BcollectionTime+deliveryScope+isPossible+name+__typename%7D__typename%7DstoreAddress%7Bcity+country+latitude+longitude+postcode+state+street+__typename%7DstoreCode+storeName+tripDistance+__typename%7D%7D&operationName=getStoreInventory&variables=%7B%22childSku%22%3A%22${sku}%2F${selectedColor?.displayName}%2F${selectedSize?.displayName}%22%2C%22region%22%3A%22${postcode}%22%7D"
 
                 Text(
                     text = name,
@@ -229,34 +216,95 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
                     Text(stringResource(R.string.action_get_barcode))
                 }
 
+                if (isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.padding(top = 16.dp))
+                } else {
+                    stockData.forEach { item ->
+                        StockLevelCard(item)
+                    }
+                    fetchStockDataTrigger = false
+                }
+
+                Button(
+                    onClick = {
+                        hasColorError = false
+                        hasSizeError = false
+
+                        if (selectedColor == null) {
+                            hasColorError = true
+                        }
+                        if (selectedSize == null) {
+                            hasSizeError = true
+                        }
+
+                        if (hasColorError || hasSizeError) {
+                            Toast.makeText(context, R.string.product_input_errors_warning, Toast.LENGTH_SHORT).show()
+                            return@Button
+                        }
+
+                        isLoading = true
+                        fetchStockDataTrigger = !fetchStockDataTrigger // Toggle to trigger LaunchedEffect
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Get Stock")
+                }
+
+                LaunchedEffect(fetchStockDataTrigger) {
+                    if (fetchStockDataTrigger) {
+                        val response = fetchStockData(stockCheckURL)
+                        response?.let {
+                            val stockList = parseStockJson(it)
+                            stockData = stockList
+                            isLoading = false
+                        }
+                    }
+                }
+
             }
 
         }
     }
 
-
-
-    data class ColorDropdownItem(
-        val item: BarcodesEntity,
-        val colors: List<ColorsEntity>
-    ) : DropdownItem {
-        override val displayName: String
-            get() = item.color
-        override val id: Int
-            get() = item.color.hashCode() // Or any unique integer ID
-        override val extraData: Int? = null
-        override val extraString: String? = colors.find { it.colorCode == item.color }?.colorName
+    suspend fun fetchStockData(url: String): String? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val connection = URL(url).openConnection() as HttpsURLConnection
+                connection.requestMethod = "GET"
+                connection.inputStream.bufferedReader().use { it.readText() }
+            } catch (e: Exception) {
+                Log.e("StockCheck", "Error fetching stock data", e)
+                null
+            }
+        }
     }
 
-    data class SizeDropdownItem(
-        val item: BarcodesEntity
-    ) : DropdownItem {
-        override val displayName: String
-            get() = item.size
-        override val id: Int
-            get() = item.size.hashCode() // Or any unique integer ID
-        override val extraData: Int? = null
-        override val extraString: String? = null
-    }
+    fun parseStockJson(jsonString: String): List<StockAvailability> {
+        val stockList = mutableListOf<StockAvailability>()
+        try {
+            val jsonObject = JSONObject(jsonString)
 
+            // Accessing the 'data' object
+            val dataObject = jsonObject.getJSONObject("data")
+
+            // Now, getting the 'StockAvailabilities' array from inside 'data'
+            val stockArray = dataObject.getJSONArray("StockAvailabilities")
+
+            for (i in 0 until stockArray.length()) {
+                val store = stockArray.getJSONObject(i)
+
+                val storeName = store.getString("storeName")
+                val storeCode = store.getInt("storeCode") // Note: Store code might be an integer
+                val storeAddress = store.getJSONObject("storeAddress").getString("street")
+                val inventory = store.getJSONArray("inventory").getJSONObject(0)
+                val quantity = inventory.getInt("quantity")
+                val sku = inventory.getString("sku")
+
+                stockList.add(StockAvailability(storeName, storeCode.toString(), storeAddress, sku, quantity))
+            }
+        } catch (e: Exception) {
+            Log.e("StockParsing", "Error parsing stock JSON", e)
+        }
+        return stockList
+    }
 }
