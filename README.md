@@ -23,6 +23,7 @@ Manage customer orders, product management, EOD cash counts and more – easier 
 
 * Create manage and edit customer orders
 * Search with SKU or Name
+* Check store stock levels
 * Multiple themes with both light and dark variants.
 * Custom designed cash counter which adapts to the currency of your region 
 * Plus much more...
