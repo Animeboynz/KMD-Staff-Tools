@@ -39,16 +39,13 @@ fun StockLevelCard(stock: StockAvailability) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 0.dp)
-            .clickable {
-                // Handle on click if needed
-            },
+            .padding(vertical = 0.dp),
         elevation = CardDefaults.cardElevation(8.dp),
         shape = MaterialTheme.shapes.medium
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
