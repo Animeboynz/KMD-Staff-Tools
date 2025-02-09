@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -40,8 +41,10 @@ import com.animeboynz.kmd.domain.StockAvailability
 import com.animeboynz.kmd.preferences.GeneralPreferences
 import com.animeboynz.kmd.presentation.Screen
 import com.animeboynz.kmd.presentation.components.SimpleDropdown
+import com.animeboynz.kmd.presentation.components.product.ImageCarousel
 import com.animeboynz.kmd.presentation.components.product.PrintBarcodes
-import com.animeboynz.kmd.presentation.components.product.StockLevelCard
+import com.animeboynz.kmd.presentation.components.product.StockLevels
+import com.animeboynz.kmd.presentation.components.product.fetchImageUrls
 import com.animeboynz.kmd.utils.openInBrowser
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
@@ -78,6 +81,8 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
         var stockData by remember { mutableStateOf<List<StockAvailability>>(emptyList()) }
         var isLoading by remember { mutableStateOf(false) }
         var fetchStockDataTrigger by remember { mutableStateOf(false) }
+
+        var imageUrls by remember { mutableStateOf<List<String>>(emptyList()) }
 
         Scaffold(
             topBar = {
@@ -143,6 +148,7 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
 
                 var postcode = "1010"
                 var stockCheckURL = "https://app.kathmandu.co.nz/graphql?query=query+getStoreInventory%28%24childSku%3AString%21%24region%3AString%24locationId%3AInt%29%7BStockAvailabilities%28childSku%3A%24childSku+region%3A%24region+locationId%3A%24locationId%29%7Binventory%7Bquantity+sku+__typename%7DisPossible+isPossibleMessage+magentoRetailerId+orderMethods%7BclickAndCollect%7BcollectionTime+deliveryScope+isPossible+name+__typename%7DpickupInStore%7BcollectionTime+deliveryScope+isPossible+name+__typename%7D__typename%7DstoreAddress%7Bcity+country+latitude+longitude+postcode+state+street+__typename%7DstoreCode+storeName+tripDistance+__typename%7D%7D&operationName=getStoreInventory&variables=%7B%22childSku%22%3A%22${sku}%2F${selectedColor?.displayName}%2F${selectedSize?.displayName}%22%2C%22region%22%3A%22${postcode}%22%7D"
+                var stockImageURL = "https://app.kathmandu.co.nz/graphql?query=query+productDetailBySku%28%24sku%3AString%29%7Bproducts%28filter%3A%7Bsku%3A%7Beq%3A%24sku%7D%7D%29%7Bitems%7B__typename+id+name+sku+url_key+...on+ConfigurableProduct%7Bconfigurable_options%7Battribute_code+attribute_id+id+label+values%7Bdefault_label+label+uid+store_label+use_default_value+value_index+swatch_data%7B...on+ImageSwatchData%7Bthumbnail+__typename%7Dvalue+__typename%7D__typename%7D__typename%7Dvariants%7Battributes%7Bcode+value_index+__typename%7Dproduct%7Bbrand_label+groupPriceTiers%7Bcustomer_group+value+__typename%7Did+kmd_product_label%7Bname+__typename%7Dmedia_gallery_entries%7Bid+disabled+file+label+position+__typename%7Dprice_range%7Bminimum_price%7Bfinal_price%7Bvalue+currency+__typename%7Dregular_price%7Bvalue+currency+__typename%7D__typename%7D__typename%7Dsku+special_price+stock_status+wasPrice%7Bvalue+currency+__typename%7D__typename%7D__typename%7D__typename%7D%7D__typename%7D%7D&operationName=productDetailBySku&variables=%7B%22sku%22%3A%22${sku}%2F%22%7D"
 
                 Text(
                     text = name,
@@ -154,6 +160,19 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.1f)) // Optional: Add a background
                 )
+
+                LaunchedEffect(Unit) {
+                    imageUrls = fetchImageUrls(stockImageURL)
+                }
+
+                if (imageUrls.isNotEmpty())
+                {
+                    Column(modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp)) {
+                        ImageCarousel(imageUrls)
+                    }
+                }
 
                 SimpleDropdown(
                     label = stringResource(R.string.color),
