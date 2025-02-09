@@ -219,9 +219,7 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
                 if (isLoading) {
                     CircularProgressIndicator(modifier = Modifier.padding(top = 16.dp))
                 } else {
-                    stockData.forEach { item ->
-                        StockLevelCard(item)
-                    }
+                    StockLevels(stockData)
                     fetchStockDataTrigger = false
                 }
 
