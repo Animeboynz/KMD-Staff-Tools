@@ -66,7 +66,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         versionCode = 1
-        versionName = "0.2.0"
+        versionName = "0.2.1"
 
         ndk {
             abiFilters += supportedAbis
