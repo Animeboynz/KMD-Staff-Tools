@@ -121,6 +121,20 @@ object GeneralPreferencesScreen : Screen() {
                         },
                     )
 
+                    var stockCheckRegion by remember {
+                        mutableStateOf(preferences.stockCheckRegion.get())
+                    }
+                    ReplacingTextFieldPreference(
+                        value = stockCheckRegion,
+                        onValueChange = { stockCheckRegion = it },
+                        title = "Stock Check Region",
+                        description = "This is the region used when checking for nearby stock levels. Enter a region like 'Auckland' or a postcode like '1010'",
+                        textToValue = {
+                            preferences.stockCheckRegion.set(it)
+                            it
+                        },
+                    )
+
                     var countryCode by remember {
                         mutableStateOf(preferences.countryCode.get())
                     }
