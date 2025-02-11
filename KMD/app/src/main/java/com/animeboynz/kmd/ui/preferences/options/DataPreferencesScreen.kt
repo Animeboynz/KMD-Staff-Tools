@@ -115,6 +115,13 @@ object DataPreferencesScreen : Screen() {
                         },
                     )
 
+                    TextPreferenceWidget(
+                        title = "Fetch products from website",
+                        onPreferenceClick = {
+                            navigator.push(WebFetcherScreen)
+                        },
+                    )
+
                     PreferenceCategory(
                         title = { Text(text = "Advanced") },
                     )
