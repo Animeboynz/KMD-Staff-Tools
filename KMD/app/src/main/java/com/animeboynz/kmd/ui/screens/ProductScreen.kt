@@ -72,6 +72,12 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
 
         val items by screenModel.product.collectAsState()
         val colors by screenModel.colors.collectAsState()
+        var isWebProduct = false
+
+        if (items.isEmpty())
+        {
+            isWebProduct = true
+        }
 
         var hasColorError by remember { mutableStateOf(false) }
         var hasSizeError by remember { mutableStateOf(false) }
@@ -198,41 +204,43 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
                     PrintBarcodes(selectedItems)
                 }
 
+                if(!isWebProduct)
+                {
+                    Button(
+                        onClick = {
+                            // Reset error states
+                            hasColorError = false
+                            hasSizeError = false
 
-                Button(
-                    onClick = {
-                        // Reset error states
-                        hasColorError = false
-                        hasSizeError = false
+                            if (selectedColor == null) {
+                                hasColorError = true
+                            }
+                            if (selectedSize == null) {
+                                hasSizeError = true
+                            }
 
-                        if (selectedColor == null) {
-                            hasColorError = true
-                        }
-                        if (selectedSize == null) {
-                            hasSizeError = true
-                        }
+                            if (hasColorError || hasSizeError) {
+                                Toast.makeText(context, R.string.product_input_errors_warning, Toast.LENGTH_SHORT).show()
+                                return@Button
+                            }
 
-                        if (hasColorError || hasSizeError) {
-                            Toast.makeText(context, R.string.product_input_errors_warning, Toast.LENGTH_SHORT).show()
-                            return@Button
-                        }
+                            // Filter items based on selected color and size
+                            val selectedItem = items.filter { item ->
+                                item.color == selectedColor?.item?.color && item.size == selectedSize?.item?.size
+                            }
 
-                        // Filter items based on selected color and size
-                        val selectedItem = items.filter { item ->
-                            item.color == selectedColor?.item?.color && item.size == selectedSize?.item?.size
-                        }
+                            if (selectedItem.isNotEmpty()) {
+                                Toast.makeText(context, R.string.product_found, Toast.LENGTH_SHORT).show()
+                                selectedItems = selectedItem
 
-                        if (selectedItem.isNotEmpty()) {
-                            Toast.makeText(context, R.string.product_found, Toast.LENGTH_SHORT).show()
-                            selectedItems = selectedItem
-
-                        } else {
-                            Toast.makeText(context, R.string.product_not_found, Toast.LENGTH_SHORT).show()
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(stringResource(R.string.action_get_barcode))
+                            } else {
+                                Toast.makeText(context, R.string.product_not_found, Toast.LENGTH_SHORT).show()
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(R.string.action_get_barcode))
+                    }
                 }
 
                 if (isLoading) {
