@@ -257,11 +257,18 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
                     }
                 }
 
-                if (isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.padding(top = 16.dp))
-                } else {
-                    StockLevels(stockData)
-                    fetchStockDataTrigger = false
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.padding(top = 16.dp)
+                        )
+                    } else {
+                        StockLevels(stockData)
+                        fetchStockDataTrigger = false
+                    }
                 }
 
                 Button(
