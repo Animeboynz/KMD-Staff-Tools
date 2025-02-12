@@ -38,6 +38,18 @@ data class ColorDropdownItem(
     override val extraString: String? = colors.find { it.colorCode == item.color }?.colorName
 }
 
+data class WebColorDropdownItem(
+    val colorCode: String,
+    val colors: String
+) : DropdownItem {
+    override val displayName: String
+        get() = colorCode
+    override val id: Int
+        get() = colorCode.hashCode() // Or any unique integer ID
+    override val extraData: Int? = null
+    override val extraString: String = colors
+}
+
 data class SizeDropdownItem(
     val item: BarcodesEntity
 ) : DropdownItem {
@@ -45,6 +57,17 @@ data class SizeDropdownItem(
         get() = item.size
     override val id: Int
         get() = item.size.hashCode() // Or any unique integer ID
+    override val extraData: Int? = null
+    override val extraString: String? = null
+}
+
+data class WebSizeDropdownItem(
+    val item: String
+) : DropdownItem {
+    override val displayName: String
+        get() = item
+    override val id: Int
+        get() = item.hashCode() // Or any unique integer ID
     override val extraData: Int? = null
     override val extraString: String? = null
 }
