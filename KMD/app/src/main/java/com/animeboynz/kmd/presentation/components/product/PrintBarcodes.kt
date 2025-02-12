@@ -1,6 +1,7 @@
 package com.animeboynz.kmd.presentation.components.product
 
 import android.graphics.Bitmap
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,65 +18,59 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.animeboynz.kmd.R
 import com.animeboynz.kmd.database.entities.BarcodesEntity
 import com.animeboynz.kmd.utils.generateBarCode
 import kotlin.collections.forEach
 
 @Composable
 fun PrintBarcodes(items: List<BarcodesEntity>) {
+    val context = LocalContext.current
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        val barcode = mutableSetOf<BarcodeItem>()
         items.forEach { item ->
             if (!item.pieceBarcode.isNullOrEmpty()) {
-                val bitmap = remember { mutableStateOf<Bitmap?>(null) }
-                bitmap.value = generateBarCode(item.pieceBarcode)
-
-                Card(
-                    modifier = Modifier.padding(8.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text("Piece Barcode: ${item.pieceBarcode}", style = MaterialTheme.typography.bodyMedium)
-                        bitmap.value?.asImageBitmap()?.let { bitmapImage ->
-                            Image(
-                                bitmap = bitmapImage,
-                                contentDescription = "Generate Barcode Image for ${item.pieceBarcode}",
-                                modifier = Modifier.size(250.dp, 100.dp)
-                            )
-                        }
-                    }
-                }
+                barcode.add(BarcodeItem("Piece Barcode", item.pieceBarcode))
             }
             if (!item.gtin.isNullOrEmpty()) {
-                val bitmapGtin = remember { mutableStateOf<Bitmap?>(null) }
-                bitmapGtin.value = generateBarCode(item.gtin)
+                barcode.add(BarcodeItem("GTIN Barcode", item.gtin))
+            }
+        }
+        if (barcode.isEmpty()) {
+            Toast.makeText(context, R.string.product_no_barcodes, Toast.LENGTH_SHORT).show()
+        }
+        barcode.forEach{ barcode ->
+            val bitmapGtin = remember { mutableStateOf<Bitmap?>(null) }
+            bitmapGtin.value = generateBarCode(barcode.barcode)
 
-                Card(
-                    modifier = Modifier.padding(8.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            Card(
+                modifier = Modifier.padding(8.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text("GTIN Barcode: ${item.gtin}", style = MaterialTheme.typography.bodyMedium)
-                        bitmapGtin.value?.asImageBitmap()?.let { bitmapImage ->
-                            Image(
-                                bitmap = bitmapImage,
-                                contentDescription = "Generate Barcode Image for ${item.gtin}",
-                                modifier = Modifier.size(250.dp, 100.dp)
-                            )
-                        }
+                    Text("${barcode.type}: ${barcode.barcode}", style = MaterialTheme.typography.bodyMedium)
+                    bitmapGtin.value?.asImageBitmap()?.let { bitmapImage ->
+                        Image(
+                            bitmap = bitmapImage,
+                            contentDescription = "Generate Barcode Image for ${barcode.barcode}",
+                            modifier = Modifier.size(250.dp, 100.dp)
+                        )
                     }
                 }
             }
         }
     }
 }
+
+data class BarcodeItem(
+    val type: String,
+    val barcode: String
+)

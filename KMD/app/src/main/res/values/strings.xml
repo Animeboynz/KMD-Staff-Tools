@@ -70,7 +70,7 @@
     <string name="sku_search_bar">Search products...</string>
     <string name="product_details">Product Details</string>
     <string name="product_found">Selected Item Found</string>
-    <string name="product_not_found">No items match the selected criteria</string>
+    <string name="product_no_barcodes">No barcodes found for product</string>
     <string name="product_input_errors_warning">Select both Colour and Size</string>
     <string name="action_get_barcode">Get Barcode</string>
     <string name="search_url_a">https://www.kathmandu.%s/shop?q=%s</string>

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -23,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -243,11 +245,10 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
                             }
 
                             if (selectedItem.isNotEmpty()) {
-                                Toast.makeText(context, R.string.product_found, Toast.LENGTH_SHORT).show()
                                 selectedItems = selectedItem
 
                             } else {
-                                Toast.makeText(context, R.string.product_not_found, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, R.string.product_no_barcodes, Toast.LENGTH_SHORT).show()
                             }
                         },
                         modifier = Modifier.fillMaxWidth()
