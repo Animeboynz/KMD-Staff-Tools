@@ -9,7 +9,7 @@
 ### Everything a Kathmandu Store needs
 Manage customer orders, product management, EOD cash counts and more – easier than ever on your Android device.
 
-[![GitHub downloads](https://img.shields.io/github/downloads/Animeboynz/KMD-Staff-Tools/total?label=downloads&labelColor=27303D&color=0D1117&logo=github&logoColor=FFFFFF&style=flat)](https://github.com/mihonapp/mihon/releases)
+[![GitHub downloads](https://img.shields.io/github/downloads/Animeboynz/KMD-Staff-Tools/total?label=downloads&labelColor=27303D&color=0D1117&logo=github&logoColor=FFFFFF&style=flat)](https://github.com/Animeboynz/KMD-Staff-Tools/releases)
 
 ## Download
 
