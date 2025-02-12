@@ -78,7 +78,7 @@ suspend fun fetchImageUrls(sku: String): ProductDetails {
                     for (i in 0 until colorOptions.length()) {
                         val colorName = colorOptions.getJSONObject(i).getString("label")
                         val colorCode = colorOptions.getJSONObject(i).getJSONObject("swatch_data").getString("value")
-                        colors.add(ColorsEntity(colorCode.substringBefore('.').takeLast(3).uppercase(), colorName)) // Trim to 3 characters before the dot
+                        colors.add(ColorsEntity(colorCode.substringAfterLast('/').take(3).uppercase(), colorName)) // Trim to 3 characters before the dot
                     }
                 }
             }
@@ -100,7 +100,7 @@ suspend fun fetchImageUrls(sku: String): ProductDetails {
                     for (i in 0 until colorOptions.length()) {
                         val colorName = colorOptions.getJSONObject(i).getString("label")
                         val colorCode = colorOptions.getJSONObject(i).getJSONObject("swatch_data").getString("value")
-                        colors.add(ColorsEntity(colorCode.substringBefore('.').takeLast(3).uppercase(), colorName)) // Trim to 3 characters before the dot
+                        colors.add(ColorsEntity(colorCode.substringAfterLast('/').take(3).uppercase(), colorName)) // Trim to 3 characters before the dot
                     }
                 }
             }
@@ -152,35 +152,6 @@ private fun fetchAndParseImages(jsonString: String, skuList: MutableList<String>
         emptyList()
     }
 }
-
-//fun parseImageJson(jsonString: String, skuList: MutableList<String>): List<String> {
-//    return try {
-//        val jsonObject = JSONObject(jsonString)
-//        val itemsArray = jsonObject.getJSONObject("data")
-//            .getJSONObject("products")
-//            .getJSONArray("items")
-//
-//        val imageUrls = mutableListOf<String>() // Preserve order for a single request
-//        for (i in 0 until itemsArray.length()) {
-//            val variantsArray = itemsArray.getJSONObject(i).getJSONArray("variants")
-//            val sku = itemsArray.getJSONObject(i).getString("sku")
-//            skuList.add(sku)
-//            for (j in 0 until variantsArray.length()) {
-//                val mediaArray = variantsArray.getJSONObject(j)
-//                    .getJSONObject("product")
-//                    .getJSONArray("media_gallery_entries")
-//                for (k in 0 until mediaArray.length()) {
-//                    val fileUrl = mediaArray.getJSONObject(k).getString("file")
-//                    imageUrls.add("https://kmd-assets.imgix.net/catalog/product$fileUrl")
-//                }
-//            }
-//        }
-//        imageUrls
-//    } catch (e: Exception) {
-//        Log.e("ImageParsing", "Error parsing image JSON", e)
-//        emptyList()
-//    }
-//}
 
 data class ProductDetails(
     val imageUrls: List<ImagebySKU>,

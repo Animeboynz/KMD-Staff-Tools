@@ -38,9 +38,13 @@ import com.animeboynz.kmd.domain.ColorDropdownItem
 import com.animeboynz.kmd.domain.ColorsRepository
 import com.animeboynz.kmd.domain.SizeDropdownItem
 import com.animeboynz.kmd.domain.StockAvailability
+import com.animeboynz.kmd.domain.WebColorDropdownItem
+import com.animeboynz.kmd.domain.WebSizeDropdownItem
 import com.animeboynz.kmd.preferences.GeneralPreferences
 import com.animeboynz.kmd.presentation.Screen
+import com.animeboynz.kmd.presentation.components.DropdownItem
 import com.animeboynz.kmd.presentation.components.SimpleDropdown
+import com.animeboynz.kmd.presentation.components.product.ColorsEntity
 import com.animeboynz.kmd.presentation.components.product.ImageCarousel
 import com.animeboynz.kmd.presentation.components.product.PrintBarcodes
 import com.animeboynz.kmd.presentation.components.product.StockLevels
@@ -146,15 +150,28 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
                 val filteredByColor: List<BarcodesEntity> = items.distinctBy { it.color }
                 val filteredBySize: List<BarcodesEntity> = items.distinctBy { it.size }
 
-                var selectedColor by remember { mutableStateOf<ColorDropdownItem?>(null) }
+                var selectedColor by remember { mutableStateOf<DropdownItem?>(null) }
                 val dropdownColorItems = filteredByColor.map { ColorDropdownItem(it, colors) }
 
-                var selectedSize by remember { mutableStateOf<SizeDropdownItem?>(null) }
+                var selectedSize by remember { mutableStateOf<DropdownItem?>(null) }
                 val dropdownSizeItems = filteredBySize.map { SizeDropdownItem(it) }
+
+                var dropdownColorItemsWeb by remember { mutableStateOf<List<DropdownItem>>(emptyList()) }
+                var dropdownSizeItemsWeb by remember { mutableStateOf<List<DropdownItem>>(emptyList()) }
 
                 var region = preferences.stockCheckRegion.get()
                 var stockCheckURL = "https://app.kathmandu.co.nz/graphql?query=query+getStoreInventory%28%24childSku%3AString%21%24region%3AString%24locationId%3AInt%29%7BStockAvailabilities%28childSku%3A%24childSku+region%3A%24region+locationId%3A%24locationId%29%7Binventory%7Bquantity+sku+__typename%7DisPossible+isPossibleMessage+magentoRetailerId+orderMethods%7BclickAndCollect%7BcollectionTime+deliveryScope+isPossible+name+__typename%7DpickupInStore%7BcollectionTime+deliveryScope+isPossible+name+__typename%7D__typename%7DstoreAddress%7Bcity+country+latitude+longitude+postcode+state+street+__typename%7DstoreCode+storeName+tripDistance+__typename%7D%7D&operationName=getStoreInventory&variables=%7B%22childSku%22%3A%22${sku}%2F${selectedColor?.displayName}%2F${selectedSize?.displayName}%22%2C%22region%22%3A%22${region}%22%7D"
 
+                LaunchedEffect(Unit) {
+                    val productDetails = fetchImageUrls(sku)
+                    imageUrls = productDetails.imageUrls.flatMap { it.imageUrls }.distinct() // Combine and remove duplicates
+                    if (isWebProduct) {
+                        val sizeList = productDetails.sizes
+                        val colorList = productDetails.colors
+                        dropdownSizeItemsWeb = sizeList.map { WebSizeDropdownItem(it) }
+                        dropdownColorItemsWeb = colorList.map { WebColorDropdownItem(it.colorCode, it.colorName) }
+                    }
+                }
 
                 Text(
                     text = name,
@@ -166,11 +183,6 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.1f)) // Optional: Add a background
                 )
-
-                LaunchedEffect(Unit) {
-                    val productDetails = fetchImageUrls(sku)
-                    imageUrls = productDetails.imageUrls.flatMap { it.imageUrls }.distinct() // Combine and remove duplicates
-                }
 
                 if (imageUrls.isNotEmpty())
                 {
@@ -184,7 +196,7 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
                 SimpleDropdown(
                     label = stringResource(R.string.color),
                     selectedItem = selectedColor,
-                    items = dropdownColorItems,
+                    items = if(isWebProduct) dropdownColorItemsWeb else dropdownColorItems,
                     modifier = maxWidth,
                     onSelected = { color ->
                         selectedColor = color
@@ -194,7 +206,7 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
                 SimpleDropdown(
                     label = stringResource(R.string.size),
                     selectedItem = selectedSize,
-                    items = dropdownSizeItems,
+                    items = if(isWebProduct) dropdownSizeItemsWeb else dropdownSizeItems,
                     modifier = maxWidth,
                     onSelected = { size ->
                         selectedSize = size
@@ -227,7 +239,7 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
 
                             // Filter items based on selected color and size
                             val selectedItem = items.filter { item ->
-                                item.color == selectedColor?.item?.color && item.size == selectedSize?.item?.size
+                                item.color == selectedColor?.displayName && item.size == selectedSize?.displayName
                             }
 
                             if (selectedItem.isNotEmpty()) {
