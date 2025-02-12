@@ -168,7 +168,8 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
                 )
 
                 LaunchedEffect(Unit) {
-                    imageUrls = fetchImageUrls(sku)
+                    val productDetails = fetchImageUrls(sku)
+                    imageUrls = productDetails.imageUrls.flatMap { it.imageUrls }.distinct() // Combine and remove duplicates
                 }
 
                 if (imageUrls.isNotEmpty())
