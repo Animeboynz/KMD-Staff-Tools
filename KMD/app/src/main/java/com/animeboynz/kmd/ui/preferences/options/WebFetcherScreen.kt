@@ -102,14 +102,17 @@ object WebFetcherScreen : Screen() {
                 Button(
                     onClick = {
                         isFetching = true
-                        statusMessage = "Fetching products..."
+                        statusMessage = "Fetching NZ products..."
                         fetchedCount = 0
 
                         CoroutineScope(Dispatchers.IO).launch {
-                            val success = fetchAndStoreProducts(productsRepository) { count, message ->
-                                fetchedCount = count
-                                statusMessage = message
-                            }
+                            val success = fetchAndStoreProducts(
+                                productsRepository = productsRepository, countryCode = "NZ",
+                                updateStatus = { count, message ->
+                                    fetchedCount = count
+                                    statusMessage = message
+                                }
+                            )
                             withContext(Dispatchers.Main) {
                                 isFetching = false
                                 statusMessage = if (success) "Products fetched successfully!" else "Failed to fetch products"
@@ -123,6 +126,35 @@ object WebFetcherScreen : Screen() {
                     enabled = !isFetching
                 ) {
                     Text(if (isFetching) "Fetching..." else "Fetch Products from NZ Website")
+                }
+
+                Button(
+                    onClick = {
+                        isFetching = true
+                        statusMessage = "Fetching AU products..."
+                        fetchedCount = 0
+
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val success = fetchAndStoreProducts(
+                                productsRepository = productsRepository, countryCode = "AU",
+                                updateStatus = { count, message ->
+                                    fetchedCount = count
+                                    statusMessage = message
+                                }
+                            )
+                            withContext(Dispatchers.Main) {
+                                isFetching = false
+                                statusMessage = if (success) "Products fetched successfully!" else "Failed to fetch products"
+                                Toast.makeText(context, statusMessage, Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    enabled = !isFetching
+                ) {
+                    Text(if (isFetching) "Fetching..." else "Fetch Products from AU Website")
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -148,7 +180,8 @@ object WebFetcherScreen : Screen() {
 
     private suspend fun fetchAndStoreProducts(
         productsRepository: ProductsRepository,
-        updateStatus: (Int, String) -> Unit
+        updateStatus: (Int, String) -> Unit,
+        countryCode: String
     ): Boolean {
         val client = OkHttpClient()
         val jsonParser = Json { ignoreUnknownKeys = true }
@@ -158,7 +191,12 @@ object WebFetcherScreen : Screen() {
         val fetchedSkus = mutableListOf<String>()
 
         do {
-            val url = "https://8r21li.a.searchspring.io/api/search/search.json?resultsFormat=native&resultsPerPage=100&page=$page&siteId=8r21li"
+            val urls = mapOf(
+                "AU" to "https://3vlhyg.a.searchspring.io/api/search/search.json?resultsFormat=native&resultsPerPage=100&page=$page&siteId=3vlhyg",
+                "NZ" to "https://8r21li.a.searchspring.io/api/search/search.json?resultsFormat=native&resultsPerPage=100&page=$page&siteId=8r21li"
+            )
+
+            val url = urls[countryCode] ?: urls["NZ"]!!
             val request = Request.Builder().url(url).build()
 
             client.newCall(request).execute().use { response ->
