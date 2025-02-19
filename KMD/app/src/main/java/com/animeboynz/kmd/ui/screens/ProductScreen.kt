@@ -59,7 +59,12 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import org.koin.compose.koinInject
 
-class ProductScreen(val sku: String, val name: String) : Screen() {
+class ProductScreen(
+    val sku: String,
+    val name: String,
+    val color: String? = null,
+    val size: String? = null,
+) : Screen() {
 
     @Composable
     override fun Content() {
@@ -157,6 +162,11 @@ class ProductScreen(val sku: String, val name: String) : Screen() {
 
                 var selectedSize by remember { mutableStateOf<DropdownItem?>(null) }
                 val dropdownSizeItems = filteredBySize.map { SizeDropdownItem(it) }
+
+                LaunchedEffect(dropdownColorItems, dropdownSizeItems) {
+                    selectedColor = dropdownColorItems.find { it.displayName == color }
+                    selectedSize = dropdownSizeItems.find { it.displayName == size }
+                }
 
                 var dropdownColorItemsWeb by remember { mutableStateOf<List<DropdownItem>>(emptyList()) }
                 var dropdownSizeItemsWeb by remember { mutableStateOf<List<DropdownItem>>(emptyList()) }
