@@ -15,12 +15,14 @@ import com.animeboynz.kmd.database.repository.CustomerOrderRepositoryImpl
 import com.animeboynz.kmd.database.repository.EmployeeRepositoryImpl
 import com.animeboynz.kmd.database.repository.OrderItemRepositoryImpl
 import com.animeboynz.kmd.database.repository.ProductsRepositoryImpl
+import com.animeboynz.kmd.database.repository.StockCountRepositoryImpl
 import com.animeboynz.kmd.domain.BarcodesRepository
 import com.animeboynz.kmd.domain.ColorsRepository
 import com.animeboynz.kmd.domain.CustomerOrderRepository
 import com.animeboynz.kmd.domain.EmployeeRepository
 import com.animeboynz.kmd.domain.OrderItemRepository
 import com.animeboynz.kmd.domain.ProductsRepository
+import com.animeboynz.kmd.domain.StockCountRepository
 import com.animeboynz.kmd.domain.importProtobufData
 import com.animeboynz.kmd.domain.toEntity
 import com.animeboynz.kmd.domain.toSKUEntity
@@ -65,4 +67,5 @@ val DatabaseModule = module {
     singleOf(::OrderItemRepositoryImpl).bind(OrderItemRepository::class)
     singleOf(::BarcodesRepositoryImpl).bind(BarcodesRepository::class)
     singleOf(::ColorsRepositoryImpl).bind(ColorsRepository::class)
+    singleOf(::StockCountRepositoryImpl).bind(StockCountRepository::class)
 }

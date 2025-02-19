@@ -78,6 +78,10 @@ class BarcodeScanner(
         }
     }
 
+    fun clearScannedBarcode() {
+        _scannedBarcode.value = ""
+    }
+
     private fun cleanupBarcodeReader() {
         coroutineScope.launch {
             barcodeReader?.let {

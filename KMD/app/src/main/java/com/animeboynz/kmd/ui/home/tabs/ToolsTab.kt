@@ -38,7 +38,9 @@ import com.animeboynz.kmd.R
 import com.animeboynz.kmd.presentation.components.tools.ToolRow
 import com.animeboynz.kmd.presentation.util.Tab
 import com.animeboynz.kmd.ui.preferences.PreferencesScreen
+import com.animeboynz.kmd.ui.screens.tools.BarcodeScanTest
 import com.animeboynz.kmd.ui.screens.tools.CashRow
+import com.animeboynz.kmd.ui.screens.tools.StockManagementScreen
 import com.animeboynz.kmd.ui.theme.spacing
 
 
@@ -80,6 +82,9 @@ object ToolsTab : Tab {
                 ToolRow(stringResource(R.string.tools_cash_count), {
                     navigator.push(CashRow())
                 })
+                ToolRow("Offsite Inventory") {
+                    navigator.push(StockManagementScreen())
+                }
             }
         }
     }
