@@ -1,5 +1,7 @@
 package com.animeboynz.kmd.presentation.components.product
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -14,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.animeboynz.kmd.R
+import com.animeboynz.kmd.database.entities.BarcodesEntity
 import com.animeboynz.kmd.ui.home.tabs.SkuTabScreenModel
 import com.animeboynz.kmd.ui.screens.ProductScreen
 import com.animeboynz.kmd.utils.BarcodeScanner
@@ -66,10 +69,22 @@ fun ScanBarcodeDialog(
             Text(text = "Scan a Barcode")
         },
         text = {
-            if (productsListState) {
-                Text(text = "Scanned Barcode: $scannedBarcode")
+            if (sku == null) {
+                if (productsListState) {
+                    if (scannedBarcode.isNotEmpty()){
+                        Column {
+                            Text(text = "Scanned Barcode: $scannedBarcode")
+                            PrintBarcodes(scannedBarcode)
+                        }
+                    }
+                } else {
+                    Text(text = "Import a products list with barcodes to use this feature")
+                }
             } else {
-                Text(text = "Import a products list with barcodes to use this feature")
+                Column {
+                    Text(text = "SKU: ${sku?.sku}\nName: ${sku?.name}\nColour: ${sku?.color}\nSize: ${sku?.size}")
+                    PrintBarcodes(scannedBarcode)
+                }
             }
         },
     )
