@@ -74,3 +74,34 @@ data class BarcodeItem(
     val type: String,
     val barcode: String
 )
+
+@Composable
+fun PrintBarcodes(barcode: String) {
+    val context = LocalContext.current
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+
+        val bitmapGtin = remember { mutableStateOf<Bitmap?>(null) }
+        bitmapGtin.value = generateBarCode(barcode)
+
+        Card(
+            modifier = Modifier.padding(8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                bitmapGtin.value?.asImageBitmap()?.let { bitmapImage ->
+                    Image(
+                        bitmap = bitmapImage,
+                        contentDescription = "Generate Barcode Image for $barcode",
+                        modifier = Modifier.size(250.dp, 100.dp)
+                    )
+                }
+            }
+        }
+    }
+}
