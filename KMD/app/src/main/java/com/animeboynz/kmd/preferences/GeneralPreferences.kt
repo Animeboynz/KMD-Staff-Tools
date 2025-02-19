@@ -10,4 +10,5 @@ class GeneralPreferences(preferenceStore: PreferenceStore) {
     val orderNumberPadding = preferenceStore.getInt("order-number-padding", 4)
     val lastUsedOrderCategory = preferenceStore.getInt("last_used_order_category", 0)
     val stockCheckRegion = preferenceStore.getString("stock_check_region", "1010")
+    val productsListImported = preferenceStore.getBoolean("products_list_imported", false)
 }

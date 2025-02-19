@@ -44,6 +44,7 @@ import org.koin.compose.koinInject
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import android.net.Uri
+import android.os.Build
 import com.animeboynz.kmd.domain.BarcodesRepository
 import com.animeboynz.kmd.domain.ColorsRepository
 import com.animeboynz.kmd.domain.ProductsRepository
@@ -57,6 +58,7 @@ object DataPreferencesScreen : Screen() {
     override fun Content() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
+        val preferences = koinInject<GeneralPreferences>()
 
         val employeeRepository = koinInject<EmployeeRepository>()
         val customerOrderRepository = koinInject<CustomerOrderRepository>()
@@ -80,6 +82,7 @@ object DataPreferencesScreen : Screen() {
                 var importedData = importProtobufData(context, uri)
                 if (importedData != null) {
                     screenModel.importProducts(importedData)
+                    preferences.productsListImported.set(true)
                 }
             }
         }
@@ -111,7 +114,12 @@ object DataPreferencesScreen : Screen() {
                     TextPreferenceWidget(
                         title = "Import products file",
                         onPreferenceClick = {
-                            importFileLauncher.launch("application/gzip")
+                            val mimeType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                "application/gzip" // Android 10 (API 29) and above
+                            } else {
+                                "*/*" // Older versions (API 28 and below)
+                            }
+                            importFileLauncher.launch(mimeType)
                         },
                     )
 
@@ -162,6 +170,7 @@ object DataPreferencesScreen : Screen() {
                                 "All products deleted",
                                 Toast.LENGTH_SHORT,
                             ).show()
+                            preferences.productsListImported.set(false)
                         },
                     )
 
