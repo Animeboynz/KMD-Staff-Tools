@@ -6,6 +6,7 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -18,9 +19,11 @@ import com.animeboynz.kmd.ui.home.HomeScreen
 import com.animeboynz.kmd.ui.theme.ThemeMode
 import com.animeboynz.kmd.utils.FirebaseConfig
 import org.koin.android.ext.android.inject
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.graphics.luminance
 
-class MainActivity : ComponentActivity() {
-    private val appearancePreferences by inject<AppearancePreferences>()
+class MainActivity : BaseActivity() {
+    //private val appearancePreferences by inject<AppearancePreferences>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,12 +35,17 @@ class MainActivity : ComponentActivity() {
         setContent {
             val dark by appearancePreferences.themeMode.collectAsState()
             val isSystemInDarkTheme = isSystemInDarkTheme()
-            enableEdgeToEdge(
-                SystemBarStyle.auto(
-                    lightScrim = Color.White.toArgb(),
-                    darkScrim = Color.White.toArgb(),
-                ) { dark == ThemeMode.DARK || (dark == ThemeMode.SYSTEM && isSystemInDarkTheme) },
-            )
+            val statusBarBackgroundColor = MaterialTheme.colorScheme.surface
+
+            LaunchedEffect(isSystemInDarkTheme, statusBarBackgroundColor) {
+                // Draw edge-to-edge and set system bars color to transparent
+                val lightStyle = SystemBarStyle.light(Color.Transparent.toArgb(), Color.Black.toArgb())
+                val darkStyle = SystemBarStyle.dark(Color.Transparent.toArgb())
+                enableEdgeToEdge(
+                    statusBarStyle = if (statusBarBackgroundColor.luminance() > 0.5) lightStyle else darkStyle,
+                    navigationBarStyle = if (isSystemInDarkTheme) darkStyle else lightStyle,
+                )
+            }
 
             TachiyomiTheme() {
                 Navigator(screen = HomeScreen) {

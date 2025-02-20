@@ -27,6 +27,9 @@ spotless = "7.0.0"
 ktlint-core = "1.5.0"
 
 [libraries]
+appcompat = "androidx.appcompat:appcompat:1.7.0"
+splashscreen = "androidx.core:core-splashscreen:1.0.1"
+
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
