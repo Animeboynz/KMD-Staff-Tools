@@ -123,7 +123,8 @@ room {
 dependencies {
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-//    implementation(libs.androidx.appcompat)
+    implementation(libs.appcompat)
+    implementation(libs.splashscreen)
     implementation(libs.material)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
