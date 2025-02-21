@@ -56,6 +56,7 @@ fun ScanBarcodeDialog(
                     navigator.push(ProductScreen(productSku.sku, productSku.name, productSku.color, productSku.size))
                     onCancel() // Close the dialog after navigating
                 }
+                onCancel()
             }) {
                 Text(text = stringResource(R.string.generic_confirm))
             }
