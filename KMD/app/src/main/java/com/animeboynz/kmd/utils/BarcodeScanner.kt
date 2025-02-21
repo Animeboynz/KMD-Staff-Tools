@@ -82,6 +82,30 @@ class BarcodeScanner(
         _scannedBarcode.value = ""
     }
 
+    fun getBarcodeScanners(): List<BarcodeReader> {
+        return BarcodeReaderManager.getBarcodeReaders()
+    }
+
+    fun getScanner(): BarcodeReader? {
+        return barcodeReader
+    }
+
+    fun triggerScan(pressed: Boolean) {
+        coroutineScope.launch {
+            barcodeReader?.let {
+                try {
+                    it.pressSoftwareTrigger(pressed)
+                } catch (e: BarcodeException) {
+                    Log.e("BarcodeScanner", "Error triggering scan: ${e.message}")
+                }
+            }
+        }
+    }
+
+    fun getScannerDetails(scanner: BarcodeReader? = barcodeReader): String {
+        return scanner?.let { "Model: ${scanner.deviceName}\nFirmware: ${scanner.deviceFirmwareVersion}\nSerial No: ${scanner.deviceSerialNumber}" } ?: "No scanner available or not initialised"
+    }
+
     private fun cleanupBarcodeReader() {
         coroutineScope.launch {
             barcodeReader?.let {
