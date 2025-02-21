@@ -83,7 +83,7 @@ class BarcodeScanner(
     }
 
     fun getBarcodeScanners(): List<BarcodeReader> {
-        return BarcodeReaderManager.getBarcodeReaders()
+        return if (isInitialized) BarcodeReaderManager.getBarcodeReaders() else emptyList()
     }
 
     fun getScanner(): BarcodeReader? {
