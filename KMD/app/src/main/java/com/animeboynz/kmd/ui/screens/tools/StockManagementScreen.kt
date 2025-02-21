@@ -4,6 +4,8 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
@@ -18,17 +20,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.animeboynz.kmd.R
 import com.animeboynz.kmd.database.entities.BarcodesEntity
+import com.animeboynz.kmd.database.entities.OrderItemEntity
 import com.animeboynz.kmd.database.entities.StockCountEntity
 import com.animeboynz.kmd.domain.BarcodesRepository
 import com.animeboynz.kmd.domain.EmployeeRepository
 import com.animeboynz.kmd.domain.StockCountRepository
 import com.animeboynz.kmd.presentation.Screen
+import com.animeboynz.kmd.presentation.components.order.OrderItemCard
 import com.animeboynz.kmd.ui.home.tabs.OrdersTabScreenModel
+import com.animeboynz.kmd.ui.screens.AddItemScreen
+import com.animeboynz.kmd.ui.screens.CustomerOrderScreenModel
 import com.animeboynz.kmd.utils.BarcodeScanner
 import org.koin.compose.koinInject
+import kotlin.collections.forEach
 
 class StockManagementScreen : Screen() {
 
@@ -74,21 +82,41 @@ class StockManagementScreen : Screen() {
                 modifier = Modifier
                     .padding(paddingValues)
                     .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
             ) {
                 Text("Manage Offsite Stock", style = MaterialTheme.typography.titleMedium)
 
                 // Display scanned barcode
                 Text("Scanned Barcode: $scannedBarcode", style = MaterialTheme.typography.bodyLarge)
 
-                // Display current stock list in styled cards
-                LazyColumn {
-                    items(screenModel.stockList.value) { stock ->
-                        screenModel.fetchProductDetails(stock.productBarcode)
-                        val productDetails = screenModel.skuResult.collectAsState()
-                        StockCard(productDetails.value, stock, screenModel)
-                    }
-                }
+                val orderItems by screenModel.offsiteItems.collectAsState()
+
+                StockItemsList(orderItems, screenModel)
+
+//                // Display current stock list in styled cards
+//                LazyColumn {
+//                    items(screenModel.stockList.value) { stock ->
+//                        screenModel.fetchProductDetails(stock.productBarcode)
+//                        val productDetails = screenModel.skuResult.collectAsState()
+//                        StockCard(productDetails.value, stock, screenModel)
+//                    }
+//                }
             }
+        }
+    }
+
+    @Composable
+    fun StockItemsList(orderItems: List<StockCountEntity>, screenModel: StockManagementScreenModel) {
+
+        val barcodeEntity by screenModel.productNames.collectAsState()
+
+        orderItems.forEach { item ->
+            if (!barcodeEntity.containsKey(item.productBarcode)) {
+                screenModel.fetchProductDetails(item.productBarcode)
+            }
+            val barcodeEntity = barcodeEntity[item.productBarcode]
+
+            StockCard(barcodeEntity, item, screenModel)
         }
     }
 

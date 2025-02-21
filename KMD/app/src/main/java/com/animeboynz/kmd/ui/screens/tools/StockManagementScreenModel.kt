@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.animeboynz.kmd.database.entities.BarcodesEntity
+import com.animeboynz.kmd.database.entities.OrderItemEntity
 import com.animeboynz.kmd.database.entities.ProductsEntity
 import com.animeboynz.kmd.database.entities.StockCountEntity
 import com.animeboynz.kmd.domain.BarcodesRepository
@@ -12,6 +13,7 @@ import com.animeboynz.kmd.domain.StockCountRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class StockManagementScreenModel(
@@ -19,11 +21,7 @@ class StockManagementScreenModel(
     private val barcodesRepository: BarcodesRepository
 ) : ScreenModel {
 
-    var stockList = mutableStateOf<List<StockCountEntity>>(emptyList())
-        private set
-
-    private val _skuResult = MutableStateFlow<BarcodesEntity?>(null)
-    val skuResult: StateFlow<BarcodesEntity?> get() = _skuResult
+    var offsiteItems = MutableStateFlow<List<StockCountEntity>>(emptyList())
 
     init {
         loadOffsiteInventory()
@@ -32,14 +30,14 @@ class StockManagementScreenModel(
     fun loadOffsiteInventory() {
         screenModelScope.launch(Dispatchers.IO) {
             stockCountRepository.getOffsiteInventory().collect { inventory ->
-                stockList.value = inventory
+                offsiteItems.value = inventory
             }
         }
     }
 
     fun addOrIncrementProduct(productBarcode: String) {
         screenModelScope.launch(Dispatchers.IO) {
-            val existingStock = stockList.value.find { it.productBarcode == productBarcode }
+            val existingStock = offsiteItems.value.find { it.productBarcode == productBarcode }
 
             if (existingStock != null) {
                 stockCountRepository.incrementStockCount("", productBarcode, 1)
@@ -51,10 +49,16 @@ class StockManagementScreenModel(
         }
     }
 
+    private val _productNames = MutableStateFlow<Map<String, BarcodesEntity>>(emptyMap())
+    val productNames: StateFlow<Map<String, BarcodesEntity>> = _productNames.asStateFlow()
+
     fun fetchProductDetails(barcode: String) {
         screenModelScope.launch(Dispatchers.IO) {
-            val result = barcodesRepository.getByBarcode(barcode)
-            _skuResult.value = result
+            if (!_productNames.value.containsKey(barcode)) {
+                val productName = barcodesRepository.getByBarcode(barcode)
+                //R.string.item_name_unknown
+                _productNames.value = _productNames.value + (barcode to productName)
+            }
         }
     }
 
