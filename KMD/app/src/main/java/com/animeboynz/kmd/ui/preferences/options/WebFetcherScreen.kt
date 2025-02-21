@@ -193,7 +193,11 @@ object WebFetcherScreen : Screen() {
         do {
             val urls = mapOf(
                 "AU" to "https://3vlhyg.a.searchspring.io/api/search/search.json?resultsFormat=native&resultsPerPage=100&page=$page&siteId=3vlhyg",
-                "NZ" to "https://8r21li.a.searchspring.io/api/search/search.json?resultsFormat=native&resultsPerPage=100&page=$page&siteId=8r21li"
+                "NZ" to "https://8r21li.a.searchspring.io/api/search/search.json?resultsFormat=native&resultsPerPage=100&page=$page&siteId=8r21li",
+                "FR" to "https://rvz9yn.a.searchspring.io/api/search/search.json?resultsFormat=native&resultsPerPage=100&page=$page&siteId=rvz9yn",
+                "DE" to "https://6v27dr.a.searchspring.io/api/search/search.json?resultsFormat=native&resultsPerPage=100&page=$page&siteId=6v27dr",
+                "UK" to "https://q8l5y3.a.searchspring.io/api/search/search.json?resultsFormat=native&resultsPerPage=100&page=$page&siteId=q8l5y3",
+                "US" to "https://fcgway.a.searchspring.io/api/search/search.json?resultsFormat=native&resultsPerPage=100&page=$page&siteId=fcgway"
             )
 
             val url = urls[countryCode] ?: urls["NZ"]!!
