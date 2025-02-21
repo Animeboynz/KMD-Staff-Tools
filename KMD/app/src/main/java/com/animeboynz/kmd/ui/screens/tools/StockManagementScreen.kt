@@ -74,7 +74,7 @@ class StockManagementScreen : Screen() {
                             Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     },
-                    title = { Text(stringResource(R.string.product_details)) }
+                    title = { Text("Offsite Inventory") }
                 )
             }
         ) { paddingValues ->
@@ -84,23 +84,12 @@ class StockManagementScreen : Screen() {
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
             ) {
-                Text("Manage Offsite Stock", style = MaterialTheme.typography.titleMedium)
-
-                // Display scanned barcode
-                Text("Scanned Barcode: $scannedBarcode", style = MaterialTheme.typography.bodyLarge)
+//                Text("Manage Offsite Stock", style = MaterialTheme.typography.titleMedium)
+//                // Display scanned barcode
+//                Text("Scanned Barcode: $scannedBarcode", style = MaterialTheme.typography.bodyLarge)
 
                 val orderItems by screenModel.offsiteItems.collectAsState()
-
                 StockItemsList(orderItems, screenModel)
-
-//                // Display current stock list in styled cards
-//                LazyColumn {
-//                    items(screenModel.stockList.value) { stock ->
-//                        screenModel.fetchProductDetails(stock.productBarcode)
-//                        val productDetails = screenModel.skuResult.collectAsState()
-//                        StockCard(productDetails.value, stock, screenModel)
-//                    }
-//                }
             }
         }
     }
@@ -121,36 +110,61 @@ class StockManagementScreen : Screen() {
     }
 
     @Composable
-    fun StockCard(productDetails:BarcodesEntity?, stock: StockCountEntity, screenModel: StockManagementScreenModel) {
-
+    fun StockCard(productDetails: BarcodesEntity?, stock: StockCountEntity, screenModel: StockManagementScreenModel) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                .padding(horizontal = 8.dp, vertical = 4.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(text = "Product: ${productDetails?.name ?: "Unknown"}", style = MaterialTheme.typography.titleMedium)
-                Text(text = "Color: ${productDetails?.color ?: "Unknown"}", style = MaterialTheme.typography.bodySmall)
-                Text(text = "Size: ${productDetails?.size ?: "Unknown"}", style = MaterialTheme.typography.bodySmall)
-                Text(text = "Quantity: ${stock.quantity}", style = MaterialTheme.typography.bodyLarge)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                // Product Info
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = productDetails?.name ?: "Unknown",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        text = "${productDetails?.color ?: "Unknown"} | ${productDetails?.size ?: "Unknown"}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    )
+                }
 
+                // Quantity Control
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(onClick = { screenModel.decrementProduct(stock.productBarcode) }) {
+                    IconButton(
+                        onClick = { screenModel.decrementProduct(stock.productBarcode) }
+                    ) {
                         Icon(Icons.Default.Remove, contentDescription = "Decrease")
                     }
-                    IconButton(onClick = { screenModel.addOrIncrementProduct(stock.productBarcode) }) {
-                        Icon(Icons.Default.Add, contentDescription = "Decrease")
+                    Text(
+                        text = stock.quantity.toString(),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    IconButton(
+                        onClick = { screenModel.addOrIncrementProduct(stock.productBarcode) }
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = "Increase")
                     }
-                    IconButton(onClick = { screenModel.removeProduct(stock.productBarcode) }) {
-                        Icon(Icons.Default.Delete, contentDescription = "Delete")
-                    }
+                }
+
+                // Delete Action
+                IconButton(
+                    onClick = { screenModel.removeProduct(stock.productBarcode) }
+                ) {
+                    Icon(Icons.Default.Delete, contentDescription = "Delete")
                 }
             }
         }
     }
+
 }
