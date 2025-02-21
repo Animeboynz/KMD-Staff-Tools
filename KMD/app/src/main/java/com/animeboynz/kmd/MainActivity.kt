@@ -42,7 +42,7 @@ class MainActivity : BaseActivity() {
                 val lightStyle = SystemBarStyle.light(Color.Transparent.toArgb(), Color.Black.toArgb())
                 val darkStyle = SystemBarStyle.dark(Color.Transparent.toArgb())
                 enableEdgeToEdge(
-                    statusBarStyle = if (statusBarBackgroundColor.luminance() > 0.5) lightStyle else darkStyle,
+                    statusBarStyle = if (isSystemInDarkTheme) darkStyle else lightStyle,
                     navigationBarStyle = if (isSystemInDarkTheme) darkStyle else lightStyle,
                 )
             }
