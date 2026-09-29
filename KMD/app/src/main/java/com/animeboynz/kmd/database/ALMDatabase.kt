@@ -3,16 +3,20 @@ package com.animeboynz.kmd.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.animeboynz.kmd.database.dao.BarcodesDao
+import com.animeboynz.kmd.database.dao.BoxDao
 import com.animeboynz.kmd.database.dao.ColorsDao
 import com.animeboynz.kmd.database.dao.CustomerOrderDao
 import com.animeboynz.kmd.database.dao.EmployeeDao
+import com.animeboynz.kmd.database.dao.LocationDao
 import com.animeboynz.kmd.database.dao.OrderItemDao
 import com.animeboynz.kmd.database.dao.ProductsDao
 import com.animeboynz.kmd.database.dao.StockCountDao
 import com.animeboynz.kmd.database.entities.BarcodesEntity
+import com.animeboynz.kmd.database.entities.BoxEntity
 import com.animeboynz.kmd.database.entities.ColorsEntity
 import com.animeboynz.kmd.database.entities.CustomerOrderEntity
 import com.animeboynz.kmd.database.entities.EmployeeEntity
+import com.animeboynz.kmd.database.entities.LocationEntity
 import com.animeboynz.kmd.database.entities.OrderItemEntity
 import com.animeboynz.kmd.database.entities.ProductsEntity
 import com.animeboynz.kmd.database.entities.StockCountEntity
@@ -24,8 +28,10 @@ import com.animeboynz.kmd.database.entities.StockCountEntity
     OrderItemEntity::class,
     BarcodesEntity::class,
     ColorsEntity::class,
-    StockCountEntity::class],
-    version = 2
+    StockCountEntity::class,
+    LocationEntity::class,
+    BoxEntity::class],
+    version = 3
 )
 abstract class ALMDatabase : RoomDatabase() {
     abstract fun employeeDao(): EmployeeDao
@@ -36,4 +42,6 @@ abstract class ALMDatabase : RoomDatabase() {
     abstract fun barcodesDao(): BarcodesDao
     abstract fun colorsDao(): ColorsDao
     abstract fun stockCountDao(): StockCountDao
+    abstract fun locationDao(): LocationDao
+    abstract fun boxDao(): BoxDao
 }
