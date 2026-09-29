@@ -5,6 +5,7 @@ import com.animeboynz.kmd.database.ALMDatabase
 import com.animeboynz.kmd.database.entities.BoxEntity
 import com.animeboynz.kmd.database.entities.LocationEntity
 import com.animeboynz.kmd.database.entities.StockCountEntity
+import com.animeboynz.kmd.domain.BoxContentMatch
 import com.animeboynz.kmd.domain.StockCountRepository
 import kotlinx.coroutines.flow.Flow
 
@@ -49,6 +50,34 @@ class StockCountRepositoryImpl(
             current = getLocation(parentId)
         }
         return parts.joinToString(" / ")
+    }
+
+    override suspend fun searchBoxes(query: String): List<BoxContentMatch> {
+        val trimmed = query.trim().replace("%", "").replace("_", "")
+        if (trimmed.isEmpty()) return emptyList()
+        val products = database.barcodesDao().search("%$trimmed%")
+        val codes = products.flatMap { listOfNotNull(it.pieceBarcode, it.gtin) }.distinct()
+        if (codes.isEmpty()) return emptyList()
+        val counts = database.stockCountDao().findByProductBarcodes(codes)
+        if (counts.isEmpty()) return emptyList()
+        val boxes = database.boxDao().getByBarcodes(counts.map { it.boxId }.distinct()).associateBy { it.barcode }
+        val paths = mutableMapOf<Long, String>()
+        return counts.mapNotNull { count ->
+            val box = boxes[count.boxId] ?: return@mapNotNull null
+            val product = products.find {
+                it.pieceBarcode == count.productBarcode || it.gtin == count.productBarcode
+            } ?: return@mapNotNull null
+            val path = paths.getOrPut(box.locationId) { locationPath(box.locationId) }
+            BoxContentMatch(
+                boxBarcode = box.barcode,
+                locationPath = path,
+                productName = product.name,
+                sku = product.sku,
+                color = product.color,
+                size = product.size,
+                quantity = count.quantity,
+            )
+        }.distinctBy { "${it.boxBarcode}|${it.sku}|${it.color}|${it.size}" }
     }
 
     override suspend fun insertBox(barcode: String, locationId: Long): Long {

@@ -14,6 +14,9 @@ interface BoxDao {
     @Query("SELECT * FROM BoxEntity WHERE barcode = :barcode LIMIT 1")
     suspend fun getByBarcode(barcode: String): BoxEntity?
 
+    @Query("SELECT * FROM BoxEntity WHERE barcode IN (:barcodes)")
+    suspend fun getByBarcodes(barcodes: List<String>): List<BoxEntity>
+
     @Query("SELECT * FROM BoxEntity WHERE id = :id")
     suspend fun getById(id: Long): BoxEntity?
 

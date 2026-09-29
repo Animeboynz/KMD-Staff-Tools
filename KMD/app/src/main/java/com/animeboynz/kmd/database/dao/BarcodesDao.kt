@@ -23,6 +23,17 @@ interface BarcodesDao {
     @Query("SELECT * FROM BarcodesEntity WHERE sku = :sku")
     fun getBySku(sku: String): Flow<List<BarcodesEntity>>
 
+    @Query(
+        """
+        SELECT * FROM BarcodesEntity
+        WHERE sku LIKE :query
+            OR name LIKE :query
+            OR IFNULL(pieceBarcode, '') LIKE :query
+            OR IFNULL(gtin, '') LIKE :query
+        """,
+    )
+    fun search(query: String): List<BarcodesEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(products: List<BarcodesEntity>)
 

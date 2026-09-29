@@ -22,6 +22,8 @@ interface StockCountRepository {
 
     suspend fun locationPath(locationId: Long): String
 
+    suspend fun searchBoxes(query: String): List<BoxContentMatch>
+
     suspend fun insertBox(barcode: String, locationId: Long): Long
 
     suspend fun getBoxByBarcode(barcode: String): BoxEntity?
