@@ -160,6 +160,7 @@ dependencies {
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
     implementation(libs.room.ktx)
+    implementation(libs.androidx.work)
     implementation(libs.aboutLibraries.compose)
     implementation(libs.zxing)
     implementation(platform(libs.firebase.bom))

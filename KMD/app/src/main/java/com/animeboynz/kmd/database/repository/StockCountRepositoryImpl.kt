@@ -1,7 +1,11 @@
 package com.animeboynz.kmd.database.repository
 
+import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
+import android.provider.Settings
 import com.animeboynz.kmd.database.ALMDatabase
+import com.animeboynz.kmd.database.entities.PendingTransactionEntity
+import com.animeboynz.kmd.sync.StockSyncWorker
 import com.animeboynz.kmd.database.entities.BoxEntity
 import com.animeboynz.kmd.database.entities.LocationEntity
 import com.animeboynz.kmd.database.entities.StockCountEntity
@@ -13,6 +17,7 @@ import kotlinx.coroutines.flow.Flow
 
 class StockCountRepositoryImpl(
     private val database: ALMDatabase,
+    private val context: Context,
 ) : StockCountRepository {
     override fun getOffsiteInventory(): Flow<List<StockCountEntity>> {
         return database.stockCountDao().getOffsiteInventory()
@@ -160,13 +165,18 @@ class StockCountRepositoryImpl(
     }
 
     private fun addQuantity(location: String, boxId: String, productBarcode: String, quantity: Int) {
-        val updated = database.stockCountDao().incrementStockCount(boxId, productBarcode, quantity)
-        if (updated > 0) return
-        try {
-            database.stockCountDao().insertStockCount(location, boxId, productBarcode, quantity)
-        } catch (_: SQLiteConstraintException) {
-            database.stockCountDao().incrementStockCount(boxId, productBarcode, quantity)
+        database.runInTransaction {
+            val updated = database.stockCountDao().incrementStockCount(boxId, productBarcode, quantity)
+            if (updated == 0) {
+                try {
+                    database.stockCountDao().insertStockCount(location, boxId, productBarcode, quantity)
+                } catch (_: SQLiteConstraintException) {
+                    database.stockCountDao().incrementStockCount(boxId, productBarcode, quantity)
+                }
+            }
+            enqueue(boxId, productBarcode, quantity)
         }
+        StockSyncWorker.scheduleSoon(context)
     }
 
     override fun decrementStockCount(
@@ -178,12 +188,40 @@ class StockCountRepositoryImpl(
     }
 
     override fun removeOneFromBox(boxId: String, productBarcode: String) {
-        database.stockCountDao().decrementStockCount(boxId, productBarcode, 1)
-        database.stockCountDao().deleteIfEmpty(boxId, productBarcode)
+        var changed = false
+        database.runInTransaction {
+            val existing = database.stockCountDao().findItem(boxId, productBarcode) ?: return@runInTransaction
+            if (existing.quantity <= 0) return@runInTransaction
+            database.stockCountDao().decrementStockCount(boxId, productBarcode, 1)
+            database.stockCountDao().deleteIfEmpty(boxId, productBarcode)
+            enqueue(boxId, productBarcode, -1)
+            changed = true
+        }
+        if (changed) StockSyncWorker.scheduleSoon(context)
     }
 
     override fun deleteItem(boxId: String, productBarcode: String) {
-        database.stockCountDao().deleteItem(boxId, productBarcode)
+        var changed = false
+        database.runInTransaction {
+            val existing = database.stockCountDao().findItem(boxId, productBarcode) ?: return@runInTransaction
+            database.stockCountDao().deleteItem(boxId, productBarcode)
+            enqueue(boxId, productBarcode, -existing.quantity)
+            changed = true
+        }
+        if (changed) StockSyncWorker.scheduleSoon(context)
+    }
+
+    private fun enqueue(boxBarcode: String, productBarcode: String, delta: Int) {
+        val deviceId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID) ?: "unknown"
+        database.pendingTransactionDao().insert(
+            PendingTransactionEntity(
+                boxBarcode = boxBarcode,
+                productBarcode = productBarcode,
+                delta = delta,
+                createdAt = System.currentTimeMillis(),
+                deviceId = deviceId,
+            ),
+        )
     }
 
     override fun clearOffsiteInventoryByBarcode(barcode: String) {

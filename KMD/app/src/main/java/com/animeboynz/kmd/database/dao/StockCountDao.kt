@@ -16,6 +16,9 @@ interface StockCountDao {
     @Query("SELECT * FROM StockCountEntity WHERE productBarcode IN (:barcodes)")
     fun findByProductBarcodes(barcodes: List<String>): List<StockCountEntity>
 
+    @Query("SELECT * FROM StockCountEntity WHERE boxId = :boxId AND productBarcode = :productBarcode LIMIT 1")
+    fun findItem(boxId: String, productBarcode: String): StockCountEntity?
+
     @Query("INSERT INTO StockCountEntity (location, boxId, productBarcode, quantity) VALUES (:location, :boxId, :productBarcode, :quantity)")
     fun insertStockCount(location: String, boxId: String, productBarcode: String, quantity: Int)
 

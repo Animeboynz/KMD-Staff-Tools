@@ -67,5 +67,5 @@ val DatabaseModule = module {
     singleOf(::OrderItemRepositoryImpl).bind(OrderItemRepository::class)
     singleOf(::BarcodesRepositoryImpl).bind(BarcodesRepository::class)
     singleOf(::ColorsRepositoryImpl).bind(ColorsRepository::class)
-    singleOf(::StockCountRepositoryImpl).bind(StockCountRepository::class)
+    single<StockCountRepository> { StockCountRepositoryImpl(get(), androidContext()) }
 }

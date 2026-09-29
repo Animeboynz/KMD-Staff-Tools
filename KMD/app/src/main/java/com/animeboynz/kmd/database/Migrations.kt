@@ -75,7 +75,29 @@ val migration_2_3 = object : Migration(2, 3) {
     }
 }
 
+val migration_3_4 = object : Migration(3, 4) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS `PendingTransactionEntity` (
+                `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                `boxBarcode` TEXT NOT NULL,
+                `productBarcode` TEXT NOT NULL,
+                `delta` INTEGER NOT NULL,
+                `createdAt` INTEGER NOT NULL,
+                `deviceId` TEXT NOT NULL,
+                `synced` INTEGER NOT NULL
+            )
+            """.trimIndent(),
+        )
+        db.execSQL(
+            "CREATE INDEX IF NOT EXISTS `index_PendingTransactionEntity_synced` ON `PendingTransactionEntity` (`synced`)",
+        )
+    }
+}
+
 val Migrations: Array<Migration> = arrayOf(
     migration_1_2,
     migration_2_3,
+    migration_3_4,
 )
