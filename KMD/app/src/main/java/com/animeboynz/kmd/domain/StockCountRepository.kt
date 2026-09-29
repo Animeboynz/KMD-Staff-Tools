@@ -20,6 +20,8 @@ interface StockCountRepository {
 
     suspend fun getLocation(id: Long): LocationEntity?
 
+    suspend fun locationPath(locationId: Long): String
+
     suspend fun insertBox(barcode: String, locationId: Long): Long
 
     suspend fun getBoxByBarcode(barcode: String): BoxEntity?

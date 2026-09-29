@@ -44,7 +44,7 @@ import com.animeboynz.kmd.presentation.Screen
 import com.animeboynz.kmd.utils.BarcodeScanner
 import org.koin.compose.koinInject
 
-class StockManagementScreen : Screen() {
+class StockManagementScreen(val initialBoxBarcode: String? = null) : Screen() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -63,7 +63,15 @@ class StockManagementScreen : Screen() {
 
         val openBox by screenModel.openBox.collectAsState()
         val items by screenModel.items.collectAsState()
+        val locationPath by screenModel.locationPath.collectAsState()
         val message by screenModel.message.collectAsState()
+
+        LaunchedEffect(initialBoxBarcode) {
+            val barcode = initialBoxBarcode
+            if (!barcode.isNullOrBlank()) {
+                screenModel.openBoxByBarcode(barcode)
+            }
+        }
 
         DisposableEffect(Unit) {
             scanner.startScanning()
@@ -101,6 +109,13 @@ class StockManagementScreen : Screen() {
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
             ) {
+                if (locationPath.isNotEmpty()) {
+                    Text(
+                        text = locationPath,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                    )
+                }
                 Text(
                     text = if (openBox == null) {
                         "Scan a box barcode. Item scans after that are added to that box only."

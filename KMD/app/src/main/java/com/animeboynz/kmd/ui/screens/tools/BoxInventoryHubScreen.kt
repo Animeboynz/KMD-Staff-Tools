@@ -1,6 +1,7 @@
 package com.animeboynz.kmd.ui.screens.tools
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -173,7 +174,10 @@ class BoxInventoryHubScreen : Screen() {
                     val locationName = locations.find { it.id == box.locationId }?.name ?: "Unknown location"
                     Text(
                         text = "${box.barcode} · $locationName",
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { navigator.push(StockManagementScreen(box.barcode)) }
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
                     )
                 }
             }

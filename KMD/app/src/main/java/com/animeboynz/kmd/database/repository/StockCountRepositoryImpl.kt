@@ -39,6 +39,18 @@ class StockCountRepositoryImpl(
         return database.locationDao().getById(id)
     }
 
+    override suspend fun locationPath(locationId: Long): String {
+        val parts = ArrayDeque<String>()
+        val seen = mutableSetOf<Long>()
+        var current = getLocation(locationId)
+        while (current != null && seen.add(current.id)) {
+            parts.addFirst(current.name)
+            val parentId = current.parentId ?: break
+            current = getLocation(parentId)
+        }
+        return parts.joinToString(" / ")
+    }
+
     override suspend fun insertBox(barcode: String, locationId: Long): Long {
         return database.boxDao().insert(BoxEntity(barcode = barcode.trim(), locationId = locationId))
     }

@@ -27,10 +27,20 @@ class StockManagementScreenModel(
     private val _message = MutableStateFlow<String?>(null)
     val message: StateFlow<String?> = _message.asStateFlow()
 
+    private val _locationPath = MutableStateFlow("")
+    val locationPath: StateFlow<String> = _locationPath.asStateFlow()
+
     private val _productNames = MutableStateFlow<Map<String, BarcodesEntity>>(emptyMap())
     val productNames: StateFlow<Map<String, BarcodesEntity>> = _productNames.asStateFlow()
 
     private var contentsJob: Job? = null
+
+    fun openBoxByBarcode(barcode: String) {
+        screenModelScope.launch(Dispatchers.IO) {
+            val box = stockCountRepository.getBoxByBarcode(barcode) ?: return@launch
+            openBox(box)
+        }
+    }
 
     fun processScan(barcode: String) {
         val trimmed = barcode.trim()
@@ -97,6 +107,12 @@ class StockManagementScreenModel(
     private fun openBox(box: BoxEntity) {
         _openBox.value = box
         _message.value = "Opened ${box.barcode}"
+        screenModelScope.launch(Dispatchers.IO) {
+            val path = stockCountRepository.locationPath(box.locationId)
+            if (_openBox.value?.barcode == box.barcode) {
+                _locationPath.value = path
+            }
+        }
         contentsJob?.cancel()
         contentsJob = screenModelScope.launch(Dispatchers.IO) {
             stockCountRepository.getInventoryByBoxId(box.barcode).collect { inventory ->
