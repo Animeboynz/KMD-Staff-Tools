@@ -8,6 +8,8 @@ interface BarcodesRepository {
 
     fun getByBarcode(barcode: String): BarcodesEntity
 
+    fun findByBarcode(barcode: String): BarcodesEntity?
+
     fun getBySku(sku: String): Flow<List<BarcodesEntity>>
 
     suspend fun insertAll(products: List<BarcodesEntity>)

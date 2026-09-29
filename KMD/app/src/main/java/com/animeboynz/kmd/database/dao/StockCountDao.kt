@@ -17,10 +17,16 @@ interface StockCountDao {
     fun insertStockCount(location: String, boxId: String, productBarcode: String, quantity: Int)
 
     @Query("UPDATE StockCountEntity SET quantity = quantity + :increment WHERE boxId = :boxId AND productBarcode = :productBarcode")
-    fun incrementStockCount(boxId: String, productBarcode: String, increment: Int)
+    fun incrementStockCount(boxId: String, productBarcode: String, increment: Int): Int
 
     @Query("UPDATE StockCountEntity SET quantity = quantity - :decrement WHERE boxId = :boxId AND productBarcode = :productBarcode")
     fun decrementStockCount(boxId: String, productBarcode: String, decrement: Int)
+
+    @Query("DELETE FROM StockCountEntity WHERE boxId = :boxId AND productBarcode = :productBarcode AND quantity <= 0")
+    fun deleteIfEmpty(boxId: String, productBarcode: String)
+
+    @Query("DELETE FROM StockCountEntity WHERE boxId = :boxId AND productBarcode = :productBarcode")
+    fun deleteItem(boxId: String, productBarcode: String)
 
     @Query("DELETE FROM StockCountEntity WHERE location = 'Offsite' AND productBarcode = :barcode")
     fun clearOffsiteInventoryByBarcode(barcode: String)

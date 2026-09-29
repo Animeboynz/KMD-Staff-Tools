@@ -17,6 +17,9 @@ interface BarcodesDao {
     @Query("SELECT * FROM BarcodesEntity WHERE pieceBarcode = :barcode OR gtin = :barcode LIMIT 1")
     fun getByBarcode(barcode: String): BarcodesEntity
 
+    @Query("SELECT * FROM BarcodesEntity WHERE pieceBarcode = :barcode OR gtin = :barcode LIMIT 1")
+    fun findByBarcode(barcode: String): BarcodesEntity?
+
     @Query("SELECT * FROM BarcodesEntity WHERE sku = :sku")
     fun getBySku(sku: String): Flow<List<BarcodesEntity>>
 

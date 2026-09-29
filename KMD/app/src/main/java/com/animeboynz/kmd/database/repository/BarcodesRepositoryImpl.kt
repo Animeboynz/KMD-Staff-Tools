@@ -17,6 +17,10 @@ class BarcodesRepositoryImpl(
         return database.barcodesDao().getByBarcode(barcode)
     }
 
+    override fun findByBarcode(barcode: String): BarcodesEntity? {
+        return database.barcodesDao().findByBarcode(barcode)
+    }
+
     override fun getBySku(sku: String): Flow<List<BarcodesEntity>> {
         return database.barcodesDao().getBySku(sku)
     }

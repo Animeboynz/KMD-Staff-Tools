@@ -1,5 +1,6 @@
 package com.animeboynz.kmd.database.repository
 
+import android.database.sqlite.SQLiteConstraintException
 import com.animeboynz.kmd.database.ALMDatabase
 import com.animeboynz.kmd.database.entities.BoxEntity
 import com.animeboynz.kmd.database.entities.LocationEntity
@@ -71,12 +72,31 @@ class StockCountRepositoryImpl(
         database.stockCountDao().incrementStockCount(boxId, productBarcode, increment)
     }
 
+    override fun addOneToBox(location: String, boxId: String, productBarcode: String) {
+        val updated = database.stockCountDao().incrementStockCount(boxId, productBarcode, 1)
+        if (updated > 0) return
+        try {
+            database.stockCountDao().insertStockCount(location, boxId, productBarcode, 1)
+        } catch (_: SQLiteConstraintException) {
+            database.stockCountDao().incrementStockCount(boxId, productBarcode, 1)
+        }
+    }
+
     override fun decrementStockCount(
         boxId: String,
         productBarcode: String,
         decrement: Int
     ) {
         database.stockCountDao().decrementStockCount(boxId, productBarcode, decrement)
+    }
+
+    override fun removeOneFromBox(boxId: String, productBarcode: String) {
+        database.stockCountDao().decrementStockCount(boxId, productBarcode, 1)
+        database.stockCountDao().deleteIfEmpty(boxId, productBarcode)
+    }
+
+    override fun deleteItem(boxId: String, productBarcode: String) {
+        database.stockCountDao().deleteItem(boxId, productBarcode)
     }
 
     override fun clearOffsiteInventoryByBarcode(barcode: String) {

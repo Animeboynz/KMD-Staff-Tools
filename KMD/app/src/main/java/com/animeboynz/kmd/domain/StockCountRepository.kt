@@ -32,7 +32,13 @@ interface StockCountRepository {
 
     fun incrementStockCount(boxId: String, productBarcode: String, increment: Int)
 
+    fun addOneToBox(location: String, boxId: String, productBarcode: String)
+
     fun decrementStockCount(boxId: String, productBarcode: String, decrement: Int)
+
+    fun removeOneFromBox(boxId: String, productBarcode: String)
+
+    fun deleteItem(boxId: String, productBarcode: String)
 
     fun clearOffsiteInventoryByBarcode(barcode: String)
 
