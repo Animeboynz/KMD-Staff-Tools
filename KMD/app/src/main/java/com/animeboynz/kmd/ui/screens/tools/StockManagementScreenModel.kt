@@ -9,8 +9,11 @@ import com.animeboynz.kmd.domain.BarcodesRepository
 import com.animeboynz.kmd.domain.StockCountRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -26,6 +29,9 @@ class StockManagementScreenModel(
 
     private val _message = MutableStateFlow<String?>(null)
     val message: StateFlow<String?> = _message.asStateFlow()
+
+    private val _scanSucceeded = MutableSharedFlow<Boolean>(extraBufferCapacity = 1)
+    val scanSucceeded: SharedFlow<Boolean> = _scanSucceeded.asSharedFlow()
 
     private val _locationPath = MutableStateFlow("")
     val locationPath: StateFlow<String> = _locationPath.asStateFlow()
@@ -49,20 +55,24 @@ class StockManagementScreenModel(
             val box = stockCountRepository.getBoxByBarcode(trimmed)
             if (box != null) {
                 openBox(box)
+                _scanSucceeded.tryEmit(true)
                 return@launch
             }
             val current = _openBox.value
             if (current == null) {
                 _message.value = "Scan a box barcode first"
+                _scanSucceeded.tryEmit(false)
                 return@launch
             }
             val product = barcodesRepository.findByBarcode(trimmed)
             if (product == null) {
                 _message.value = "Unknown barcode"
+                _scanSucceeded.tryEmit(false)
                 return@launch
             }
             rememberProduct(trimmed, product)
             addOne(current, trimmed)
+            _scanSucceeded.tryEmit(true)
         }
     }
 

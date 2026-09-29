@@ -19,6 +19,10 @@ class PanasonicScannerEngine(
     private var _scannedBarcode = mutableStateOf("")
     override val scannedBarcode: State<String> get() = _scannedBarcode
 
+    override fun clearScannedBarcode() {
+        _scannedBarcode.value = ""
+    }
+
     init {
         initialize()
     }

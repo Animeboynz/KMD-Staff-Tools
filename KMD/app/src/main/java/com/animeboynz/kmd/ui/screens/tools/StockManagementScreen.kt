@@ -1,7 +1,12 @@
 package com.animeboynz.kmd.ui.screens.tools
 
+import android.Manifest
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,7 +34,11 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -43,6 +52,8 @@ import com.animeboynz.kmd.domain.BarcodesRepository
 import com.animeboynz.kmd.domain.StockCountRepository
 import com.animeboynz.kmd.presentation.Screen
 import com.animeboynz.kmd.utils.BarcodeScanner
+import com.animeboynz.kmd.utils.CameraBarcodeScanner
+import com.animeboynz.kmd.utils.playScanFeedback
 import org.koin.compose.koinInject
 
 class StockManagementScreen(val initialBoxBarcode: String? = null) : Screen() {
@@ -53,8 +64,16 @@ class StockManagementScreen(val initialBoxBarcode: String? = null) : Screen() {
         val context = LocalContext.current
         val navigator = LocalNavigator.currentOrThrow
 
-        val scanner = remember { BarcodeScanner(context) }
-        val scannedBarcode by remember { scanner.scannedBarcode }
+        val hardware = remember { BarcodeScanner(context) }
+        val camera = remember { CameraBarcodeScanner(context) }
+        val hardwareUnavailable by hardware.hardwareUnavailable
+        val scanner = if (hardwareUnavailable) camera else hardware
+        val scannedBarcode by scanner.scannedBarcode
+        val lifecycleOwner = LocalLifecycleOwner.current
+        var cameraGranted by remember { mutableStateOf(false) }
+        val cameraPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
+            cameraGranted = it
+        }
 
         val stockCountRepository = koinInject<StockCountRepository>()
         val barcodesRepository = koinInject<BarcodesRepository>()
@@ -74,15 +93,31 @@ class StockManagementScreen(val initialBoxBarcode: String? = null) : Screen() {
             }
         }
 
-        DisposableEffect(Unit) {
-            scanner.startScanning()
-            onDispose { scanner.stopScanning() }
+        LaunchedEffect(hardwareUnavailable) {
+            if (hardwareUnavailable) {
+                cameraPermission.launch(Manifest.permission.CAMERA)
+            }
+        }
+
+        DisposableEffect(hardwareUnavailable) {
+            if (hardwareUnavailable) {
+                onDispose { camera.stop() }
+            } else {
+                hardware.startScanning()
+                onDispose { hardware.stopScanning() }
+            }
+        }
+
+        LaunchedEffect(Unit) {
+            screenModel.scanSucceeded.collect { success ->
+                playScanFeedback(context, success)
+            }
         }
 
         LaunchedEffect(scannedBarcode) {
             if (scannedBarcode.isNotEmpty()) {
-                screenModel.addOrIncrementProduct(scannedBarcode)
-                //scanner.clearScannedBarcode()
+                screenModel.processScan(scannedBarcode)
+                scanner.clearScannedBarcode()
             }
         }
 
@@ -110,6 +145,18 @@ class StockManagementScreen(val initialBoxBarcode: String? = null) : Screen() {
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
             ) {
+                if (hardwareUnavailable && cameraGranted) {
+                    AndroidView(
+                        factory = { previewContext ->
+                            PreviewView(previewContext).also { preview ->
+                                camera.bind(lifecycleOwner, preview)
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(220.dp),
+                    )
+                }
                 if (locationPath.isNotEmpty()) {
                     Text(
                         text = locationPath,

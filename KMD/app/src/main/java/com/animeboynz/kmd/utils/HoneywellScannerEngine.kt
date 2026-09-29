@@ -21,6 +21,10 @@ class HoneywellScannerEngine(
     private var _scannedBarcode = mutableStateOf("")
     override val scannedBarcode: State<String> get() = _scannedBarcode
 
+    override fun clearScannedBarcode() {
+        _scannedBarcode.value = ""
+    }
+
     private val barcodeListener = object : BarcodeReader.BarcodeListener {
 
         override fun onBarcodeEvent(event: BarcodeReadEvent) {
