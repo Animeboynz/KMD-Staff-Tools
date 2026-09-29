@@ -99,6 +99,15 @@ class StockManagementScreenModel(
         _message.value = null
     }
 
+    fun confirmCount() {
+        val current = _openBox.value ?: return
+        screenModelScope.launch(Dispatchers.IO) {
+            stockCountRepository.confirmBoxCount(current.barcode)
+            _openBox.value = current.copy(lastCountedAt = System.currentTimeMillis())
+            _message.value = "Count confirmed for ${current.barcode}"
+        }
+    }
+
     private suspend fun addOne(box: BoxEntity, productBarcode: String) {
         val location = stockCountRepository.getLocation(box.locationId)?.name ?: ""
         stockCountRepository.addOneToBox(location, box.barcode, productBarcode)

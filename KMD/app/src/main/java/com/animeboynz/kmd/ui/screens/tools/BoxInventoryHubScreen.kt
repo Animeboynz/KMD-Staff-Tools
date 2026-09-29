@@ -55,6 +55,7 @@ class BoxInventoryHubScreen : Screen() {
 
         val locations by screenModel.locations.collectAsState(emptyList())
         val boxes by screenModel.boxes.collectAsState(emptyList())
+        val dueBoxes by screenModel.dueBoxes.collectAsState(emptyList())
         val message by screenModel.message.collectAsState()
 
         var locationName by remember { mutableStateOf("") }
@@ -87,6 +88,22 @@ class BoxInventoryHubScreen : Screen() {
                     .verticalScroll(rememberScrollState())
                     .padding(bottom = 16.dp),
             ) {
+                if (dueBoxes.isNotEmpty()) {
+                    Text(
+                        text = "Due for recount",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                    )
+                    dueBoxes.forEach { box ->
+                        Text(
+                            text = box.barcode,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { navigator.push(StockManagementScreen(box.barcode)) }
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                        )
+                    }
+                }
                 ToolRow("Search stock") { navigator.push(StockSearchScreen()) }
                 ToolRow("Scan a box") { navigator.push(StockManagementScreen()) }
                 ToolRow("Import stock") { navigator.push(StockImportScreen()) }

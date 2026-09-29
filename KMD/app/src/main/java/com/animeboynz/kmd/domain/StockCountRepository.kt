@@ -34,6 +34,10 @@ interface StockCountRepository {
 
     fun getBoxesByLocation(locationId: Long): Flow<List<BoxEntity>>
 
+    fun getBoxesDueForRecount(cutoffMillis: Long): Flow<List<BoxEntity>>
+
+    suspend fun confirmBoxCount(barcode: String)
+
     fun insertStockCount(location: String, boxId: String, productBarcode: String, quantity: Int)
 
     fun incrementStockCount(boxId: String, productBarcode: String, increment: Int)

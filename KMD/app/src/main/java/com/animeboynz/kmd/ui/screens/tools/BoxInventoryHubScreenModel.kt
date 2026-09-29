@@ -17,6 +17,9 @@ class BoxInventoryHubScreenModel(
 ) : ScreenModel {
     val locations = stockCountRepository.getLocations()
     val boxes = stockCountRepository.getBoxes()
+    val dueBoxes = stockCountRepository.getBoxesDueForRecount(
+        System.currentTimeMillis() - RECOUNT_AFTER_MS,
+    )
 
     private val _message = MutableStateFlow<String?>(null)
     val message: StateFlow<String?> = _message.asStateFlow()
@@ -51,5 +54,9 @@ class BoxInventoryHubScreenModel(
 
     fun consumeMessage() {
         _message.value = null
+    }
+
+    companion object {
+        const val RECOUNT_AFTER_MS = 30L * 24 * 60 * 60 * 1000
     }
 }

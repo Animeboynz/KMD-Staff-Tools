@@ -25,4 +25,16 @@ interface BoxDao {
 
     @Query("SELECT * FROM BoxEntity WHERE locationId = :locationId ORDER BY barcode")
     fun getByLocation(locationId: Long): Flow<List<BoxEntity>>
+
+    @Query(
+        """
+        SELECT * FROM BoxEntity
+        WHERE lastCountedAt IS NULL OR lastCountedAt < :cutoff
+        ORDER BY barcode
+        """,
+    )
+    fun getDueForRecount(cutoff: Long): Flow<List<BoxEntity>>
+
+    @Query("UPDATE BoxEntity SET lastCountedAt = :countedAt WHERE barcode = :barcode")
+    suspend fun markCounted(barcode: String, countedAt: Long)
 }

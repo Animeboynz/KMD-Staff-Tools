@@ -130,6 +130,14 @@ class StockCountRepositoryImpl(
         return database.boxDao().getByLocation(locationId)
     }
 
+    override fun getBoxesDueForRecount(cutoffMillis: Long): Flow<List<BoxEntity>> {
+        return database.boxDao().getDueForRecount(cutoffMillis)
+    }
+
+    override suspend fun confirmBoxCount(barcode: String) {
+        database.boxDao().markCounted(barcode, System.currentTimeMillis())
+    }
+
     override fun insertStockCount(
         location: String,
         boxId: String,

@@ -14,6 +14,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -125,6 +126,14 @@ class StockManagementScreen(val initialBoxBarcode: String? = null) : Screen() {
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(16.dp),
                 )
+                if (openBox != null) {
+                    Button(
+                        onClick = { screenModel.confirmCount() },
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                    ) {
+                        Text("Confirm count")
+                    }
+                }
                 StockItemsList(items, screenModel)
             }
         }
