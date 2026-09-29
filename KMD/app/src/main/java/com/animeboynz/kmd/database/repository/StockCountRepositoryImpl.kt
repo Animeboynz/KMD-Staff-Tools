@@ -7,6 +7,8 @@ import com.animeboynz.kmd.database.entities.LocationEntity
 import com.animeboynz.kmd.database.entities.StockCountEntity
 import com.animeboynz.kmd.domain.BoxContentMatch
 import com.animeboynz.kmd.domain.StockCountRepository
+import com.animeboynz.kmd.domain.StockImportResult
+import com.animeboynz.kmd.domain.StockImportRow
 import kotlinx.coroutines.flow.Flow
 
 class StockCountRepositoryImpl(
@@ -80,6 +82,38 @@ class StockCountRepositoryImpl(
         }.distinctBy { "${it.boxBarcode}|${it.sku}|${it.color}|${it.size}" }
     }
 
+    override suspend fun importRows(rows: List<StockImportRow>): StockImportResult {
+        var applied = 0
+        var skipped = 0
+        for (row in rows) {
+            if (row.boxBarcode.isBlank() || row.locationName.isBlank() || row.productBarcode.isBlank() || row.quantity <= 0) {
+                skipped++
+                continue
+            }
+            if (database.barcodesDao().findByBarcode(row.productBarcode) == null) {
+                skipped++
+                continue
+            }
+            val location = database.locationDao().getByName(row.locationName)
+                ?: run {
+                    val id = insertLocation(row.locationName, null)
+                    LocationEntity(id = id, parentId = null, name = row.locationName)
+                }
+            val existingBox = database.boxDao().getByBarcode(row.boxBarcode)
+            if (existingBox == null) {
+                try {
+                    insertBox(row.boxBarcode, location.id)
+                } catch (_: SQLiteConstraintException) {
+                    skipped++
+                    continue
+                }
+            }
+            addQuantity(location.name, row.boxBarcode, row.productBarcode, row.quantity)
+            applied++
+        }
+        return StockImportResult(applied, skipped)
+    }
+
     override suspend fun insertBox(barcode: String, locationId: Long): Long {
         return database.boxDao().insert(BoxEntity(barcode = barcode.trim(), locationId = locationId))
     }
@@ -114,12 +148,16 @@ class StockCountRepositoryImpl(
     }
 
     override fun addOneToBox(location: String, boxId: String, productBarcode: String) {
-        val updated = database.stockCountDao().incrementStockCount(boxId, productBarcode, 1)
+        addQuantity(location, boxId, productBarcode, 1)
+    }
+
+    private fun addQuantity(location: String, boxId: String, productBarcode: String, quantity: Int) {
+        val updated = database.stockCountDao().incrementStockCount(boxId, productBarcode, quantity)
         if (updated > 0) return
         try {
-            database.stockCountDao().insertStockCount(location, boxId, productBarcode, 1)
+            database.stockCountDao().insertStockCount(location, boxId, productBarcode, quantity)
         } catch (_: SQLiteConstraintException) {
-            database.stockCountDao().incrementStockCount(boxId, productBarcode, 1)
+            database.stockCountDao().incrementStockCount(boxId, productBarcode, quantity)
         }
     }
 

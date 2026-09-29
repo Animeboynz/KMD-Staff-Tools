@@ -14,6 +14,9 @@ interface LocationDao {
     @Query("SELECT * FROM LocationEntity WHERE id = :id")
     suspend fun getById(id: Long): LocationEntity?
 
+    @Query("SELECT * FROM LocationEntity WHERE name = :name LIMIT 1")
+    suspend fun getByName(name: String): LocationEntity?
+
     @Query("SELECT * FROM LocationEntity ORDER BY name")
     fun getAll(): Flow<List<LocationEntity>>
 

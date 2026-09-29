@@ -24,6 +24,8 @@ interface StockCountRepository {
 
     suspend fun searchBoxes(query: String): List<BoxContentMatch>
 
+    suspend fun importRows(rows: List<StockImportRow>): StockImportResult
+
     suspend fun insertBox(barcode: String, locationId: Long): Long
 
     suspend fun getBoxByBarcode(barcode: String): BoxEntity?
