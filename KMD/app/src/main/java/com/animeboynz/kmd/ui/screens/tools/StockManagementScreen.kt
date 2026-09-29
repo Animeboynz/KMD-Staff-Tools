@@ -61,7 +61,7 @@ class StockManagementScreen : Screen() {
         LaunchedEffect(scannedBarcode) {
             if (scannedBarcode.isNotEmpty()) {
                 screenModel.addOrIncrementProduct(scannedBarcode)
-                scanner.clearScannedBarcode()
+                //scanner.clearScannedBarcode()
             }
         }
 
