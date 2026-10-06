@@ -1,8 +1,8 @@
 package com.animeboynz.kmd.ui.screens
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,10 +36,11 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.animeboynz.kmd.R
 import com.animeboynz.kmd.database.entities.BarcodesEntity
 import com.animeboynz.kmd.domain.BarcodesRepository
+import com.animeboynz.kmd.domain.BoxContentMatch
 import com.animeboynz.kmd.domain.ColorDropdownItem
 import com.animeboynz.kmd.domain.ColorsRepository
 import com.animeboynz.kmd.domain.SizeDropdownItem
-import com.animeboynz.kmd.domain.StockAvailability
+import com.animeboynz.kmd.domain.StockCountRepository
 import com.animeboynz.kmd.domain.WebColorDropdownItem
 import com.animeboynz.kmd.domain.WebSizeDropdownItem
 import com.animeboynz.kmd.preferences.GeneralPreferences
@@ -49,14 +50,9 @@ import com.animeboynz.kmd.presentation.components.SimpleDropdown
 import com.animeboynz.kmd.presentation.components.product.ColorsEntity
 import com.animeboynz.kmd.presentation.components.product.ImageCarousel
 import com.animeboynz.kmd.presentation.components.product.PrintBarcodes
-import com.animeboynz.kmd.presentation.components.product.StockLevels
 import com.animeboynz.kmd.presentation.components.product.fetchImageUrls
+import com.animeboynz.kmd.ui.screens.tools.StockManagementScreen
 import com.animeboynz.kmd.utils.openInBrowser
-import java.net.URL
-import javax.net.ssl.HttpsURLConnection
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import org.json.JSONObject
 import org.koin.compose.koinInject
 
 class ProductScreen(
@@ -73,9 +69,10 @@ class ProductScreen(
 
         val barcodesRepository = koinInject<BarcodesRepository>()
         val colorsRepository = koinInject<ColorsRepository>()
+        val stockCountRepository = koinInject<StockCountRepository>()
 
         val screenModel = rememberScreenModel {
-            ProductScreenModel(barcodesRepository, colorsRepository, sku)
+            ProductScreenModel(barcodesRepository, colorsRepository, stockCountRepository, sku)
         }
 
         val preferences = koinInject<GeneralPreferences>()
@@ -95,9 +92,7 @@ class ProductScreen(
 
         var selectedItems by remember { mutableStateOf<List<BarcodesEntity>>(emptyList()) }
 
-        var stockData by remember { mutableStateOf<List<StockAvailability>>(emptyList()) }
-        var isLoading by remember { mutableStateOf(false) }
-        var fetchStockDataTrigger by remember { mutableStateOf(false) }
+        val boxStock by screenModel.boxStock.collectAsState()
 
         var imageUrls by remember { mutableStateOf<List<String>>(emptyList()) }
 
@@ -170,9 +165,6 @@ class ProductScreen(
 
                 var dropdownColorItemsWeb by remember { mutableStateOf<List<DropdownItem>>(emptyList()) }
                 var dropdownSizeItemsWeb by remember { mutableStateOf<List<DropdownItem>>(emptyList()) }
-
-                var region = preferences.stockCheckRegion.get()
-                var stockCheckURL = "https://app.kathmandu.co.nz/graphql?query=query+getStoreInventory%28%24childSku%3AString%21%24region%3AString%24locationId%3AInt%29%7BStockAvailabilities%28childSku%3A%24childSku+region%3A%24region+locationId%3A%24locationId%29%7Binventory%7Bquantity+sku+__typename%7DisPossible+isPossibleMessage+magentoRetailerId+orderMethods%7BclickAndCollect%7BcollectionTime+deliveryScope+isPossible+name+__typename%7DpickupInStore%7BcollectionTime+deliveryScope+isPossible+name+__typename%7D__typename%7DstoreAddress%7Bcity+country+latitude+longitude+postcode+state+street+__typename%7DstoreCode+storeName+tripDistance+__typename%7D%7D&operationName=getStoreInventory&variables=%7B%22childSku%22%3A%22${sku}%2F${selectedColor?.displayName}%2F${selectedSize?.displayName}%22%2C%22region%22%3A%22${region}%22%7D"
 
                 LaunchedEffect(Unit) {
                     val productDetails = fetchImageUrls(sku)
@@ -267,20 +259,6 @@ class ProductScreen(
                     }
                 }
 
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    if (isLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.padding(top = 16.dp)
-                        )
-                    } else {
-                        StockLevels(stockData)
-                        fetchStockDataTrigger = false
-                    }
-                }
-
                 Button(
                     onClick = {
                         hasColorError = false
@@ -298,21 +276,27 @@ class ProductScreen(
                             return@Button
                         }
 
-                        isLoading = true
-                        fetchStockDataTrigger = !fetchStockDataTrigger // Toggle to trigger LaunchedEffect
+                        screenModel.findBoxStock(
+                            selectedColor?.displayName.orEmpty(),
+                            selectedSize?.displayName.orEmpty(),
+                        )
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Get Stock")
                 }
 
-                LaunchedEffect(fetchStockDataTrigger) {
-                    if (fetchStockDataTrigger) {
-                        val response = fetchStockData(stockCheckURL)
-                        response?.let {
-                            val stockList = parseStockJson(it)
-                            stockData = stockList
-                            isLoading = false
+                val stockMatches = boxStock
+                when {
+                    stockMatches == null -> Unit
+                    stockMatches.isEmpty() -> {
+                        Text("This colour and size is not in any box.")
+                    }
+                    else -> {
+                        for (match in stockMatches) {
+                            BoxStockRow(match) {
+                                navigator.push(StockManagementScreen(match.boxBarcode))
+                            }
                         }
                     }
                 }
@@ -321,46 +305,17 @@ class ProductScreen(
 
         }
     }
+}
 
-    suspend fun fetchStockData(url: String): String? {
-        return withContext(Dispatchers.IO) {
-            try {
-                val connection = URL(url).openConnection() as HttpsURLConnection
-                connection.requestMethod = "GET"
-                connection.inputStream.bufferedReader().use { it.readText() }
-            } catch (e: Exception) {
-                Log.e("StockCheck", "Error fetching stock data", e)
-                null
-            }
-        }
-    }
-
-    fun parseStockJson(jsonString: String): List<StockAvailability> {
-        val stockList = mutableListOf<StockAvailability>()
-        try {
-            val jsonObject = JSONObject(jsonString)
-
-            // Accessing the 'data' object
-            val dataObject = jsonObject.getJSONObject("data")
-
-            // Now, getting the 'StockAvailabilities' array from inside 'data'
-            val stockArray = dataObject.getJSONArray("StockAvailabilities")
-
-            for (i in 0 until stockArray.length()) {
-                val store = stockArray.getJSONObject(i)
-
-                val storeName = store.getString("storeName")
-                val storeCode = store.getInt("storeCode") // Note: Store code might be an integer
-                val storeAddress = store.getJSONObject("storeAddress").getString("street")
-                val inventory = store.getJSONArray("inventory").getJSONObject(0)
-                val quantity = inventory.getInt("quantity")
-                val sku = inventory.getString("sku")
-
-                stockList.add(StockAvailability(storeName, storeCode.toString(), storeAddress, sku, quantity))
-            }
-        } catch (e: Exception) {
-            Log.e("StockParsing", "Error parsing stock JSON", e)
-        }
-        return stockList
+@Composable
+private fun BoxStockRow(match: BoxContentMatch, onClick: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = 8.dp),
+    ) {
+        Text(match.locationPath, style = MaterialTheme.typography.titleMedium)
+        Text("${match.boxBarcode} · Qty ${match.quantity}", style = MaterialTheme.typography.bodyMedium)
     }
 }

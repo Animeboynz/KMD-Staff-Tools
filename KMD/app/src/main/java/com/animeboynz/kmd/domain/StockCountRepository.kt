@@ -1,5 +1,6 @@
 package com.animeboynz.kmd.domain
 
+import com.animeboynz.kmd.database.entities.BarcodesEntity
 import com.animeboynz.kmd.database.entities.BoxEntity
 import com.animeboynz.kmd.database.entities.LocationEntity
 import com.animeboynz.kmd.database.entities.StockCountEntity
@@ -25,6 +26,10 @@ interface StockCountRepository {
     suspend fun locationPath(locationId: Long): String
 
     suspend fun searchBoxes(query: String): List<BoxContentMatch>
+
+    suspend fun findBoxesForProduct(sku: String, color: String, size: String): List<BoxContentMatch>
+
+    suspend fun seedDemoInventory(products: List<BarcodesEntity>)
 
     suspend fun importRows(rows: List<StockImportRow>): StockImportResult
 

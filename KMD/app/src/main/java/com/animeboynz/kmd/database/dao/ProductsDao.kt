@@ -16,6 +16,20 @@ interface ProductsDao {
     @Query("SELECT * FROM ProductsEntity")
     fun getAllProducts(): Flow<List<ProductsEntity>>
 
+    @Query(
+        """
+        SELECT DISTINCT ProductsEntity.sku AS sku, ProductsEntity.name AS name
+        FROM StockCountEntity
+        INNER JOIN BarcodesEntity
+            ON BarcodesEntity.pieceBarcode = StockCountEntity.productBarcode
+            OR BarcodesEntity.gtin = StockCountEntity.productBarcode
+        INNER JOIN ProductsEntity ON ProductsEntity.sku = BarcodesEntity.sku
+        WHERE StockCountEntity.quantity > 0
+        ORDER BY ProductsEntity.sku DESC
+        """,
+    )
+    fun getInStockProducts(): Flow<List<ProductsEntity>>
+
     @Query("SELECT * FROM ProductsEntity WHERE sku = :sku")
     fun getProductName(sku: String): ProductsEntity
 

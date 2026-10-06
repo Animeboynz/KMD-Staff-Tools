@@ -102,7 +102,6 @@ class BoxInventoryHubScreen : Screen() {
                         )
                     }
                 }
-                ToolRow("Search stock") { navigator.push(StockSearchScreen()) }
                 ToolRow("Scan a box") { navigator.push(StockManagementScreen()) }
                 ToolRow("Import stock") { navigator.push(StockImportScreen()) }
 

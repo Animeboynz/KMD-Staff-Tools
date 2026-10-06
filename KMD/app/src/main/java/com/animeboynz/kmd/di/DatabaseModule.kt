@@ -51,9 +51,11 @@ val DatabaseModule = module {
                         var importedData = importProtobufData(context, null, "products.proto")
 
                         if (importedData != null) {
+                            val barcodes = importedData.barcodes.map { it.toEntity() }
                             get<ProductsRepository>().insertAll(importedData.barcodes.map { it.toSKUEntity() })
-                            get<BarcodesRepository>().insertAll(importedData.barcodes.map { it.toEntity() })
+                            get<BarcodesRepository>().insertAll(barcodes)
                             get<ColorsRepository>().insertAll(importedData.colors.map { it.toEntity() })
+                            get<StockCountRepository>().seedDemoInventory(barcodes)
                         }
                     }
                 }

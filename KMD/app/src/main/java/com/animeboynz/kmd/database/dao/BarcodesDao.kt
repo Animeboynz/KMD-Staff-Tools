@@ -26,6 +26,9 @@ interface BarcodesDao {
     @Query("SELECT * FROM BarcodesEntity WHERE sku = :sku")
     fun getBySku(sku: String): Flow<List<BarcodesEntity>>
 
+    @Query("SELECT * FROM BarcodesEntity WHERE sku = :sku AND color = :color AND size = :size")
+    fun findBySkuColorSize(sku: String, color: String, size: String): List<BarcodesEntity>
+
     @Query(
         """
         SELECT * FROM BarcodesEntity

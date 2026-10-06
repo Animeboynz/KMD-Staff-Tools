@@ -24,15 +24,25 @@ class SkuTabScreenModel(
 ) : ScreenModel {
 
     var allProducts = MutableStateFlow<List<ProductsEntity>>(emptyList())
+    var inStockProducts = MutableStateFlow<List<ProductsEntity>>(emptyList())
 
     init {
         getProducts()
+        getInStockProducts()
     }
 
     fun getProducts() {
         screenModelScope.launch(Dispatchers.IO) {
             productsRepository.getAllProducts().collect() { productsList ->
                 allProducts.value = productsList
+            }
+        }
+    }
+
+    fun getInStockProducts() {
+        screenModelScope.launch(Dispatchers.IO) {
+            productsRepository.getInStockProducts().collect { productsList ->
+                inStockProducts.value = productsList
             }
         }
     }

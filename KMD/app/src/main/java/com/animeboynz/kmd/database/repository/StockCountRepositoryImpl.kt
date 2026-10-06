@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.provider.Settings
 import com.animeboynz.kmd.database.ALMDatabase
+import com.animeboynz.kmd.database.entities.BarcodesEntity
 import com.animeboynz.kmd.database.entities.PendingTransactionEntity
 import com.animeboynz.kmd.sync.StockSyncWorker
 import com.animeboynz.kmd.database.entities.BoxEntity
@@ -104,6 +105,75 @@ class StockCountRepositoryImpl(
                 quantity = count.quantity,
             )
         }.distinctBy { "${it.boxBarcode}|${it.sku}|${it.color}|${it.size}" }
+    }
+
+    override suspend fun findBoxesForProduct(sku: String, color: String, size: String): List<BoxContentMatch> {
+        val variants = database.barcodesDao().findBySkuColorSize(sku, color, size)
+        val codes = variants.flatMap { listOfNotNull(it.pieceBarcode, it.gtin) }
+            .filter { it.isNotBlank() }
+            .distinct()
+        if (codes.isEmpty()) return emptyList()
+        val counts = database.stockCountDao().findByProductBarcodes(codes).filter { it.quantity > 0 }
+        if (counts.isEmpty()) return emptyList()
+        val boxes = counts.map { it.boxId }.distinct().chunked(SQL_VARIABLE_CHUNK).flatMap { chunk ->
+            database.boxDao().getByBarcodes(chunk)
+        }.associateBy { it.barcode }
+        val paths = mutableMapOf<Long, String>()
+        return counts.mapNotNull { count ->
+            val box = boxes[count.boxId] ?: return@mapNotNull null
+            val product = variants.find {
+                it.pieceBarcode == count.productBarcode || it.gtin == count.productBarcode
+            } ?: return@mapNotNull null
+            BoxContentMatch(
+                boxBarcode = box.barcode,
+                locationPath = paths.getOrPut(box.locationId) { locationPath(box.locationId) },
+                productName = product.name,
+                sku = product.sku,
+                color = product.color,
+                size = product.size,
+                quantity = count.quantity,
+            )
+        }
+    }
+
+    override suspend fun seedDemoInventory(products: List<BarcodesEntity>) {
+        val variants = products.asSequence()
+            .filter { barcodeOf(it) != null }
+            .distinctBy { it.sku }
+            .take(6)
+            .toList()
+        if (variants.isEmpty()) return
+
+        val newZealand = insertLocation("New Zealand", null)
+        val northIsland = insertLocation("North Island", newZealand)
+        val southIsland = insertLocation("South Island", newZealand)
+        val newmarket = insertLocation("Newmarket", northIsland)
+        val christchurch = insertLocation("Christchurch CBD", southIsland)
+        val countedAt = System.currentTimeMillis()
+
+        data class Slot(val index: Int, val quantity: Int)
+        val boxes = listOf(
+            Triple("BOX-NM-01", newmarket to "Newmarket", listOf(Slot(0, 4), Slot(1, 2), Slot(2, 6))),
+            Triple("BOX-NM-02", newmarket to "Newmarket", listOf(Slot(3, 3), Slot(4, 1))),
+            Triple("BOX-CHC-01", christchurch to "Christchurch CBD", listOf(Slot(0, 2), Slot(3, 5), Slot(5, 8))),
+            Triple("BOX-CHC-02", christchurch to "Christchurch CBD", listOf(Slot(1, 1), Slot(4, 3))),
+        )
+        for ((barcode, place, slots) in boxes) {
+            val (locationId, locationName) = place
+            database.boxDao().insert(
+                BoxEntity(barcode = barcode, locationId = locationId, lastCountedAt = countedAt),
+            )
+            for (slot in slots) {
+                val variant = variants[slot.index % variants.size]
+                val code = barcodeOf(variant) ?: continue
+                database.stockCountDao().insertStockCount(locationName, barcode, code, slot.quantity)
+            }
+        }
+    }
+
+    private fun barcodeOf(product: BarcodesEntity): String? {
+        return product.pieceBarcode?.takeIf { it.isNotBlank() }
+            ?: product.gtin?.takeIf { it.isNotBlank() }
     }
 
     override suspend fun importRows(rows: List<StockImportRow>): StockImportResult {

@@ -25,6 +25,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -95,10 +98,13 @@ object SkuTab : Tab {
         val screenModel = rememberScreenModel { SkuTabScreenModel(productsRepository, barcodesRepository) }
 
         val allProducts by screenModel.allProducts.collectAsState()
+        val inStockProducts by screenModel.inStockProducts.collectAsState()
+        var inStockOnly by rememberSaveable { mutableStateOf(false) }
 
         var searchQuery by remember { mutableStateOf("") }
 
-        val filteredProducts = allProducts.filter { product ->
+        val visibleProducts = if (inStockOnly) inStockProducts else allProducts
+        val filteredProducts = visibleProducts.filter { product ->
             product.name.contains(searchQuery, ignoreCase = true) ||
                     product.sku.contains(searchQuery, ignoreCase = true)
         }.sortedByDescending { it.sku }
@@ -109,7 +115,22 @@ object SkuTab : Tab {
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(stringResource(R.string.sku_tab))
+                        SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+                            SegmentedButton(
+                                selected = !inStockOnly,
+                                onClick = { inStockOnly = false },
+                                shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
+                            ) {
+                                Text("All")
+                            }
+                            SegmentedButton(
+                                selected = inStockOnly,
+                                onClick = { inStockOnly = true },
+                                shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
+                            ) {
+                                Text("In stock")
+                            }
+                        }
                     },
                     actions = {
                         IconButton(onClick = { showDialog = true }) {
@@ -155,7 +176,12 @@ object SkuTab : Tab {
 
                     if (filteredProducts.isEmpty())
                     {
-                        EmptyScreen("No matching products found")
+                        val message = if (inStockOnly && searchQuery.isBlank()) {
+                            "No products in stock"
+                        } else {
+                            "No matching products found"
+                        }
+                        EmptyScreen(message)
                     } else {
                         LazyColumn(modifier = Modifier.fillMaxSize()) {
                             items(filteredProducts) { product ->

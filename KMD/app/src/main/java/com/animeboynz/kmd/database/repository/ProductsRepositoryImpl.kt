@@ -16,6 +16,10 @@ class ProductsRepositoryImpl(
         return database.productsDao().getAllProducts()
     }
 
+    override fun getInStockProducts(): Flow<List<ProductsEntity>> {
+        return database.productsDao().getInStockProducts()
+    }
+
     override fun getProductName(sku: String): ProductsEntity {
         return database.productsDao().getProductName(sku)
     }
