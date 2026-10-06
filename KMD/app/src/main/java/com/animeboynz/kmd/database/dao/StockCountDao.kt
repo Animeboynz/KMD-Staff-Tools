@@ -63,6 +63,9 @@ interface StockCountDao {
     @Query("DELETE FROM StockCountEntity WHERE location = 'Offsite' AND productBarcode = :barcode")
     fun clearOffsiteInventoryByBarcode(barcode: String)
 
+    @Query("SELECT * FROM StockCountEntity WHERE boxId = :boxId")
+    fun getInventoryOnce(boxId: String): List<StockCountEntity>
+
     @Query("DELETE FROM StockCountEntity WHERE boxId = :boxId")
     fun clearInventoryByBoxId(boxId: String)
 }

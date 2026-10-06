@@ -19,7 +19,10 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -85,6 +88,7 @@ class StockManagementScreen(val initialBoxBarcode: String? = null) : Screen() {
         val items by screenModel.items.collectAsState()
         val locationPath by screenModel.locationPath.collectAsState()
         val message by screenModel.message.collectAsState()
+        var confirmClear by remember { mutableStateOf(false) }
 
         LaunchedEffect(initialBoxBarcode) {
             val barcode = initialBoxBarcode
@@ -174,15 +178,52 @@ class StockManagementScreen(val initialBoxBarcode: String? = null) : Screen() {
                     modifier = Modifier.padding(16.dp),
                 )
                 if (openBox != null) {
-                    Button(
-                        onClick = { screenModel.confirmCount() },
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        Text("Confirm count")
+                        Button(
+                            onClick = { screenModel.confirmCount() },
+                            modifier = Modifier.weight(1f),
+                        ) {
+                            Text("Confirm count")
+                        }
+                        OutlinedButton(
+                            onClick = { confirmClear = true },
+                            enabled = items.isNotEmpty(),
+                            modifier = Modifier.weight(1f),
+                        ) {
+                            Text("Remove all")
+                        }
                     }
                 }
                 StockItemsList(items, screenModel)
             }
+        }
+
+        if (confirmClear) {
+            AlertDialog(
+                onDismissRequest = { confirmClear = false },
+                title = { Text("Remove all products") },
+                text = {
+                    Text("Delete every product in ${openBox?.barcode}? You can scan them again afterwards.")
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        screenModel.clearBoxContents()
+                        confirmClear = false
+                    }) {
+                        Text("Remove all")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { confirmClear = false }) {
+                        Text("Cancel")
+                    }
+                },
+            )
         }
     }
 

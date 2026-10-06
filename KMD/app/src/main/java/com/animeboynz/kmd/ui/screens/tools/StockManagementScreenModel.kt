@@ -109,6 +109,14 @@ class StockManagementScreenModel(
         _message.value = null
     }
 
+    fun clearBoxContents() {
+        val current = _openBox.value ?: return
+        screenModelScope.launch(Dispatchers.IO) {
+            stockCountRepository.clearBoxContents(current.barcode)
+            _message.value = "Removed all products from ${current.barcode}"
+        }
+    }
+
     fun confirmCount() {
         val current = _openBox.value ?: return
         screenModelScope.launch(Dispatchers.IO) {

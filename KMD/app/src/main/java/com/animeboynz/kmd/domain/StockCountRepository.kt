@@ -60,4 +60,6 @@ interface StockCountRepository {
     fun clearOffsiteInventoryByBarcode(barcode: String)
 
     fun clearInventoryByBoxId(boxId: String)
+
+    fun clearBoxContents(boxId: String)
 }

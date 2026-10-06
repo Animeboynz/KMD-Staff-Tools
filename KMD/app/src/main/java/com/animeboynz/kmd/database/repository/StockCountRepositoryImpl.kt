@@ -346,6 +346,20 @@ class StockCountRepositoryImpl(
         database.stockCountDao().clearInventoryByBoxId(boxId)
     }
 
+    override fun clearBoxContents(boxId: String) {
+        var changed = false
+        database.runInTransaction {
+            val items = database.stockCountDao().getInventoryOnce(boxId)
+            if (items.isEmpty()) return@runInTransaction
+            items.forEach { item ->
+                enqueue(boxId, item.productBarcode, -item.quantity)
+            }
+            database.stockCountDao().clearInventoryByBoxId(boxId)
+            changed = true
+        }
+        if (changed) StockSyncWorker.scheduleSoon(context)
+    }
+
     private companion object {
         // findByBarcodes binds the list twice, and SQLite allows 999 variables.
         const val SQL_VARIABLE_CHUNK = 400
