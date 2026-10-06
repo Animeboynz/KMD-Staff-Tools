@@ -1,5 +1,5 @@
 [versions]
-agp = "8.8.2"
+agp = "8.13.0"
 firebase-bom = "33.9.0"
 zxing_version = "3.4.1"
 kotlin = "2.0.21"

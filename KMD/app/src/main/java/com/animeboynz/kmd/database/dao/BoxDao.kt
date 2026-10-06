@@ -26,6 +26,9 @@ interface BoxDao {
     @Query("SELECT * FROM BoxEntity WHERE locationId = :locationId ORDER BY barcode")
     fun getByLocation(locationId: Long): Flow<List<BoxEntity>>
 
+    @Query("SELECT * FROM BoxEntity WHERE locationId IN (:locationIds)")
+    suspend fun getByLocationIds(locationIds: List<Long>): List<BoxEntity>
+
     @Query(
         """
         SELECT * FROM BoxEntity

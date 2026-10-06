@@ -58,8 +58,6 @@ class BoxInventoryHubScreen : Screen() {
         val dueBoxes by screenModel.dueBoxes.collectAsState(emptyList())
         val message by screenModel.message.collectAsState()
 
-        var locationName by remember { mutableStateOf("") }
-        var parentId by remember { mutableStateOf<Long?>(null) }
         var boxBarcode by remember { mutableStateOf("") }
         var boxLocationId by remember { mutableStateOf<Long?>(null) }
 
@@ -108,52 +106,12 @@ class BoxInventoryHubScreen : Screen() {
                 ToolRow("Scan a box") { navigator.push(StockManagementScreen()) }
                 ToolRow("Import stock") { navigator.push(StockImportScreen()) }
 
-                Text(
-                    text = "Locations",
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-                )
-                OutlinedTextField(
-                    value = locationName,
-                    onValueChange = { locationName = it },
-                    label = { Text("Location name") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    singleLine = true,
-                )
-                Spacer(Modifier.height(8.dp))
-                LocationPicker(
-                    label = "Inside",
-                    locations = locations,
-                    selectedId = parentId,
-                    allowNone = true,
-                    onSelected = { parentId = it },
-                )
-                Button(
-                    onClick = {
-                        screenModel.addLocation(locationName, parentId)
-                        locationName = ""
-                    },
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                ) {
-                    Text("Add location")
-                }
                 if (locations.isEmpty()) {
                     Text(
-                        "No locations yet. Add a backroom or bay before creating a box.",
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                        "Add locations in Settings, under Location.",
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
                         style = MaterialTheme.typography.bodyMedium,
                     )
-                } else {
-                    locations.forEach { location ->
-                        val parent = locations.find { it.id == location.parentId }?.name
-                        val label = if (parent == null) location.name else "$parent / ${location.name}"
-                        Text(
-                            text = label,
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                        )
-                    }
                 }
 
                 Text(
@@ -188,7 +146,9 @@ class BoxInventoryHubScreen : Screen() {
                     Text("Add box")
                 }
                 boxes.forEach { box ->
-                    val locationName = locations.find { it.id == box.locationId }?.name ?: "Unknown location"
+                    val locationName = locations.find { it.id == box.locationId }
+                        ?.let { locationPath(it, locations) }
+                        ?: "Unknown location"
                     Text(
                         text = "${box.barcode} · $locationName",
                         modifier = Modifier
@@ -215,7 +175,7 @@ private fun LocationPicker(
     val selectedName = when {
         selectedId == null && allowNone -> "None"
         selectedId == null -> "Choose a location"
-        else -> locations.find { it.id == selectedId }?.name ?: "Choose a location"
+        else -> locations.find { it.id == selectedId }?.let { locationPath(it, locations) } ?: "Choose a location"
     }
 
     ExposedDropdownMenuBox(
@@ -248,9 +208,9 @@ private fun LocationPicker(
                     },
                 )
             }
-            locations.forEach { location ->
+            locations.sortedBy { locationPath(it, locations) }.forEach { location ->
                 DropdownMenuItem(
-                    text = { Text(location.name) },
+                    text = { Text(locationPath(location, locations)) },
                     onClick = {
                         onSelected(location.id)
                         expanded = false
@@ -259,4 +219,16 @@ private fun LocationPicker(
             }
         }
     }
+}
+
+private fun locationPath(location: LocationEntity, locations: List<LocationEntity>): String {
+    val byId = locations.associateBy { it.id }
+    val parts = ArrayDeque<String>()
+    val seen = mutableSetOf<Long>()
+    var current: LocationEntity? = location
+    while (current != null && seen.add(current.id)) {
+        parts.addFirst(current.name)
+        current = current.parentId?.let { byId[it] }
+    }
+    return parts.joinToString(" / ")
 }

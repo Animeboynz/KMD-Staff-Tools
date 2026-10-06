@@ -10,6 +10,7 @@ import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -29,6 +30,7 @@ import com.animeboynz.kmd.ui.preferences.options.AppearancePreferencesScreen
 import com.animeboynz.kmd.ui.preferences.options.DataPreferencesScreen
 import com.animeboynz.kmd.ui.preferences.options.EmployeePreferencesScreen
 import com.animeboynz.kmd.ui.preferences.options.GeneralPreferencesScreen
+import com.animeboynz.kmd.ui.preferences.options.LocationPreferencesScreen
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.preference
 
@@ -70,6 +72,13 @@ object PreferencesScreen : Screen() {
                         summary = { Text(text = stringResource(R.string.pref_employees_summary)) },
                         icon = { Icon(Icons.Outlined.Person, null) },
                         onClick = { navigator.push(EmployeePreferencesScreen) },
+                    )
+                    preference(
+                        key = "location",
+                        title = { Text(text = stringResource(R.string.pref_location_title)) },
+                        summary = { Text(text = stringResource(R.string.pref_location_summary)) },
+                        icon = { Icon(Icons.Outlined.Place, null) },
+                        onClick = { navigator.push(LocationPreferencesScreen) },
                     )
                     preference(
                         key = "appearance",

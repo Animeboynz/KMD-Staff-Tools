@@ -3,8 +3,6 @@ package com.animeboynz.kmd.ui.screens.tools
 import android.database.sqlite.SQLiteConstraintException
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.animeboynz.kmd.database.entities.BoxEntity
-import com.animeboynz.kmd.database.entities.LocationEntity
 import com.animeboynz.kmd.domain.StockCountRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,18 +21,6 @@ class BoxInventoryHubScreenModel(
 
     private val _message = MutableStateFlow<String?>(null)
     val message: StateFlow<String?> = _message.asStateFlow()
-
-    fun addLocation(name: String, parentId: Long?) {
-        val trimmed = name.trim()
-        if (trimmed.isEmpty()) {
-            _message.value = "Enter a location name"
-            return
-        }
-        screenModelScope.launch(Dispatchers.IO) {
-            stockCountRepository.insertLocation(trimmed, parentId)
-            _message.value = "Location added"
-        }
-    }
 
     fun addBox(barcode: String, locationId: Long?) {
         val trimmed = barcode.trim()

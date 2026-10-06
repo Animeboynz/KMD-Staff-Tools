@@ -100,6 +100,8 @@
     <string name="pref_general_summary">Store Number, Store Name</string>
     <string name="pref_employees_title">Employees</string>
     <string name="pref_employees_summary">Add and edit employees</string>
+    <string name="pref_location_title">Location</string>
+    <string name="pref_location_summary">Stock location hierarchy</string>
     <string name="pref_appearance_title">Appearance</string>
     <string name="pref_appearance_summary">Theme, tabs</string>
     <string name="pref_data_title">Data</string>

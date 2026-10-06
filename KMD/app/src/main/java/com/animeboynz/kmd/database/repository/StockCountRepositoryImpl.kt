@@ -13,6 +13,7 @@ import com.animeboynz.kmd.domain.BoxContentMatch
 import com.animeboynz.kmd.domain.StockCountRepository
 import com.animeboynz.kmd.domain.StockImportResult
 import com.animeboynz.kmd.domain.StockImportRow
+import androidx.room.withTransaction
 import kotlinx.coroutines.flow.Flow
 
 class StockCountRepositoryImpl(
@@ -29,6 +30,21 @@ class StockCountRepositoryImpl(
 
     override suspend fun insertLocation(name: String, parentId: Long?): Long {
         return database.locationDao().insert(LocationEntity(parentId = parentId, name = name.trim()))
+    }
+
+    override suspend fun deleteLocation(id: Long) {
+        val all = database.locationDao().getAllOnce()
+        val toDelete = mutableListOf<Long>()
+        fun collect(currentId: Long) {
+            all.filter { it.parentId == currentId }.forEach { collect(it.id) }
+            toDelete += currentId
+        }
+        collect(id)
+        val boxes = database.boxDao().getByLocationIds(toDelete)
+        database.withTransaction {
+            boxes.forEach { database.stockCountDao().clearInventoryByBoxId(it.barcode) }
+            toDelete.forEach { database.locationDao().deleteById(it) }
+        }
     }
 
     override fun getLocations(): Flow<List<LocationEntity>> {
@@ -62,12 +78,15 @@ class StockCountRepositoryImpl(
     override suspend fun searchBoxes(query: String): List<BoxContentMatch> {
         val trimmed = query.trim().replace("%", "").replace("_", "")
         if (trimmed.isEmpty()) return emptyList()
-        val products = database.barcodesDao().search("%$trimmed%")
-        val codes = products.flatMap { listOfNotNull(it.pieceBarcode, it.gtin) }.distinct()
-        if (codes.isEmpty()) return emptyList()
-        val counts = database.stockCountDao().findByProductBarcodes(codes)
+        val counts = database.stockCountDao().findByProductSearch("%$trimmed%")
         if (counts.isEmpty()) return emptyList()
-        val boxes = database.boxDao().getByBarcodes(counts.map { it.boxId }.distinct()).associateBy { it.barcode }
+        val codes = counts.map { it.productBarcode }.distinct()
+        val products = codes.chunked(SQL_VARIABLE_CHUNK).flatMap { chunk ->
+            database.barcodesDao().findByBarcodes(chunk)
+        }
+        val boxes = counts.map { it.boxId }.distinct().chunked(SQL_VARIABLE_CHUNK).flatMap { chunk ->
+            database.boxDao().getByBarcodes(chunk)
+        }.associateBy { it.barcode }
         val paths = mutableMapOf<Long, String>()
         return counts.mapNotNull { count ->
             val box = boxes[count.boxId] ?: return@mapNotNull null
@@ -230,6 +249,11 @@ class StockCountRepositoryImpl(
 
     override fun clearInventoryByBoxId(boxId: String) {
         database.stockCountDao().clearInventoryByBoxId(boxId)
+    }
+
+    private companion object {
+        // findByBarcodes binds the list twice, and SQLite allows 999 variables.
+        const val SQL_VARIABLE_CHUNK = 400
     }
 
 }

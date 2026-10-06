@@ -25,4 +25,10 @@ interface LocationDao {
 
     @Query("SELECT * FROM LocationEntity WHERE parentId = :parentId ORDER BY name")
     fun getChildren(parentId: Long): Flow<List<LocationEntity>>
+
+    @Query("SELECT * FROM LocationEntity")
+    suspend fun getAllOnce(): List<LocationEntity>
+
+    @Query("DELETE FROM LocationEntity WHERE id = :id")
+    suspend fun deleteById(id: Long)
 }

@@ -16,6 +16,32 @@ interface StockCountDao {
     @Query("SELECT * FROM StockCountEntity WHERE productBarcode IN (:barcodes)")
     fun findByProductBarcodes(barcodes: List<String>): List<StockCountEntity>
 
+    @Query(
+        """
+        SELECT * FROM StockCountEntity
+        WHERE productBarcode IN (
+            SELECT pieceBarcode FROM BarcodesEntity
+            WHERE pieceBarcode IS NOT NULL
+                AND (
+                    sku LIKE :query
+                    OR name LIKE :query
+                    OR pieceBarcode LIKE :query
+                    OR IFNULL(gtin, '') LIKE :query
+                )
+            UNION
+            SELECT gtin FROM BarcodesEntity
+            WHERE gtin IS NOT NULL
+                AND (
+                    sku LIKE :query
+                    OR name LIKE :query
+                    OR IFNULL(pieceBarcode, '') LIKE :query
+                    OR gtin LIKE :query
+                )
+        )
+        """,
+    )
+    fun findByProductSearch(query: String): List<StockCountEntity>
+
     @Query("SELECT * FROM StockCountEntity WHERE boxId = :boxId AND productBarcode = :productBarcode LIMIT 1")
     fun findItem(boxId: String, productBarcode: String): StockCountEntity?
 

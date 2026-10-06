@@ -12,6 +12,8 @@ interface StockCountRepository {
 
     suspend fun insertLocation(name: String, parentId: Long?): Long
 
+    suspend fun deleteLocation(id: Long)
+
     fun getLocations(): Flow<List<LocationEntity>>
 
     fun getRootLocations(): Flow<List<LocationEntity>>
