@@ -137,10 +137,15 @@ class StockCountRepositoryImpl(
     }
 
     override suspend fun seedDemoInventory(products: List<BarcodesEntity>) {
-        val variants = products.asSequence()
+        val demoSkus = products.asSequence()
             .filter { barcodeOf(it) != null }
-            .distinctBy { it.sku }
-            .take(6)
+            .map { it.sku }
+            .distinct()
+            .take(DEMO_PRODUCT_COUNT)
+            .toSet()
+        val variants = products.asSequence()
+            .filter { it.sku in demoSkus && barcodeOf(it) != null }
+            .distinctBy { barcodeOf(it) }
             .toList()
         if (variants.isEmpty()) return
 
@@ -150,23 +155,43 @@ class StockCountRepositoryImpl(
         val newmarket = insertLocation("Newmarket", northIsland)
         val christchurch = insertLocation("Christchurch CBD", southIsland)
         val countedAt = System.currentTimeMillis()
+        val boxesPerStore = (variants.size / 6).coerceIn(4, 12)
 
-        data class Slot(val index: Int, val quantity: Int)
-        val boxes = listOf(
-            Triple("BOX-NM-01", newmarket to "Newmarket", listOf(Slot(0, 4), Slot(1, 2), Slot(2, 6))),
-            Triple("BOX-NM-02", newmarket to "Newmarket", listOf(Slot(3, 3), Slot(4, 1))),
-            Triple("BOX-CHC-01", christchurch to "Christchurch CBD", listOf(Slot(0, 2), Slot(3, 5), Slot(5, 8))),
-            Triple("BOX-CHC-02", christchurch to "Christchurch CBD", listOf(Slot(1, 1), Slot(4, 3))),
-        )
-        for ((barcode, place, slots) in boxes) {
-            val (locationId, locationName) = place
-            database.boxDao().insert(
-                BoxEntity(barcode = barcode, locationId = locationId, lastCountedAt = countedAt),
-            )
-            for (slot in slots) {
-                val variant = variants[slot.index % variants.size]
-                val code = barcodeOf(variant) ?: continue
-                database.stockCountDao().insertStockCount(locationName, barcode, code, slot.quantity)
+        data class DemoBox(val barcode: String, val locationId: Long, val locationName: String)
+        fun storeBoxes(prefix: String, locationId: Long, locationName: String): List<DemoBox> {
+            return List(boxesPerStore) { index ->
+                DemoBox(
+                    barcode = "$prefix-${(index + 1).toString().padStart(2, '0')}",
+                    locationId = locationId,
+                    locationName = locationName,
+                )
+            }
+        }
+        val newmarketBoxes = storeBoxes("BOX-NM", newmarket, "Newmarket")
+        val christchurchBoxes = storeBoxes("BOX-CHC", christchurch, "Christchurch CBD")
+
+        database.withTransaction {
+            for (box in newmarketBoxes + christchurchBoxes) {
+                database.boxDao().insert(
+                    BoxEntity(barcode = box.barcode, locationId = box.locationId, lastCountedAt = countedAt),
+                )
+            }
+            variants.forEachIndexed { index, variant ->
+                val code = barcodeOf(variant) ?: return@forEachIndexed
+                val newmarketBox = newmarketBoxes[index % boxesPerStore]
+                val christchurchBox = christchurchBoxes[(index + boxesPerStore / 2) % boxesPerStore]
+                database.stockCountDao().insertStockCount(
+                    newmarketBox.locationName,
+                    newmarketBox.barcode,
+                    code,
+                    (index % 6) + 1,
+                )
+                database.stockCountDao().insertStockCount(
+                    christchurchBox.locationName,
+                    christchurchBox.barcode,
+                    code,
+                    (index % 4) + 2,
+                )
             }
         }
     }
@@ -324,6 +349,7 @@ class StockCountRepositoryImpl(
     private companion object {
         // findByBarcodes binds the list twice, and SQLite allows 999 variables.
         const val SQL_VARIABLE_CHUNK = 400
+        const val DEMO_PRODUCT_COUNT = 12
     }
 
 }
