@@ -40,6 +40,7 @@ import com.animeboynz.kmd.presentation.util.Tab
 import com.animeboynz.kmd.ui.preferences.PreferencesScreen
 import com.animeboynz.kmd.ui.screens.tools.BarcodeScanTest
 import com.animeboynz.kmd.ui.screens.tools.BoxInventoryHubScreen
+import com.animeboynz.kmd.ui.screens.tools.ManageBoxesScreen
 import com.animeboynz.kmd.ui.screens.tools.CashRow
 import com.animeboynz.kmd.ui.theme.spacing
 
@@ -82,8 +83,11 @@ object ToolsTab : Tab {
                 ToolRow(stringResource(R.string.tools_cash_count), {
                     navigator.push(CashRow())
                 })
-                ToolRow("Box inventory") {
+                ToolRow("Update Inventory") {
                     navigator.push(BoxInventoryHubScreen())
+                }
+                ToolRow("Manage Boxes") {
+                    navigator.push(ManageBoxesScreen())
                 }
             }
         }

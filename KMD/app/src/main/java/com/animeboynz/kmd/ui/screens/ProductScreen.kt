@@ -2,7 +2,6 @@ package com.animeboynz.kmd.ui.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -309,13 +308,15 @@ class ProductScreen(
 
 @Composable
 private fun BoxStockRow(match: BoxContentMatch, onClick: () -> Unit) {
-    Column(
+    OutlinedCard(
+        onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(vertical = 8.dp),
+            .padding(vertical = 6.dp),
     ) {
-        Text(match.locationPath, style = MaterialTheme.typography.titleMedium)
-        Text("${match.boxBarcode} · Qty ${match.quantity}", style = MaterialTheme.typography.bodyMedium)
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(match.locationPath, style = MaterialTheme.typography.titleMedium)
+            Text("${match.boxBarcode} · Qty ${match.quantity}", style = MaterialTheme.typography.bodyMedium)
+        }
     }
 }
