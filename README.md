@@ -27,6 +27,19 @@ Manage customer orders, product management, EOD cash counts and more – easier 
 * Multiple themes with both light and dark variants.
 * Custom designed cash counter which adapts to the currency of your region 
 * Plus much more...
+* Box-level inventory: a location tree, boxes, scanning, CSV import, and local search for which box holds a product
+
+
+## Build and run
+
+The Android project is the `KMD` folder, not the repository root.
+
+1. Install Android Studio and an Android SDK with compile SDK 35. The app module uses minSdk 26 and targetSdk 34 (Android 8.0 and above).
+2. Clone this repository and open the `KMD` folder as the Gradle project.
+3. Use the Gradle wrapper in that folder (`Gradle 9.4.1`). Use it if the machine JDK is newer than the JDK bundled with Android Studio.
+4. Select the `app` run configuration and deploy the debug build to a Honeywell or Panasonic PDA, or to any Android 8+ phone. On Honeywell and Panasonic hardware the app binds to the in-built scanner. On other devices it asks for the camera and scans with ML Kit.
+5. The first time the local database is created, the app loads a bundled demonstration product file and creates a sample location tree and sample boxes. Clearing the app’s data creates that database again. An install that already has a database is not reseeded.
+
 
 </div>
 
